@@ -1,4 +1,4 @@
-package main.java.org.rootservices.jwt.entity;
+package org.rootservices.jwt.entity;
 
 import java.util.List;
 import java.util.Optional;

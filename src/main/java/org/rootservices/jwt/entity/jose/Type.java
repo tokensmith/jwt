@@ -1,4 +1,4 @@
-package main.java.org.rootservices.jwt.entity.jose;
+package org.rootservices.jwt.entity.jose;
 
 /**
  * Created by tommackenzie on 8/9/15.
