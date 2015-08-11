@@ -1,11 +1,11 @@
-package org.rootservices.jwt.entity.jose;
+package org.rootservices.jwt.entity.header;
 
 /**
  * Created by tommackenzie on 8/9/15.
  *
  * JSON Object Signing and Encryption
  */
-public class header {
+public class Header {
     Type type;
 
     public Type getType() {
