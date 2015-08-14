@@ -11,7 +11,7 @@ import java.util.Optional;
 public class Token {
     private Header header;
     private RegisteredClaimNames claimNames;
-    private Optional<String> signature;
+    private Optional<String> signature = Optional.empty();
 
     public Header getHeader() {
         return header;

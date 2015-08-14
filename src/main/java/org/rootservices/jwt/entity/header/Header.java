@@ -1,18 +1,21 @@
 package org.rootservices.jwt.entity.header;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by tommackenzie on 8/9/15.
  *
  * JSON Object Signing and Encryption
  */
 public class Header {
-    Type type;
+    @JsonProperty(value="alg")
+    Algorithm algorithm;
 
-    public Type getType() {
-        return type;
+    public Algorithm getAlgorithm() {
+        return algorithm;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setAlgorithm(Algorithm algorithm) {
+        this.algorithm = algorithm;
     }
 }

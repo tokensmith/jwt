@@ -1,5 +1,8 @@
 package org.rootservices.jwt.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,14 +12,20 @@ import java.util.Optional;
  * https://tools.ietf.org/html/rfc7519#section-4.1
  */
 public class RegisteredClaimNames {
-
-    private Optional<String> issuer;
-    private Optional<String> subject;
+    @JsonProperty(value="iss")
+    private Optional<String> issuer = Optional.empty();
+    @JsonProperty(value="sub")
+    private Optional<String> subject = Optional.empty();
+    @JsonProperty(value="aud")
     private List<String> audience;
-    private Optional<String> expirationTime;
-    private Optional<Long> notBefore;
-    private Optional<Long> issuedAt;
-    private Optional<String> jwtId;
+    @JsonProperty(value="exp")
+    private Optional<Long> expirationTime = Optional.empty();
+    @JsonProperty(value="nbf")
+    private Optional<Long> notBefore = Optional.empty();
+    @JsonProperty(value="iat")
+    private Optional<Long> issuedAt = Optional.empty();
+    @JsonProperty(value="jti")
+    private Optional<String> jwtId = Optional.empty();
 
     public Optional<String> getIssuer() {
         return issuer;
@@ -42,11 +51,11 @@ public class RegisteredClaimNames {
         this.audience = audience;
     }
 
-    public Optional<String> getExpirationTime() {
+    public Optional<Long> getExpirationTime() {
         return expirationTime;
     }
 
-    public void setExpirationTime(Optional<String> expirationTime) {
+    public void setExpirationTime(Optional<Long> expirationTime) {
         this.expirationTime = expirationTime;
     }
 
