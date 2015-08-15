@@ -58,14 +58,14 @@ public class SerializerImplTest {
     @Test
     public void jsonToUnsecuredHeader() {
         byte[] json = "{\"alg\":\"none\"}".getBytes();
-        Header actual = (Header) subject.bytesToObject(json, Header.class);
+        Header actual = (Header) subject.jsonBytesToObject(json, Header.class);
         assertThat(actual.getAlgorithm(), is(Algorithm.NONE));
     }
 
     @Test
     public void jsonToClaim() {
         byte[] json = "{\"iss\":\"joe\",\"exp\":1300819380,\"http://example.com/is_root\":true}".getBytes();
-        Claim actual = (Claim) subject.bytesToObject(json, Claim.class);
+        Claim actual = (Claim) subject.jsonBytesToObject(json, Claim.class);
 
         assertNotNull(actual);
         assertTrue(actual.isUriIsRoot());

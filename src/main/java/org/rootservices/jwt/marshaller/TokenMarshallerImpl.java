@@ -26,7 +26,7 @@ public class TokenMarshallerImpl implements TokenMarshaller {
     }
 
     @Override
-    public String tokenToString(Token token) {
+    public String tokenToJwt(Token token) {
         String jwt = "";
         String headerJson = "";
         String claimsJson = "";
@@ -47,14 +47,14 @@ public class TokenMarshallerImpl implements TokenMarshaller {
     }
 
     @Override
-    public Token stringToToken(String jwt, Class claimClass) {
+    public Token jwtToToken(String jwt, Class claimClass) {
         String[] jwtParts = jwt.split("\\.");
 
         byte[] headerJson = decoder.decode(jwtParts[0]);
         byte[] claimsJson = decoder.decode(jwtParts[1]);
 
-        Header header = (Header) serializer.bytesToObject(headerJson, Header.class);
-        RegisteredClaimNames claim = (RegisteredClaimNames) serializer.bytesToObject(claimsJson, claimClass);
+        Header header = (Header) serializer.jsonBytesToObject(headerJson, Header.class);
+        RegisteredClaimNames claim = (RegisteredClaimNames) serializer.jsonBytesToObject(claimsJson, claimClass);
 
         Token token = new Token();
         token.setHeader(header);

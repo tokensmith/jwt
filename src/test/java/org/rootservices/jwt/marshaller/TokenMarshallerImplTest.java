@@ -1,8 +1,6 @@
 package org.rootservices.jwt.marshaller;
 
 import helper.entity.Claim;
-import junit.framework.TestCase;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.builder.TokenBuilder;
@@ -10,7 +8,6 @@ import org.rootservices.jwt.config.AppConfig;
 import org.rootservices.jwt.entity.Token;
 import org.rootservices.jwt.entity.header.Algorithm;
 
-import java.util.Base64;
 import java.util.Optional;
 
 import static junit.framework.Assert.assertFalse;
@@ -38,7 +35,7 @@ public class TokenMarshallerImplTest {
     }
 
     @Test
-    public void UnsecuredJwtToStringExpectValidJWT() {
+    public void UnsecuredJwtToJwtStringExpectValidJWT() {
 
         String expectedJwt = "eyJhbGciOiJub25lIn0=.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ==.";
 
@@ -50,16 +47,16 @@ public class TokenMarshallerImplTest {
         claim.setExpirationTime(expirationTime);
 
         Token tokenToMarshal = tokenBuilder.makeUnsecuredToken(claim);
-        String actual = subject.tokenToString(tokenToMarshal);
+        String actual = subject.tokenToJwt(tokenToMarshal);
         assertEquals(actual, expectedJwt);
     }
 
     @Test
-    public void stringToTokenExpectUnsecuredToken() {
+    public void jwtToTokenExpectUnsecuredToken() {
 
         String jwt = "eyJhbGciOiJub25lIn0=.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ==.";
 
-        Token actual = subject.stringToToken(jwt, Claim.class);
+        Token actual = subject.jwtToToken(jwt, Claim.class);
         assertNotNull(actual);
 
         // header

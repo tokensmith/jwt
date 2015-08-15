@@ -9,5 +9,5 @@ import org.rootservices.jwt.entity.header.Header;
  */
 public interface Serializer {
     String objectToJson(Object object) throws JsonProcessingException;
-    Object bytesToObject(byte[] json, Class c);
+    Object jsonBytesToObject(byte[] json, Class c);
 }

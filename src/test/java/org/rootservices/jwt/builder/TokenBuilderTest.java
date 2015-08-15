@@ -41,7 +41,6 @@ public class TokenBuilderTest {
 
         Token actual = subject.makeUnsecuredToken(claim);
 
-        // attributes that should be assigned
         assertNotNull(actual);
 
         // inspect claims

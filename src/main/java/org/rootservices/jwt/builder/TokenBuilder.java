@@ -15,7 +15,7 @@ public class TokenBuilder {
     /**
      * Build a unsecure JWT.
      *
-     * Unsecure JWTs have a header type value of "none" and
+     * Unsecure JWTs have a header algorithm value of "none" and
      * a empty signature.
      *
      * @param claimNames
