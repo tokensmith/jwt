@@ -1,4 +1,4 @@
-package org.rootservices.jwt.marshaller;
+package org.rootservices.jwt.serializer;
 
 import helper.entity.Claim;
 import org.junit.Before;
@@ -22,16 +22,16 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by tommackenzie on 8/13/15.
  */
-public class TokenMarshallerImplTest {
+public class JWTSerializerImplTest {
     private AppConfig appConfig;
     private TokenBuilder tokenBuilder;
-    private TokenMarshaller subject;
+    private JWTSerializer subject;
 
     @Before
     public void setUp(){
         appConfig = new AppConfig();
         tokenBuilder = appConfig.tokenBuilder();
-        subject = appConfig.tokenMarshaller();
+        subject = appConfig.jwtSerializer();
     }
 
     @Test

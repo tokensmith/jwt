@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.rootservices.jwt.builder.TokenBuilder;
-import org.rootservices.jwt.marshaller.TokenMarshaller;
-import org.rootservices.jwt.marshaller.TokenMarshallerImpl;
+import org.rootservices.jwt.serializer.JWTSerializer;
+import org.rootservices.jwt.serializer.JWTSerializerImpl;
 import org.rootservices.jwt.serializer.Serializer;
 import org.rootservices.jwt.serializer.SerializerImpl;
 
@@ -37,7 +37,7 @@ public class AppConfig {
         return new SerializerImpl(objectMapper());
     }
 
-    public TokenMarshaller tokenMarshaller() {
-        return new TokenMarshallerImpl(serializer(), Base64.getEncoder(), Base64.getDecoder());
+    public JWTSerializer jwtSerializer() {
+        return new JWTSerializerImpl(serializer(), Base64.getEncoder(), Base64.getDecoder());
     }
 }

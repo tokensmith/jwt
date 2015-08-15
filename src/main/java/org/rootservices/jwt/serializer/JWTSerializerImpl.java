@@ -1,9 +1,10 @@
-package org.rootservices.jwt.marshaller;
+package org.rootservices.jwt.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.rootservices.jwt.entity.RegisteredClaimNames;
 import org.rootservices.jwt.entity.Token;
 import org.rootservices.jwt.entity.header.Header;
+import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.Serializer;
 
 import java.nio.charset.Charset;
@@ -13,13 +14,17 @@ import java.util.Base64.Decoder;
 
 /**
  * Created by tommackenzie on 8/13/15.
+ *
+ * A Serializer that converts:
+ * - a jwt string to a intance of a Token.
+ * - a token to its jwt string.
  */
-public class TokenMarshallerImpl implements TokenMarshaller {
+public class JWTSerializerImpl implements JWTSerializer {
     private Serializer serializer;
     private Encoder encoder;
     private Decoder decoder;
 
-    public TokenMarshallerImpl(Serializer serializer, Encoder encoder, Decoder decoder) {
+    public JWTSerializerImpl(Serializer serializer, Encoder encoder, Decoder decoder) {
         this.serializer = serializer;
         this.encoder = encoder;
         this.decoder = decoder;

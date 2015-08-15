@@ -9,6 +9,11 @@ import java.io.IOException;
 
 /**
  * Created by tommackenzie on 8/12/15.
+ *
+ * A Generic serializer that converts:
+ * - a object to json
+ * - json to a object
+ *
  */
 public class SerializerImpl implements Serializer {
 
