@@ -1,4 +1,4 @@
-package org.rootservices.jwt.entity;
+package org.rootservices.jwt.entity.jwt;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

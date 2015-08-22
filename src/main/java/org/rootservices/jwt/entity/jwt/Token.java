@@ -1,7 +1,7 @@
-package org.rootservices.jwt.entity;
+package org.rootservices.jwt.entity.jwt;
 
 
-import org.rootservices.jwt.entity.header.Header;
+import org.rootservices.jwt.entity.jwt.header.Header;
 
 import java.util.Optional;
 

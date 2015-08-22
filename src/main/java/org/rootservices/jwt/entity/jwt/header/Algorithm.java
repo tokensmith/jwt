@@ -1,4 +1,4 @@
-package org.rootservices.jwt.entity.header;
+package org.rootservices.jwt.entity.jwt.header;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -8,11 +8,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Algorithm {
-    NONE ("none");
+    NONE ("none"),
+    HS256 ("HS256");
 
     private String value;
 
-    private Algorithm(String value) {
+    Algorithm(String value) {
         this.value = value;
     }
 

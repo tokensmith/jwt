@@ -5,8 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.builder.TokenBuilder;
 import org.rootservices.jwt.config.AppConfig;
-import org.rootservices.jwt.entity.Token;
-import org.rootservices.jwt.entity.header.Algorithm;
+import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.header.Algorithm;
 
 import java.util.Optional;
 

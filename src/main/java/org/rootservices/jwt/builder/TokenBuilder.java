@@ -1,9 +1,9 @@
 package org.rootservices.jwt.builder;
 
-import org.rootservices.jwt.entity.RegisteredClaimNames;
-import org.rootservices.jwt.entity.Token;
-import org.rootservices.jwt.entity.header.Header;
-import org.rootservices.jwt.entity.header.Algorithm;
+import org.rootservices.jwt.entity.jwt.RegisteredClaimNames;
+import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.header.Header;
+import org.rootservices.jwt.entity.jwt.header.Algorithm;
 
 import java.util.Optional;
 

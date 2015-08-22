@@ -1,7 +1,7 @@
 package helper.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.rootservices.jwt.entity.RegisteredClaimNames;
+import org.rootservices.jwt.entity.jwt.RegisteredClaimNames;
 
 /**
  * Created by tommackenzie on 8/11/15.

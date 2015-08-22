@@ -2,8 +2,6 @@ package org.rootservices.jwt.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.rootservices.jwt.entity.header.Header;
-import org.rootservices.jwt.serializer.Serializer;
 
 import java.io.IOException;
 
