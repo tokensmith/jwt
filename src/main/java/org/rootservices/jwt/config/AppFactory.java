@@ -24,10 +24,10 @@ import java.util.Base64;
 /**
  * Created by tommackenzie on 8/13/15.
  */
-public class AppConfig {
+public class AppFactory {
 
     public TokenBuilder tokenBuilder(){
-        return new TokenBuilder();
+        return new TokenBuilder(jwtSerializer(), signerFactory());
     }
 
     public ObjectMapper objectMapper() {
@@ -46,7 +46,7 @@ public class AppConfig {
     }
 
     public JWTSerializer jwtSerializer() {
-        return new JWTSerializerImpl(serializer(), Base64.getEncoder(), Base64.getDecoder());
+        return new JWTSerializerImpl(serializer(), Base64.getEncoder().withoutPadding(), Base64.getDecoder());
     }
 
     public KeyFactory keyFactory() {

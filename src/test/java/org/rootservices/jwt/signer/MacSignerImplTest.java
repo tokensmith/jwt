@@ -3,14 +3,13 @@ package org.rootservices.jwt.signer;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.config.AppConfig;
+import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signer.factory.SignerFactory;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Base64;
 
 import static org.junit.Assert.*;
 
@@ -22,7 +21,7 @@ public class MacSignerImplTest {
 
     @Before
     public void setUp() {
-        AppConfig config = new AppConfig();
+        AppFactory config = new AppFactory();
         signerFactory = config.signerFactory();
 
     }
@@ -41,6 +40,7 @@ public class MacSignerImplTest {
         key.setKeyType(KeyType.OCT);
         key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
 
+        // this evaluates to a header and claims that contains \r\n
         byte[] signInput = new byte[] {101, 121, 74, 48, 101, 88, 65, 105, 79, 105, 74, 75, 86, 49, 81,
                 105, 76, 65, 48, 75, 73, 67, 74, 104, 98, 71, 99, 105, 79, 105, 74,
                 73, 85, 122, 73, 49, 78, 105, 74, 57, 46, 101, 121, 74, 112, 99, 51,

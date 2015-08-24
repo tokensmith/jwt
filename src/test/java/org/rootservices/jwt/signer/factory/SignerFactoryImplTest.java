@@ -3,7 +3,7 @@ package org.rootservices.jwt.signer.factory;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.config.AppConfig;
+import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
@@ -21,7 +21,7 @@ public class SignerFactoryImplTest {
 
     @Before
     public void setUp() {
-        AppConfig appConfig = new AppConfig();
+        AppFactory appConfig = new AppFactory();
         subject = appConfig.signerFactory();
     }
 

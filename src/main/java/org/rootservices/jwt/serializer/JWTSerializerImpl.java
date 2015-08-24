@@ -63,6 +63,8 @@ public class JWTSerializerImpl implements JWTSerializer {
         token.setHeader(header);
         token.setClaimNames(claim);
 
+        // TODO: verify the signature.
+
         return token;
     }
 }
