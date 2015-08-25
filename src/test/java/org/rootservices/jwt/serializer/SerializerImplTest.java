@@ -5,9 +5,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import helper.entity.Claim;
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.config.AppConfig;
-import org.rootservices.jwt.entity.header.Header;
-import org.rootservices.jwt.entity.header.Algorithm;
+import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.entity.jwt.header.Header;
+import org.rootservices.jwt.entity.jwt.header.Algorithm;
 
 import java.util.Optional;
 
@@ -23,12 +23,12 @@ import static org.junit.Assert.assertTrue;
  */
 public class SerializerImplTest {
 
-    private AppConfig appConfig;
+    private AppFactory appConfig;
     private Serializer subject;
 
     @Before
     public void setUp() {
-        appConfig = new AppConfig();
+        appConfig = new AppFactory();
         subject = appConfig.serializer();
     }
 

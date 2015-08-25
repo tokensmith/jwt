@@ -4,9 +4,9 @@ import helper.entity.Claim;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.builder.TokenBuilder;
-import org.rootservices.jwt.config.AppConfig;
-import org.rootservices.jwt.entity.Token;
-import org.rootservices.jwt.entity.header.Algorithm;
+import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.header.Algorithm;
 
 import java.util.Optional;
 
@@ -23,13 +23,13 @@ import static org.junit.Assert.assertTrue;
  * Created by tommackenzie on 8/13/15.
  */
 public class JWTSerializerImplTest {
-    private AppConfig appConfig;
+    private AppFactory appConfig;
     private TokenBuilder tokenBuilder;
     private JWTSerializer subject;
 
     @Before
     public void setUp(){
-        appConfig = new AppConfig();
+        appConfig = new AppFactory();
         tokenBuilder = appConfig.tokenBuilder();
         subject = appConfig.jwtSerializer();
     }
@@ -37,7 +37,7 @@ public class JWTSerializerImplTest {
     @Test
     public void UnsecuredJwtToJwtStringExpectValidJWT() {
 
-        String expectedJwt = "eyJhbGciOiJub25lIn0=.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ==.";
+        String expectedJwt = "eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";
 
         Claim claim = new Claim();
         Optional<String> issuer = Optional.of("joe");

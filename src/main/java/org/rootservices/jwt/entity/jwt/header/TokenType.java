@@ -1,18 +1,18 @@
-package org.rootservices.jwt.entity.header;
+package org.rootservices.jwt.entity.jwt.header;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Created by tommackenzie on 8/9/15.
+ * Created by tommackenzie on 8/23/15.
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum Algorithm {
-    NONE ("none");
+public enum TokenType {
+    JWT ("JWT");
 
     private String value;
 
-    private Algorithm(String value) {
+    TokenType(String value) {
         this.value = value;
     }
 

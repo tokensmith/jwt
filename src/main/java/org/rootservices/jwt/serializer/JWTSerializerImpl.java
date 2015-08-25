@@ -1,11 +1,9 @@
 package org.rootservices.jwt.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.rootservices.jwt.entity.RegisteredClaimNames;
-import org.rootservices.jwt.entity.Token;
-import org.rootservices.jwt.entity.header.Header;
-import org.rootservices.jwt.serializer.JWTSerializer;
-import org.rootservices.jwt.serializer.Serializer;
+import org.rootservices.jwt.entity.jwt.RegisteredClaimNames;
+import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.header.Header;
 
 import java.nio.charset.Charset;
 
@@ -64,6 +62,8 @@ public class JWTSerializerImpl implements JWTSerializer {
         Token token = new Token();
         token.setHeader(header);
         token.setClaimNames(claim);
+
+        // TODO: verify the signature.
 
         return token;
     }
