@@ -1,6 +1,4 @@
-package org.rootservices.jwt.signer;
-
-import com.fasterxml.jackson.annotation.JsonValue;
+package org.rootservices.jwt.signature.signer;
 
 /**
  * Created by tommackenzie on 8/22/15.

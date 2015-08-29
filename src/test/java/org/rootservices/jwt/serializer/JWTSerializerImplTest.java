@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.builder.TokenBuilder;
 import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.entity.jwk.Key;
+import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwt.Token;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 
@@ -23,15 +25,19 @@ import static org.junit.Assert.assertTrue;
  * Created by tommackenzie on 8/13/15.
  */
 public class JWTSerializerImplTest {
-    private AppFactory appConfig;
+
     private TokenBuilder tokenBuilder;
     private JWTSerializer subject;
 
     @Before
     public void setUp(){
-        appConfig = new AppFactory();
-        tokenBuilder = appConfig.tokenBuilder();
-        subject = appConfig.jwtSerializer();
+        Key key = new Key();
+        key.setKeyType(KeyType.OCT);
+        key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
+
+        AppFactory appFactory = new AppFactory();
+        tokenBuilder = appFactory.tokenBuilder(Algorithm.HS256, key);
+        subject = appFactory.jwtSerializer();
     }
 
     @Test

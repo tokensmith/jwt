@@ -1,4 +1,4 @@
-package org.rootservices.jwt.signer.factory;
+package org.rootservices.jwt.signature.signer.factory;
 
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 

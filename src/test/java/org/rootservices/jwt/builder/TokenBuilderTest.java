@@ -30,8 +30,12 @@ public class TokenBuilderTest {
 
     @Before
     public void setUp(){
+        Key key = new Key();
+        key.setKeyType(KeyType.OCT);
+        key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
+
         AppFactory appFactory = new AppFactory();
-        subject = appFactory.tokenBuilder();
+        subject = appFactory.tokenBuilder(Algorithm.HS256, key);
     }
 
     @Test
@@ -91,12 +95,7 @@ public class TokenBuilderTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        // JSON Web Key
-        Key key = new Key();
-        key.setKeyType(KeyType.OCT);
-        key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
-
-        Token actual = subject.makeSignedToken(Algorithm.HS256, key, claim);
+        Token actual = subject.makeSignedToken(Algorithm.HS256, claim);
 
         assertNotNull(actual);
 

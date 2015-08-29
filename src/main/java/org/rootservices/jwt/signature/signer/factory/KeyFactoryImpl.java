@@ -1,8 +1,8 @@
-package org.rootservices.jwt.signer.factory;
+package org.rootservices.jwt.signature.signer.factory;
 
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.signer.SignAlgorithm;
+import org.rootservices.jwt.signature.signer.SignAlgorithm;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;

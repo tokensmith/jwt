@@ -1,4 +1,4 @@
-package org.rootservices.jwt.signer.factory;
+package org.rootservices.jwt.signature.signer.factory;
 
 
 import org.junit.Assert;
@@ -7,9 +7,7 @@ import org.junit.Test;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.signer.SignAlgorithm;
-import org.rootservices.jwt.signer.factory.KeyFactory;
-import org.rootservices.jwt.signer.factory.KeyFactoryImpl;
+import org.rootservices.jwt.signature.signer.SignAlgorithm;
 
 import java.util.Base64;
 

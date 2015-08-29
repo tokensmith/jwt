@@ -46,6 +46,8 @@ public class JWTSerializerImpl implements JWTSerializer {
                 encoder.encodeToString(claimsJson.getBytes(Charset.forName("UTF-8"))) +
                 ".";
 
+        // TODO: add signature
+
         return jwt;
     }
 
@@ -63,7 +65,7 @@ public class JWTSerializerImpl implements JWTSerializer {
         token.setHeader(header);
         token.setClaimNames(claim);
 
-        // TODO: verify the signature.
+        // TODO: add signature.. should it verify the token? no
 
         return token;
     }
