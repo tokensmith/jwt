@@ -23,13 +23,13 @@ import static org.junit.Assert.assertTrue;
  */
 public class SerializerImplTest {
 
-    private AppFactory appConfig;
+    private AppFactory appFactory;
     private Serializer subject;
 
     @Before
     public void setUp() {
-        appConfig = new AppFactory();
-        subject = appConfig.serializer();
+        appFactory = new AppFactory();
+        subject = appFactory.serializer();
     }
 
     @Test

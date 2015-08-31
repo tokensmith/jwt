@@ -1,8 +1,9 @@
-package org.rootservices.jwt.signer.factory;
+package org.rootservices.jwt.signature.signer.factory;
 
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.signer.Signer;
+import org.rootservices.jwt.signature.signer.Signer;
+
 
 /**
  * Created by tommackenzie on 8/22/15.

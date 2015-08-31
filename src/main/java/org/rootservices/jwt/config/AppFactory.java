@@ -12,23 +12,21 @@ import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.JWTSerializerImpl;
 import org.rootservices.jwt.serializer.Serializer;
 import org.rootservices.jwt.serializer.SerializerImpl;
-import org.rootservices.jwt.signer.MacSignerImpl;
-import org.rootservices.jwt.signer.Signer;
-import org.rootservices.jwt.signer.factory.KeyFactory;
-import org.rootservices.jwt.signer.factory.KeyFactoryImpl;
-import org.rootservices.jwt.signer.factory.SignerFactory;
-import org.rootservices.jwt.signer.factory.SignerFactoryImpl;
+import org.rootservices.jwt.signature.VerifySignature;
+import org.rootservices.jwt.signature.VerifySignatureImpl;
+import org.rootservices.jwt.signature.signer.Signer;
+import org.rootservices.jwt.signature.signer.factory.MacFactory;
+import org.rootservices.jwt.signature.signer.factory.MacFactoryImpl;
+import org.rootservices.jwt.signature.signer.factory.SignerFactory;
+import org.rootservices.jwt.signature.signer.factory.SignerFactoryImpl;
 
+import javax.crypto.Mac;
 import java.util.Base64;
 
 /**
  * Created by tommackenzie on 8/13/15.
  */
 public class AppFactory {
-
-    public TokenBuilder tokenBuilder(){
-        return new TokenBuilder(jwtSerializer(), signerFactory());
-    }
 
     public ObjectMapper objectMapper() {
         return new ObjectMapper()
@@ -45,15 +43,40 @@ public class AppFactory {
         return new SerializerImpl(objectMapper());
     }
 
-    public JWTSerializer jwtSerializer() {
-        return new JWTSerializerImpl(serializer(), Base64.getEncoder().withoutPadding(), Base64.getDecoder());
+    public Base64.Decoder decoder() {
+        return Base64.getDecoder();
     }
 
-    public KeyFactory keyFactory() {
-        return new KeyFactoryImpl();
+    public Base64.Encoder encoder() {
+        return Base64.getUrlEncoder().withoutPadding();
+    }
+
+    public JWTSerializer jwtSerializer() {
+        return new JWTSerializerImpl(
+                serializer(),
+                encoder(),
+                decoder()
+        );
+    }
+
+    public MacFactory macFactory() {
+        return new MacFactoryImpl();
     }
 
     public SignerFactory signerFactory() {
-        return new SignerFactoryImpl(keyFactory());
+        return new SignerFactoryImpl(
+                macFactory(),
+                serializer(),
+                encoder()
+        );
+    }
+
+    public VerifySignature verifySignature() {
+        return new VerifySignatureImpl(signerFactory());
+    }
+
+    public TokenBuilder tokenBuilder(Algorithm alg, Key jwk){
+        Signer signer = signerFactory().makeSigner(alg, jwk);
+        return new TokenBuilder(jwtSerializer(), signer);
     }
 }

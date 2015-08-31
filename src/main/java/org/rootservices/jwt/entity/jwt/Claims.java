@@ -11,7 +11,7 @@ import java.util.Optional;
  *
  * https://tools.ietf.org/html/rfc7519#section-4.1
  */
-public class RegisteredClaimNames {
+public class Claims {
     @JsonProperty(value="iss")
     private Optional<String> issuer = Optional.empty();
     @JsonProperty(value="sub")

@@ -1,7 +1,7 @@
 package org.rootservices.jwt.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.rootservices.jwt.entity.jwt.RegisteredClaimNames;
+import org.rootservices.jwt.entity.jwt.Claims;
 import org.rootservices.jwt.entity.jwt.Token;
 import org.rootservices.jwt.entity.jwt.header.Header;
 
@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 
 import java.util.Base64.Encoder;
 import java.util.Base64.Decoder;
+import java.util.Optional;
 
 /**
  * Created by tommackenzie on 8/13/15.
@@ -18,6 +19,7 @@ import java.util.Base64.Decoder;
  * - a token to its jwt string.
  */
 public class JWTSerializerImpl implements JWTSerializer {
+    private final int SECURE_TOKEN_LENGTH = 3;
     private Serializer serializer;
     private Encoder encoder;
     private Decoder decoder;
@@ -36,17 +38,21 @@ public class JWTSerializerImpl implements JWTSerializer {
 
         try {
             headerJson = serializer.objectToJson(token.getHeader());
-            claimsJson = serializer.objectToJson(token.getClaimNames());
+            claimsJson = serializer.objectToJson(token.getClaims());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        jwt = encoder.encodeToString(headerJson.getBytes(Charset.forName("UTF-8"))) +
-                "." +
-                encoder.encodeToString(claimsJson.getBytes(Charset.forName("UTF-8"))) +
-                ".";
+        jwt = encode(headerJson) + "." + encode(claimsJson) + ".";
+
+        if (token.getSignature().isPresent())
+            jwt+=token.getSignature().get();
 
         return jwt;
+    }
+
+    private String encode(String input) {
+        return encoder.encodeToString(input.getBytes(Charset.forName("UTF-8")));
     }
 
     @Override
@@ -57,13 +63,12 @@ public class JWTSerializerImpl implements JWTSerializer {
         byte[] claimsJson = decoder.decode(jwtParts[1]);
 
         Header header = (Header) serializer.jsonBytesToObject(headerJson, Header.class);
-        RegisteredClaimNames claim = (RegisteredClaimNames) serializer.jsonBytesToObject(claimsJson, claimClass);
+        Claims claim = (Claims) serializer.jsonBytesToObject(claimsJson, claimClass);
 
-        Token token = new Token();
-        token.setHeader(header);
-        token.setClaimNames(claim);
+        Token token = new Token(header, claim, Optional.of(jwt));
 
-        // TODO: verify the signature.
+        if (jwtParts.length == SECURE_TOKEN_LENGTH && jwtParts[SECURE_TOKEN_LENGTH-1] != null)
+            token.setSignature(Optional.of(jwtParts[SECURE_TOKEN_LENGTH-1]));
 
         return token;
     }

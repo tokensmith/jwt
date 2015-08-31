@@ -1,6 +1,5 @@
 package org.rootservices.jwt.builder;
 
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
@@ -30,8 +29,12 @@ public class TokenBuilderTest {
 
     @Before
     public void setUp(){
+        Key key = new Key();
+        key.setKeyType(KeyType.OCT);
+        key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
+
         AppFactory appFactory = new AppFactory();
-        subject = appFactory.tokenBuilder();
+        subject = appFactory.tokenBuilder(Algorithm.HS256, key);
     }
 
     @Test
@@ -50,7 +53,7 @@ public class TokenBuilderTest {
         assertNotNull(actual);
 
         // inspect claims
-        Claim actualClaim = (Claim) actual.getClaimNames();
+        Claim actualClaim = (Claim) actual.getClaims();
         assertTrue(actualClaim.isUriIsRoot());
         assertTrue(actualClaim.getIssuer().isPresent());
         assertThat(actualClaim.getIssuer().get(), is("joe"));
@@ -91,17 +94,12 @@ public class TokenBuilderTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        // JSON Web Key
-        Key key = new Key();
-        key.setKeyType(KeyType.OCT);
-        key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
-
-        Token actual = subject.makeSignedToken(Algorithm.HS256, key, claim);
+        Token actual = subject.makeSignedToken(Algorithm.HS256, claim);
 
         assertNotNull(actual);
 
         // inspect claims
-        Claim actualClaim = (Claim) actual.getClaimNames();
+        Claim actualClaim = (Claim) actual.getClaims();
         assertTrue(actualClaim.isUriIsRoot());
         assertTrue(actualClaim.getIssuer().isPresent());
         assertThat(actualClaim.getIssuer().get(), is("joe"));
