@@ -1,6 +1,5 @@
 package org.rootservices.jwt.builder;
 
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
@@ -54,7 +53,7 @@ public class TokenBuilderTest {
         assertNotNull(actual);
 
         // inspect claims
-        Claim actualClaim = (Claim) actual.getClaimNames();
+        Claim actualClaim = (Claim) actual.getClaims();
         assertTrue(actualClaim.isUriIsRoot());
         assertTrue(actualClaim.getIssuer().isPresent());
         assertThat(actualClaim.getIssuer().get(), is("joe"));
@@ -100,7 +99,7 @@ public class TokenBuilderTest {
         assertNotNull(actual);
 
         // inspect claims
-        Claim actualClaim = (Claim) actual.getClaimNames();
+        Claim actualClaim = (Claim) actual.getClaims();
         assertTrue(actualClaim.isUriIsRoot());
         assertTrue(actualClaim.getIssuer().isPresent());
         assertThat(actualClaim.getIssuer().get(), is("joe"));

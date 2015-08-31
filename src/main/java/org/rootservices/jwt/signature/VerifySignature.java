@@ -9,5 +9,4 @@ import org.rootservices.jwt.entity.jwt.header.Algorithm;
  */
 public interface VerifySignature {
     boolean run(Token token, Key jwk);
-    boolean run(byte[] signInput, Algorithm alg, String signature, Key jwk);
 }

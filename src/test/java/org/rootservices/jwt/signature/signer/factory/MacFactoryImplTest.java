@@ -16,12 +16,12 @@ import static org.junit.Assert.*;
 /**
  * Created by tommackenzie on 8/22/15.
  */
-public class KeyFactoryImplTest {
-    private KeyFactory keyFactory;
+public class MacFactoryImplTest {
+    private MacFactory macFactory;
 
     @Before
     public void setUp() {
-        keyFactory = new KeyFactoryImpl();
+        macFactory = new MacFactoryImpl();
     }
 
     @Test
@@ -30,7 +30,7 @@ public class KeyFactoryImplTest {
         key.setKeyType(KeyType.OCT);
         key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
 
-        java.security.Key actual = keyFactory.makeKey(Algorithm.HS256, key);
+        java.security.Key actual = macFactory.makeKey(Algorithm.HS256, key);
         assertNotNull(actual);
         Assert.assertEquals(actual.getAlgorithm(), SignAlgorithm.HS256.getValue());
 

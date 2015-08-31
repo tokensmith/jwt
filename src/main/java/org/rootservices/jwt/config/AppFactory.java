@@ -12,14 +12,15 @@ import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.JWTSerializerImpl;
 import org.rootservices.jwt.serializer.Serializer;
 import org.rootservices.jwt.serializer.SerializerImpl;
-import org.rootservices.jwt.signature.signer.MacSignerImpl;
+import org.rootservices.jwt.signature.VerifySignature;
+import org.rootservices.jwt.signature.VerifySignatureImpl;
 import org.rootservices.jwt.signature.signer.Signer;
-import org.rootservices.jwt.signature.signer.factory.KeyFactory;
-import org.rootservices.jwt.signature.signer.factory.KeyFactoryImpl;
+import org.rootservices.jwt.signature.signer.factory.MacFactory;
+import org.rootservices.jwt.signature.signer.factory.MacFactoryImpl;
+import org.rootservices.jwt.signature.signer.factory.SignerFactory;
+import org.rootservices.jwt.signature.signer.factory.SignerFactoryImpl;
 
 import javax.crypto.Mac;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 /**
@@ -42,49 +43,40 @@ public class AppFactory {
         return new SerializerImpl(objectMapper());
     }
 
-    public Base64.Encoder encoder() {
-        return Base64.getUrlEncoder().withoutPadding();
-    }
-
     public Base64.Decoder decoder() {
         return Base64.getDecoder();
     }
 
+    public Base64.Encoder encoder() {
+        return Base64.getUrlEncoder().withoutPadding();
+    }
+
     public JWTSerializer jwtSerializer() {
-        return new JWTSerializerImpl(serializer(), encoder(), decoder());
-    }
-
-    public KeyFactory keyFactory() {
-        return new KeyFactoryImpl();
-    }
-
-    public Mac mac(java.security.Key securityKey) {
-        Mac mac = null;
-        try {
-            mac = Mac.getInstance(securityKey.getAlgorithm());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            mac.init(securityKey);
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
-        return mac;
-    }
-
-    public Signer signer(Algorithm alg, Key jwk) {
-        java.security.Key securitykey = keyFactory().makeKey(alg, jwk);
-        Mac mac = mac(securitykey);
-        return new MacSignerImpl(
+        return new JWTSerializerImpl(
                 serializer(),
-                mac,
+                encoder(),
+                decoder()
+        );
+    }
+
+    public MacFactory macFactory() {
+        return new MacFactoryImpl();
+    }
+
+    public SignerFactory signerFactory() {
+        return new SignerFactoryImpl(
+                macFactory(),
+                serializer(),
                 encoder()
         );
     }
 
+    public VerifySignature verifySignature() {
+        return new VerifySignatureImpl(signerFactory());
+    }
+
     public TokenBuilder tokenBuilder(Algorithm alg, Key jwk){
-        return new TokenBuilder(jwtSerializer(), signer(alg, jwk));
+        Signer signer = signerFactory().makeSigner(alg, jwk);
+        return new TokenBuilder(jwtSerializer(), signer);
     }
 }

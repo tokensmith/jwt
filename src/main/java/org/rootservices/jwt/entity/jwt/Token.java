@@ -10,8 +10,22 @@ import java.util.Optional;
  */
 public class Token {
     private Header header;
-    private RegisteredClaimNames claimNames;
+    private Claims claims;
     private Optional<String> signature = Optional.empty();
+    private Optional<String> jwt = Optional.empty();
+
+    public Token() {}
+
+    public Token(Header header, Claims claims) {
+        this.header = header;
+        this.claims = claims;
+    }
+
+    public Token(Header header, Claims claims, Optional<String> jwt) {
+        this.header = header;
+        this.claims = claims;
+        this.jwt = jwt;
+    }
 
     public Header getHeader() {
         return header;
@@ -21,12 +35,12 @@ public class Token {
         this.header = header;
     }
 
-    public RegisteredClaimNames getClaimNames() {
-        return claimNames;
+    public Claims getClaims() {
+        return claims;
     }
 
-    public void setClaimNames(RegisteredClaimNames claimNames) {
-        this.claimNames = claimNames;
+    public void setClaims(Claims claims) {
+        this.claims = claims;
     }
 
     public Optional<String> getSignature() {
@@ -35,5 +49,13 @@ public class Token {
 
     public void setSignature(Optional<String> signature) {
         this.signature = signature;
+    }
+
+    public Optional<String> getJwt() {
+        return jwt;
+    }
+
+    public void setJwt(Optional<String> jwt) {
+        this.jwt = jwt;
     }
 }

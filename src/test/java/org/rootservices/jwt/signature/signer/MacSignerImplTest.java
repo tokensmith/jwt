@@ -1,13 +1,20 @@
 package org.rootservices.jwt.signature.signer;
 
 
+import helper.entity.Claim;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
+import org.rootservices.jwt.entity.jwt.Token;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.entity.jwt.header.Header;
+import org.rootservices.jwt.entity.jwt.header.TokenType;
 
+import java.util.Optional;
+
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 /**
@@ -23,33 +30,52 @@ public class MacSignerImplTest {
         key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
 
         AppFactory appFactory = new AppFactory();
-        subject = appFactory.signer(Algorithm.HS256, key);
-
+        subject = appFactory.signerFactory().makeSigner(Algorithm.HS256, key);
     }
 
     /**
      * Test scenario taken from,
      * https://tools.ietf.org/html/rfc7515#appendix-A.1
+     *
+     * There is a modification in which the sign input does not contain \r\n
+     * Which is why the signature is different than the rfc.
      */
     @Test
-    public void shouldSignCorrectly() {
+    public void shouldSignTokenCorrectly() {
 
-        String expected = "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
+        // header
+        Header header = new Header();
+        header.setAlgorithm(Algorithm.HS256);
+        header.setType(TokenType.JWT);
 
-        // this evaluates to a header and claims that contains \r\n
-        byte[] signInput = new byte[] {101, 121, 74, 48, 101, 88, 65, 105, 79, 105, 74, 75, 86, 49, 81,
-                105, 76, 65, 48, 75, 73, 67, 74, 104, 98, 71, 99, 105, 79, 105, 74,
-                73, 85, 122, 73, 49, 78, 105, 74, 57, 46, 101, 121, 74, 112, 99, 51,
-                77, 105, 79, 105, 74, 113, 98, 50, 85, 105, 76, 65, 48, 75, 73, 67,
-                74, 108, 101, 72, 65, 105, 79, 106, 69, 122, 77, 68, 65, 52, 77, 84,
-                107, 122, 79, 68, 65, 115, 68, 81, 111, 103, 73, 109, 104, 48, 100,
-                72, 65, 54, 76, 121, 57, 108, 101, 71, 70, 116, 99, 71, 120, 108, 76,
-                109, 78, 118, 98, 83, 57, 112, 99, 49, 57, 121, 98, 50, 57, 48, 73,
-                106, 112, 48, 99, 110, 86, 108, 102, 81};
+        // claim of the token.
+        Claim claim = new Claim();
+        Optional<String> issuer = Optional.of("joe");
+        Optional<Long> expirationTime = Optional.of(1300819380L);
+        claim.setUriIsRoot(true);
+        claim.setIssuer(issuer);
+        claim.setExpirationTime(expirationTime);
 
-        String actual = subject.run(signInput);
+        Token token = new Token(header, claim);
 
-        assertNotNull(actual);
-        assertEquals(actual, expected);
+        String actual = subject.run(token);
+        assertThat(actual, is("lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY"));
+    }
+
+    /**
+     * Test scenario taken from,
+     * https://tools.ietf.org/html/rfc7515#appendix-A.1
+     *
+     * There is a modification in which the sign input does not contain \r\n
+     * Which is why the signature is different than the rfc.
+     */
+    @Test
+    public void shouldSignBytesCorrectly() {
+        String input = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
+                "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ";
+
+        String actual = subject.run(input.getBytes());
+
+        assertThat(actual, is("lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY"));
     }
 }
