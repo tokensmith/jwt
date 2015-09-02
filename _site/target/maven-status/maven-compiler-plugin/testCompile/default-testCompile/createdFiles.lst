@@ -1,0 +1,7 @@
+org/rootservices/jwt/builder/TokenBuilderTest.class
+org/rootservices/jwt/serializer/SerializerImplTest.class
+org/rootservices/jwt/signature/signer/factory/SignerFactoryImplTest.class
+org/rootservices/jwt/signature/signer/factory/MacFactoryImplTest.class
+org/rootservices/jwt/signature/signer/MacSignerImplTest.class
+org/rootservices/jwt/serializer/JWTSerializerImplTest.class
+helper/entity/Claim.class
