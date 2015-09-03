@@ -1,5 +1,6 @@
+baseurl: /jwt
+
 markdown:    kramdown
-highlighter: rouge
 
 kramdown:
   default_lang: java
