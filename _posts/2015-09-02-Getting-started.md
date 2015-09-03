@@ -5,7 +5,7 @@ title: Getting started
 
 ### {{ page.title }} ###
 
-*Maven dependency*
+##### Maven dependency #####
 
 ~~~
 <dependency>
@@ -15,7 +15,7 @@ title: Getting started
 </dependency>
 ~~~
 
-*Extend the Claim class to add claims*
+##### Extend the Claim class to add claims #####
 
 ~~~
 package com.organization.project;
@@ -41,7 +41,7 @@ public class Claim extends Claims {
 }
 ~~~
 
-*Unsecured JWT example*
+##### Unsecured JWT example #####
 
 ~~~
 Key key = new Key();
@@ -61,7 +61,7 @@ String jwt = jwtSerializer.tokenToJwt(token);
 ~~~
 
 
-*Secured JWT with HS256 symmetric key example*
+##### Secured JWT with HS256 symmetric key example #####
 
 ~~~
 Key key = new Key();
@@ -80,7 +80,7 @@ JwtSerializer jwtSerializer = appFactory.jwtSerializer();
 String jwt = jwtSerializer.tokenToJwt(token);
 ~~~
 
-*JWT to an instance of a Token - verify signature*
+##### JWT to an instance of a Token - verify signature #####
 
 ~~~
 Key key = new Key();

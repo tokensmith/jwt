@@ -19,7 +19,7 @@
 <body>
 <header>
     <div class="inner">
-        <h1>JWT</h1>
+        <a href="/"><h1>JWT</h1></a>
         <a href="https://github.com/RootServices/jwt" class="button"><small>View project on</small> GitHub</a>
     </div>
 </header>
@@ -30,7 +30,7 @@
 
             <h3 id="getting-started">Getting started</h3>
 
-<p><em>Maven dependency</em></p>
+<h5 id="maven-dependency">Maven dependency</h5>
 
 <pre><code>&lt;dependency&gt;
     &lt;groupId&gt;org.rootservices&lt;/groupId&gt;
@@ -39,7 +39,7 @@
 &lt;/dependency&gt;
 </code></pre>
 
-<p><em>Extend the Claim class to add claims</em></p>
+<h5 id="extend-the-claim-class-to-add-claims">Extend the Claim class to add claims</h5>
 
 <pre><code>package com.organization.project;
 
@@ -64,7 +64,7 @@ public class Claim extends Claims {
 }
 </code></pre>
 
-<p><em>Unsecured JWT example</em></p>
+<h5 id="unsecured-jwt-example">Unsecured JWT example</h5>
 
 <pre><code>Key key = new Key();
 key.setKeyType(KeyType.OCT);
@@ -82,7 +82,7 @@ JwtSerializer jwtSerializer = appFactory.jwtSerializer();
 String jwt = jwtSerializer.tokenToJwt(token);
 </code></pre>
 
-<p><em>Secured JWT with HS256 symmetric key example</em></p>
+<h5 id="secured-jwt-with-hs256-symmetric-key-example">Secured JWT with HS256 symmetric key example</h5>
 
 <pre><code>Key key = new Key();
 key.setKeyType(KeyType.OCT);
@@ -100,7 +100,7 @@ JwtSerializer jwtSerializer = appFactory.jwtSerializer();
 String jwt = jwtSerializer.tokenToJwt(token);
 </code></pre>
 
-<p><em>JWT to an instance of a Token - verify signature</em></p>
+<h5 id="jwt-to-an-instance-of-a-token---verify-signature">JWT to an instance of a Token - verify signature</h5>
 
 <pre><code>Key key = new Key();
 key.setKeyType(KeyType.OCT);
