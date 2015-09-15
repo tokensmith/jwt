@@ -1,8 +1,8 @@
 org/rootservices/jwt/serializer/JWTSerializer.class
+org/rootservices/jwt/builder/UnsecureTokenBuilder.class
 org/rootservices/jwt/signature/signer/factory/SignerFactoryImpl.class
 org/rootservices/jwt/entity/jwk/KeyType.class
 org/rootservices/jwt/signature/signer/factory/MacFactoryImpl.class
-org/rootservices/jwt/builder/TokenBuilder.class
 org/rootservices/jwt/config/AppFactory.class
 org/rootservices/jwt/entity/jwt/header/Algorithm.class
 org/rootservices/jwt/entity/jwt/header/Header.class
@@ -16,6 +16,7 @@ org/rootservices/jwt/entity/jwt/header/TokenType.class
 org/rootservices/jwt/serializer/Serializer.class
 org/rootservices/jwt/signature/signer/MacSignerImpl.class
 org/rootservices/jwt/signature/signer/factory/SignerFactory.class
+org/rootservices/jwt/builder/SecureTokenBuilder.class
 org/rootservices/jwt/entity/jwt/Token.class
 org/rootservices/jwt/entity/jwk/Key.class
 org/rootservices/jwt/serializer/SerializerImpl.class
