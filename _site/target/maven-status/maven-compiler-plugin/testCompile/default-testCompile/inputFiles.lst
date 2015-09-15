@@ -1,7 +1,0 @@
-/Users/tommackenzie/Documents/workspace/jwt/src/test/java/org/rootservices/jwt/serializer/SerializerImplTest.java
-/Users/tommackenzie/Documents/workspace/jwt/src/test/java/helper/entity/Claim.java
-/Users/tommackenzie/Documents/workspace/jwt/src/test/java/org/rootservices/jwt/builder/TokenBuilderTest.java
-/Users/tommackenzie/Documents/workspace/jwt/src/test/java/org/rootservices/jwt/serializer/JWTSerializerImplTest.java
-/Users/tommackenzie/Documents/workspace/jwt/src/test/java/org/rootservices/jwt/signature/VerifySignatureImplTest.java
-/Users/tommackenzie/Documents/workspace/jwt/src/test/java/org/rootservices/jwt/signature/signer/factory/KeyFactoryImplTest.java
-/Users/tommackenzie/Documents/workspace/jwt/src/test/java/org/rootservices/jwt/signature/signer/MacSignerImplTest.java
