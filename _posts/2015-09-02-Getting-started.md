@@ -44,17 +44,13 @@ public class Claim extends Claims {
 ##### Unsecured JWT example #####
 
 ~~~
-Key key = new Key();
-key.setKeyType(KeyType.OCT);
-key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
-
 AppFactory appFactory = new AppFactory();
-TokenBuilder tokenBuilder = appFactory.tokenBuilder(Algorithm.HS256, key);
+UnsecureTokenBuilder unsecureTokenBuilder = appFactory.unsecureTokenBuilder();
 
 Claim claim = new Claim();
 claim.setSomeAdditionalClaim(true);
 
-Token token = tokenBuilder.makeUnsecuredToken(claim);
+Token token = unsecureTokenBuilder.build(claim);
 
 JwtSerializer jwtSerializer = appFactory.jwtSerializer();
 String jwt = jwtSerializer.tokenToJwt(token);
@@ -69,12 +65,12 @@ key.setKeyType(KeyType.OCT);
 key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
 
 AppFactory appFactory = new AppFactory();
-TokenBuilder tokenBuilder = appFactory.tokenBuilder(Algorithm.HS256, key);
+SecureTokenBuilder secureTokenBuilder = appFactory.secureTokenBuilder(Algorithm.HS256, key);
 
 Claim claim = new Claim();
 claim.setSomeAdditionalClaim(true);
 
-Token token = tokenBuilder.makeSignedToken(Algorithm.HS256, claim);
+Token token = secureTokenBuilder.build(Algorithm.HS256, claim);
 
 JwtSerializer jwtSerializer = appFactory.jwtSerializer();
 String jwt = jwtSerializer.tokenToJwt(token);

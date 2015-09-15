@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="4" failures="0" name="org.rootservices.jwt.serializer.JWTSerializerImplTest" time="0.147" errors="0" skipped="0">
+<testsuite tests="1" failures="0" name="org.rootservices.jwt.builder.UnsecureTokenBuilderTest" time="0" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="14.1.1"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -64,8 +64,5 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="org.rootservices.jwt.serializer.JWTSerializerImplTest" name="jwtToTokenExpectUnsecuredToken" time="0.102"/>
-  <testcase classname="org.rootservices.jwt.serializer.JWTSerializerImplTest" name="SecuredJwtToJwtStringExpectValidSecureJWT" time="0.013"/>
-  <testcase classname="org.rootservices.jwt.serializer.JWTSerializerImplTest" name="UnsecuredJwtToJwtStringExpectValidJWT" time="0.007"/>
-  <testcase classname="org.rootservices.jwt.serializer.JWTSerializerImplTest" name="jwtToTokenExpectSecuredToken" time="0.025"/>
+  <testcase classname="org.rootservices.jwt.builder.UnsecureTokenBuilderTest" name="makeUnsecuredTokenShouldHaveValidHeaderClaimsSignature" time="0"/>
 </testsuite>
