@@ -1,10 +1,10 @@
 package org.rootservices.jwt.serializer;
 
 import helper.entity.Claim;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.builder.TokenBuilder;
+import org.rootservices.jwt.builder.SecureTokenBuilder;
+import org.rootservices.jwt.builder.UnsecureTokenBuilder;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
@@ -28,7 +28,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class JWTSerializerImplTest {
 
-    private TokenBuilder tokenBuilder;
+    private UnsecureTokenBuilder unsecureTokenBuilder;
+    private SecureTokenBuilder secureTokenBuilder;
     private JWTSerializer subject;
 
     @Before
@@ -38,7 +39,8 @@ public class JWTSerializerImplTest {
         key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
 
         AppFactory appFactory = new AppFactory();
-        tokenBuilder = appFactory.tokenBuilder(Algorithm.HS256, key);
+        unsecureTokenBuilder = appFactory.unsecureTokenBuilder();
+        secureTokenBuilder = appFactory.secureTokenBuilder(Algorithm.HS256, key);
         subject = appFactory.jwtSerializer();
     }
 
@@ -54,7 +56,7 @@ public class JWTSerializerImplTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        Token tokenToMarshal = tokenBuilder.makeUnsecuredToken(claim);
+        Token tokenToMarshal = unsecureTokenBuilder.build(claim);
         String actual = subject.tokenToJwt(tokenToMarshal);
         assertEquals(actual, expectedJwt);
     }
@@ -74,7 +76,7 @@ public class JWTSerializerImplTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        Token tokenToMarshal = tokenBuilder.makeSignedToken(Algorithm.HS256, claim);
+        Token tokenToMarshal = secureTokenBuilder.build(Algorithm.HS256, claim);
         String actual = subject.tokenToJwt(tokenToMarshal);
 
         assertEquals(actual, expectedJwt);

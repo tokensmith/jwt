@@ -5,7 +5,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import org.rootservices.jwt.builder.TokenBuilder;
+import org.rootservices.jwt.builder.SecureTokenBuilder;
+import org.rootservices.jwt.builder.UnsecureTokenBuilder;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
@@ -20,7 +21,6 @@ import org.rootservices.jwt.signature.signer.factory.MacFactoryImpl;
 import org.rootservices.jwt.signature.signer.factory.SignerFactory;
 import org.rootservices.jwt.signature.signer.factory.SignerFactoryImpl;
 
-import javax.crypto.Mac;
 import java.util.Base64;
 
 /**
@@ -75,8 +75,12 @@ public class AppFactory {
         return new VerifySignatureImpl(signerFactory());
     }
 
-    public TokenBuilder tokenBuilder(Algorithm alg, Key jwk){
+    public UnsecureTokenBuilder unsecureTokenBuilder(){
+        return new UnsecureTokenBuilder(jwtSerializer());
+    }
+
+    public SecureTokenBuilder secureTokenBuilder(Algorithm alg, Key jwk){
         Signer signer = signerFactory().makeSigner(alg, jwk);
-        return new TokenBuilder(jwtSerializer(), signer);
+        return new SecureTokenBuilder(signer);
     }
 }
