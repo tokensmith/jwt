@@ -76,13 +76,15 @@ JwtSerializer jwtSerializer = appFactory.jwtSerializer();
 String jwt = jwtSerializer.tokenToJwt(token);
 ~~~
 
+The example above is documented in [JWS](https://tools.ietf.org/html/rfc7515#appendix-A.1)
+
+- `key` represents a [JWK](https://tools.ietf.org/html/rfc7517) (JSON Web Key). 
+- `KeyType.OCT` indicates it's a symmetric key, documented in [JWA](https://tools.ietf.org/html/rfc7518#section-6.1)
+- The key value, `AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow` is the base64 encoded value of the key value. The key value is a octect sequence. Which is documented in [JWA](https://tools.ietf.org/html/rfc7518#section-6.4.1)
+
 ##### JWT to an instance of a Token - verify signature #####
 
 ~~~
-Key key = new Key();
-key.setKeyType(KeyType.OCT);
-key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
-
 JwtSerializer jwtSerializer = appFactory.jwtSerializer();
 Token token = jwtSerializer.jwtToToken(jwt, Claim.class);
 
