@@ -88,6 +88,10 @@ The example above is documented in [JWS](https://tools.ietf.org/html/rfc7515#app
 JwtSerializer jwtSerializer = appFactory.jwtSerializer();
 Token token = jwtSerializer.jwtToToken(jwt, Claim.class);
 
+Key key = new Key();
+key.setKeyType(KeyType.OCT);
+key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
+
 VerifySignature verifySignature = appFactory.verifySignature();
 boolean isVerified = verifySignature.run(token, key);
 ~~~
