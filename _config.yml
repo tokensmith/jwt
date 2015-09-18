@@ -4,3 +4,8 @@ markdown:    kramdown
 
 kramdown:
   default_lang: java
+
+gems:
+  - jekyll-mentions
+
+latest_release: "1.0"

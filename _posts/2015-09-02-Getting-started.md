@@ -1,9 +1,13 @@
 ---
 layout: default
 title: Getting started
+date: 2015-09-02 11:59:58
 ---
 
 ### {{ page.title }} ###
+
+Basic understanding of [JWT](https://tools.ietf.org/html/rfc7519) and [JWS](https://tools.ietf.org/html/rfc7515) is 
+recommended.
 
 ##### Maven dependency #####
 
@@ -11,7 +15,7 @@ title: Getting started
 <dependency>
     <groupId>org.rootservices</groupId>
     <artifactId>jwt</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>{{ site.latest_release }}</version>
 </dependency>
 ~~~
 
