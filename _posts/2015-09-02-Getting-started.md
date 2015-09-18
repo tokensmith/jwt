@@ -1,9 +1,13 @@
 ---
 layout: default
 title: Getting started
+date: 2015-09-02 11:59:58
 ---
 
 ### {{ page.title }} ###
+
+Basic understanding of [JWT](https://tools.ietf.org/html/rfc7519) and [JWS](https://tools.ietf.org/html/rfc7515) is 
+recommended.
 
 ##### Maven dependency #####
 
@@ -11,7 +15,7 @@ title: Getting started
 <dependency>
     <groupId>org.rootservices</groupId>
     <artifactId>jwt</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>{{ site.latest_release }}</version>
 </dependency>
 ~~~
 
@@ -76,15 +80,21 @@ JwtSerializer jwtSerializer = appFactory.jwtSerializer();
 String jwt = jwtSerializer.tokenToJwt(token);
 ~~~
 
+The example above is documented in [JWS](https://tools.ietf.org/html/rfc7515#appendix-A.1)
+
+- `key` represents a [JWK](https://tools.ietf.org/html/rfc7517) (JSON Web Key). 
+- `KeyType.OCT` indicates it's a symmetric key, documented in [JWA](https://tools.ietf.org/html/rfc7518#section-6.1)
+- The key value, `AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow` is the base64 encoded value of the key value. The key value is a octect sequence. Which is documented in [JWA](https://tools.ietf.org/html/rfc7518#section-6.4.1)
+
 ##### JWT to an instance of a Token - verify signature #####
 
 ~~~
+JwtSerializer jwtSerializer = appFactory.jwtSerializer();
+Token token = jwtSerializer.jwtToToken(jwt, Claim.class);
+
 Key key = new Key();
 key.setKeyType(KeyType.OCT);
 key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
-
-JwtSerializer jwtSerializer = appFactory.jwtSerializer();
-Token token = jwtSerializer.jwtToToken(jwt, Claim.class);
 
 VerifySignature verifySignature = appFactory.verifySignature();
 boolean isVerified = verifySignature.run(token, key);
