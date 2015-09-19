@@ -17,3 +17,5 @@ target/*
 
 # gh-pages
 _site/*
+
+release.properties

@@ -4,11 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>8</version>
+    </parent>
+
     <name>JWT</name>
     <description>Java implementation of JWT</description>
     <url>http://rootservices.github.io/jwt/</url>
     <scm>
         <url>https://github.com/RootServices/jwt</url>
+        <connection>scm:git:ssh://github.com/RootServices/jwt.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/RootServices/jwt.git</developerConnection>
     </scm>
     <licenses>
         <license>
@@ -25,7 +33,7 @@
 
     <groupId>org.rootservices</groupId>
     <artifactId>jwt</artifactId>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
