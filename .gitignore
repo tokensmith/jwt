@@ -19,3 +19,4 @@ target/*
 _site/*
 
 release.properties
+pom.xml.releaseBackup
