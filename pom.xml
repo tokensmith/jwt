@@ -15,7 +15,7 @@
         <url>https://github.com/RootServices/jwt</url>
         <connection>scm:git:ssh://github.com/RootServices/jwt.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/RootServices/jwt.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>jwt-1.0</tag>
   </scm>
     <licenses>
         <license>
@@ -32,7 +32,7 @@
 
     <groupId>org.rootservices</groupId>
     <artifactId>jwt</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <properties>
