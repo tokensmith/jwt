@@ -4,6 +4,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <name>JWT</name>
+    <description>Java implementation of JWT</description>
+    <url>http://rootservices.github.io/jwt/</url>
+    <scm>
+        <url>https://github.com/RootServices/jwt</url>
+    </scm>
+    <licenses>
+        <license>
+            <url>https://github.com/RootServices/jwt/blob/development/LICENSE</url>
+            <name>MIT</name>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Tom Mackenzie</name>
+            <url>https://github.com/tmackenzie</url>
+        </developer>
+    </developers>
+
     <groupId>org.rootservices</groupId>
     <artifactId>jwt</artifactId>
     <version>1.0</version>
