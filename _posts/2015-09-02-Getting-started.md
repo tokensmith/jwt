@@ -6,8 +6,8 @@ date: 2015-09-02 11:59:58
 
 ### {{ page.title }} ###
 
-Basic understanding of [JWT](https://tools.ietf.org/html/rfc7519) and [JWS](https://tools.ietf.org/html/rfc7515) is 
-recommended.
+A basic understanding of [JSON Web Tokens](https://tools.ietf.org/html/rfc7519) (JWT) 
+and [JSON Web Signatures](https://tools.ietf.org/html/rfc7515) (JWS) is recommended.
 
 ##### Maven dependency #####
 
@@ -83,8 +83,8 @@ String jwt = jwtSerializer.tokenToJwt(token);
 The example above is documented in [JWS](https://tools.ietf.org/html/rfc7515#appendix-A.1)
 
 - `key` represents a [JWK](https://tools.ietf.org/html/rfc7517) (JSON Web Key). 
-- `KeyType.OCT` indicates it's a symmetric key, documented in [JWA](https://tools.ietf.org/html/rfc7518#section-6.1)
-- The key value, `AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow` is the base64 encoded value of the key value. The key value is a octect sequence. Which is documented in [JWA](https://tools.ietf.org/html/rfc7518#section-6.4.1)
+- `KeyType.OCT` indicates it's a symmetric key, documented in [JSON Web Algorithms](https://tools.ietf.org/html/rfc7518#section-6.1) (JWA).
+- The key value, `AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow` is the base64 encoded value of the key value. The key value is an octect sequence. Which is documented in [JWA](https://tools.ietf.org/html/rfc7518#section-6.4.1)
 
 ##### JWT to an instance of a Token - verify signature #####
 
