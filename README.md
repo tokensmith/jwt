@@ -4,7 +4,7 @@
 
 Documentation
 ------------
- Documentation is written in github pages. Which is located in the branch, [gh-pages](https://github.com/RootServices/jwt/tree/gh-pages)
+ Documentation is written in [github pages](http://rootservices.github.io/jwt/). Which is located in the branch, [gh-pages](https://github.com/RootServices/jwt/tree/gh-pages)
 
 Travis Results
 -------------------------------------
