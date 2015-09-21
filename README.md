@@ -2,13 +2,11 @@
 ---------------------------------------------------------------------------------------------------------------------
 
 
-Contributing
+Documentation
 ------------
- - All code changes must have a story or bug written in Gherkin.
- - All code must be written with the SOLID principles.
- - Unit and Integration tests are required.
+ Documentation is written in github pages. Which is located in the branch, [gh-pages](https://github.com/RootServices/jwt/tree/gh-pages)
 
-Requesting features and reporting bugs
+Travis Results
 -------------------------------------
- - Features are reported and tracked in [pivotal tracker](https://www.pivotaltracker.com/n/projects/1404556).
- - Reporting issues through github is acceptable. We will probably transfer them to PT.
+ - Latest Release (master branch) [![Build Status](https://travis-ci.org/RootServices/jwt.svg?branch=master)](https://travis-ci.org/RootServices/jwt)
+ - development branch [![Build Status](https://travis-ci.org/RootServices/jwt.svg?branch=development)](https://travis-ci.org/RootServices/jwt)
