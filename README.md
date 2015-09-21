@@ -8,5 +8,4 @@ Documentation
 
 Travis Results
 -------------------------------------
- - Latest Release (master branch) [![Build Status](https://travis-ci.org/RootServices/jwt.svg?branch=master)](https://travis-ci.org/RootServices/jwt)
  - development branch [![Build Status](https://travis-ci.org/RootServices/jwt.svg?branch=development)](https://travis-ci.org/RootServices/jwt)
