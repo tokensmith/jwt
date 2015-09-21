@@ -1,6 +1,7 @@
 org/rootservices/jwt/serializer/JWTSerializer.class
 org/rootservices/jwt/builder/UnsecureTokenBuilder.class
 org/rootservices/jwt/signature/signer/factory/SignerFactoryImpl.class
+org/rootservices/jwt/entity/jwt/Claims.class
 org/rootservices/jwt/entity/jwk/KeyType.class
 org/rootservices/jwt/signature/signer/factory/MacFactoryImpl.class
 org/rootservices/jwt/config/AppFactory.class

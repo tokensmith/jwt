@@ -1,3 +1,4 @@
+org/rootservices/jwt/signature/VerifySignatureImplTest.class
 org/rootservices/jwt/serializer/SerializerImplTest.class
 org/rootservices/jwt/signature/signer/factory/SignerFactoryImplTest.class
 org/rootservices/jwt/builder/UnsecureTokenBuilderTest.class
