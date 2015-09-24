@@ -1,11 +1,3 @@
 baseurl: /jwt
-
-markdown:    kramdown
-
-kramdown:
-  default_lang: java
-
-gems:
-  - jekyll-mentions
-
+markdown: kramdown
 latest_release: "1.0"
