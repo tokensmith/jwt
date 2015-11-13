@@ -1,6 +1,8 @@
 package helper.entity;
 
+import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
+import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.entity.jwt.Token;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
@@ -31,6 +33,24 @@ public class Factory {
         );
     }
 
+    public static SymmetricKey makeSymmetricKey() {
+        SymmetricKey key = new SymmetricKey();
+        key.setKeyType(KeyType.OCT);
+        key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
+        return key;
+    }
+
+    public static Claim makeClaim() {
+        Claim claim = new Claim();
+        Optional<String> issuer = Optional.of("joe");
+        Optional<Long> expirationTime = Optional.of(1300819380L);
+        claim.setUriIsRoot(true);
+        claim.setIssuer(issuer);
+        claim.setExpirationTime(expirationTime);
+
+        return claim;
+    }
+
     public static Token makeToken(Algorithm algorithm, Optional<TokenType> tokenType) {
 
         // header
@@ -39,12 +59,7 @@ public class Factory {
         header.setType(tokenType);
 
         // claim of the token.
-        Claim claim = new Claim();
-        Optional<String> issuer = Optional.of("joe");
-        Optional<Long> expirationTime = Optional.of(1300819380L);
-        claim.setUriIsRoot(true);
-        claim.setIssuer(issuer);
-        claim.setExpirationTime(expirationTime);
+        Claim claim = makeClaim();
 
         return new Token(header, claim);
     }

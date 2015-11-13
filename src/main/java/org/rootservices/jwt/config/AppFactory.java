@@ -63,24 +63,23 @@ public class AppFactory {
         return new MacFactoryImpl();
     }
 
+    public PrivateKeySignatureFactory privateKeySignatureFactory() {
+        return new PrivateKeySignatureFactoryImpl(Base64.getUrlDecoder());
+    }
+
     public SignerFactory signerFactory() {
         return new SignerFactoryImpl(
                 macFactory(),
+                privateKeySignatureFactory(),
                 serializer(),
                 encoder()
         );
-    }
-
-    public PrivateKeySignatureFactory privateKeySignatureFactory() {
-        return new PrivateKeySignatureFactoryImpl(Base64.getUrlDecoder());
     }
 
     public Signer RSASigner(Algorithm alg, RSAKeyPair jwk) {
         Signature signature = privateKeySignatureFactory().makeSignature(alg, jwk);
         return new RSASigner(signature, serializer(), encoder());
     }
-
-    // TODO: should there be a MacSigner method here too? like ^
 
     public VerifySignature verifySignature() {
         return new VerifySignatureImpl(signerFactory());
