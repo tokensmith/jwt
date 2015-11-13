@@ -8,6 +8,7 @@ import org.rootservices.jwt.builder.UnsecureTokenBuilder;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
+import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.Token;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
@@ -34,7 +35,7 @@ public class JWTSerializerImplTest {
 
     @Before
     public void setUp(){
-        Key key = new Key();
+        SymmetricKey key = new SymmetricKey();
         key.setKeyType(KeyType.OCT);
         key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
 
@@ -127,7 +128,8 @@ public class JWTSerializerImplTest {
         // header
         assertNotNull(actual.getHeader());
         assertThat(actual.getHeader().getAlgorithm(), is(Algorithm.HS256));
-        assertThat(actual.getHeader().getType(), is(TokenType.JWT));
+        assertThat(actual.getHeader().getType().isPresent(), is(true));
+        assertThat(actual.getHeader().getType().get(), is(TokenType.JWT));
 
         // claim
         assertNotNull(actual.getClaims());

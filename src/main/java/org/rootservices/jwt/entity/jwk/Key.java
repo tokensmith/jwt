@@ -9,7 +9,6 @@ import java.util.Base64;
  */
 public class Key {
     private KeyType keyType;
-    private String key;
 
     public KeyType getKeyType() {
         return keyType;
@@ -17,13 +16,5 @@ public class Key {
 
     public void setKeyType(KeyType keyType) {
         this.keyType = keyType;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 }

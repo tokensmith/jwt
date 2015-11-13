@@ -1,9 +1,10 @@
 package org.rootservices.jwt.signature.signer.factory;
 
 import org.rootservices.jwt.entity.jwk.Key;
+import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.Serializer;
-import org.rootservices.jwt.signature.signer.MacSignerImpl;
+import org.rootservices.jwt.signature.signer.MacSigner;
 import org.rootservices.jwt.signature.signer.Signer;
 
 
@@ -26,9 +27,9 @@ public class SignerFactoryImpl implements SignerFactory {
 
     @Override
     public Signer makeSigner(Algorithm alg, Key jwk) {
-        Mac mac = macFactory.makeMac(alg, jwk);
+        Mac mac = macFactory.makeMac(alg, (SymmetricKey) jwk);
 
-        Signer signer = new MacSignerImpl(
+        Signer signer = new MacSigner(
                 serializer,
                 mac,
                 encoder

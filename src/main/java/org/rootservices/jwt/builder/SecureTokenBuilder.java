@@ -22,7 +22,7 @@ public class SecureTokenBuilder {
     public Token build(Algorithm alg, Claims claimNames) {
         Header header = new Header();
         header.setAlgorithm(alg);
-        header.setType(TokenType.JWT);
+        header.setType(Optional.of(TokenType.JWT));
 
         Token token = new Token();
         token.setHeader(header);

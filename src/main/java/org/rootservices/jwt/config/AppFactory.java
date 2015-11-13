@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.rootservices.jwt.builder.SecureTokenBuilder;
 import org.rootservices.jwt.builder.UnsecureTokenBuilder;
 import org.rootservices.jwt.entity.jwk.Key;
+import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.JWTSerializerImpl;
@@ -15,12 +16,11 @@ import org.rootservices.jwt.serializer.Serializer;
 import org.rootservices.jwt.serializer.SerializerImpl;
 import org.rootservices.jwt.signature.VerifySignature;
 import org.rootservices.jwt.signature.VerifySignatureImpl;
+import org.rootservices.jwt.signature.signer.RSASigner;
 import org.rootservices.jwt.signature.signer.Signer;
-import org.rootservices.jwt.signature.signer.factory.MacFactory;
-import org.rootservices.jwt.signature.signer.factory.MacFactoryImpl;
-import org.rootservices.jwt.signature.signer.factory.SignerFactory;
-import org.rootservices.jwt.signature.signer.factory.SignerFactoryImpl;
+import org.rootservices.jwt.signature.signer.factory.*;
 
+import java.security.Signature;
 import java.util.Base64;
 
 /**
@@ -70,6 +70,17 @@ public class AppFactory {
                 encoder()
         );
     }
+
+    public PrivateKeySignatureFactory privateKeySignatureFactory() {
+        return new PrivateKeySignatureFactoryImpl(Base64.getUrlDecoder());
+    }
+
+    public Signer RSASigner(Algorithm alg, RSAKeyPair jwk) {
+        Signature signature = privateKeySignatureFactory().makeSignature(alg, jwk);
+        return new RSASigner(signature, serializer(), encoder());
+    }
+
+    // TODO: should there be a MacSigner method here too? like ^
 
     public VerifySignature verifySignature() {
         return new VerifySignatureImpl(signerFactory());

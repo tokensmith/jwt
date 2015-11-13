@@ -9,7 +9,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Algorithm {
     NONE ("none"),
-    HS256 ("HS256");
+    HS256 ("HS256"),
+    RS256 ("RS256");
 
     private String value;
 

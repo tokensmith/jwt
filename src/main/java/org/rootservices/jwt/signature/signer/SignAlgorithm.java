@@ -6,7 +6,8 @@ package org.rootservices.jwt.signature.signer;
  * Algorithms used for JSON Web Signature
  */
 public enum SignAlgorithm {
-    HS256 ("HmacSHA256");
+    HS256 ("HmacSHA256"),
+    RS256 ("SHA256withRSA");
 
     private String value;
 

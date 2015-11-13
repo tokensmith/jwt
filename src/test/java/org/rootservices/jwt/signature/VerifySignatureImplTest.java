@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
+import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.Token;
 import org.rootservices.jwt.serializer.JWTSerializer;
 
@@ -36,7 +37,7 @@ public class VerifySignatureImplTest {
 
         Token token = jwtSerializer.jwtToToken(jwt, Claim.class);
 
-        Key key = new Key();
+        SymmetricKey key = new SymmetricKey();
         key.setKeyType(KeyType.OCT);
         key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
 
@@ -52,7 +53,7 @@ public class VerifySignatureImplTest {
 
         Token token = jwtSerializer.jwtToToken(jwt, Claim.class);
 
-        Key key = new Key();
+        SymmetricKey key = new SymmetricKey();
         key.setKeyType(KeyType.OCT);
         key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
 
