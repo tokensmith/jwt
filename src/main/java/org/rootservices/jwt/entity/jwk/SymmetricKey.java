@@ -6,6 +6,13 @@ package org.rootservices.jwt.entity.jwk;
 public class SymmetricKey extends Key {
     private String key;
 
+    public SymmetricKey() {}
+
+    public SymmetricKey(KeyType keyType, String key) {
+        super(keyType);
+        this.key = key;
+    }
+
     public String getKey() {
         return key;
     }

@@ -3,7 +3,6 @@ package org.rootservices.jwt.signature.signer.factory;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
-import sun.security.rsa.RSAPublicKeyImpl;
 
 import java.math.BigInteger;
 import java.security.*;
@@ -27,20 +26,6 @@ public class PrivateKeySignatureFactoryImpl implements PrivateKeySignatureFactor
     private BigInteger decode(String value) {
         byte[] decodedBytes = decoder.decode(value);
         return new BigInteger(1, decodedBytes);
-    }
-
-    public PublicKey makePublicKey(RSAKeyPair jwk) {
-        BigInteger modulus = decode(jwk.getN());
-        BigInteger publicExponent = decode(jwk.getE());
-
-        PublicKey publicKey = null;
-        try {
-            publicKey = new RSAPublicKeyImpl(modulus, publicExponent);
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
-
-        return publicKey;
     }
 
     /**

@@ -16,6 +16,8 @@ import java.util.Base64;
 
 /**
  * Created by tommackenzie on 8/22/15.
+ *
+ * Creates a, Signer, which can be use to produce a signature for a JWT.
  */
 public class SignerFactoryImpl implements SignerFactory {
     private MacFactory macFactory;
@@ -41,7 +43,8 @@ public class SignerFactoryImpl implements SignerFactory {
         return signer;
     }
 
-    private Signer makeMacSigner(Algorithm algorithm, Key key) {
+    @Override
+    public Signer makeMacSigner(Algorithm algorithm, Key key) {
         Mac mac = macFactory.makeMac(algorithm, (SymmetricKey) key);
         return new MacSigner(serializer, mac, encoder);
     }

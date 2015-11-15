@@ -8,7 +8,8 @@ public class RSAPublicKey extends Key {
     private String n; // modulus
     private String e; // public exponent
 
-    public RSAPublicKey(Use use, String n, String e) {
+    public RSAPublicKey(KeyType keyType, Use use, String n, String e) {
+        super(keyType);
         this.use = use;
         this.n = n;
         this.e = e;

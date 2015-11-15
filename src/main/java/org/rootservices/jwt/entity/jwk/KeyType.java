@@ -5,7 +5,7 @@ package org.rootservices.jwt.entity.jwk;
  */
 public enum KeyType {
     OCT ("oct"),
-    RS256 ("RS256");
+    RSA ("RSA");
 
     private String value;
 

@@ -1,23 +1,22 @@
-package org.rootservices.jwt.signature;
+package org.rootservices.jwt.signature.verifier;
 
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwt.Token;
 import org.rootservices.jwt.signature.signer.Signer;
+import org.rootservices.jwt.signature.signer.factory.MacFactory;
 import org.rootservices.jwt.signature.signer.factory.SignerFactory;
-
-import java.nio.charset.Charset;
 
 
 /**
  * Created by tommackenzie on 8/26/15.
  *
  */
-public class VerifySignatureImpl implements VerifySignature {
+public class VerifyMacSignature extends VerifySignature {
 
-    private SignerFactory signerFactory;
+    private Signer macSigner;
 
-    public VerifySignatureImpl(SignerFactory signerFactory) {
-        this.signerFactory = signerFactory;
+    public VerifyMacSignature(Signer macSigner) {
+        this.macSigner = macSigner;
     }
 
     @Override
@@ -26,16 +25,10 @@ public class VerifySignatureImpl implements VerifySignature {
         String actualSignature = "";
 
         if ( token.getSignature().isPresent()) {
-            Signer signer = signerFactory.makeSigner(token.getHeader().getAlgorithm(), jwk);
             byte[] input = createSignInput(token.getJwt().get());
-            generatedSignature = signer.run(input);
+            generatedSignature = macSigner.run(input);
             actualSignature = token.getSignature().get();
         }
         return actualSignature.equals(generatedSignature);
-    }
-
-    private byte[] createSignInput(String input) {
-        String[] inputParts = input.split("\\.");
-        return (inputParts[0] + "." + inputParts[1]).getBytes(Charset.forName("UTF-8"));
     }
 }

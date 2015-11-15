@@ -22,7 +22,8 @@ public class RSAKeyPair extends Key {
     private String dq;
     private String qi;
 
-    public RSAKeyPair(Use use, String n, String e, String d, String p, String q, String dp, String dq, String qi) {
+    public RSAKeyPair(KeyType keyType, Use use, String n, String e, String d, String p, String q, String dp, String dq, String qi) {
+        super(keyType);
         this.use = use;
         this.n = n;
         this.e = e;
