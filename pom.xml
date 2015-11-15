@@ -75,7 +75,7 @@
                 <version>2.5</version>
                 <configuration>
                     <parallel>methods</parallel>
-                    <threadCount>1</threadCount>
+                    <threadCount>5</threadCount>
                 </configuration>
             </plugin>
             <plugin>
@@ -85,6 +85,9 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                    <compilerArgument>-Xlint:unchecked</compilerArgument>
                 </configuration>
             </plugin>
             <plugin>

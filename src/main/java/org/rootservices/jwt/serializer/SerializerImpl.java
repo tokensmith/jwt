@@ -27,7 +27,7 @@ public class SerializerImpl implements Serializer {
     }
 
     @Override
-    public Object jsonBytesToObject(byte[] json, Class c) {
+    public Object jsonBytesToObject(byte[] json, Class<?> c) {
         Object object = null;
         try {
             object = objectMapper.readValue(json, c);

@@ -1,16 +1,13 @@
 package org.rootservices.jwt.signature.signer.factory;
 
-import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
-import sun.security.rsa.RSAPublicKeyImpl;
 
 import java.math.BigInteger;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.Signature;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64.Decoder;
 
 /**
@@ -34,12 +31,18 @@ public class PublicKeySignatureFactoryImpl implements PublicKeySignatureFactory 
         BigInteger modulus = decode(jwk.getN());
         BigInteger publicExponent = decode(jwk.getE());
 
+        KeyFactory keyFactory = null;
+        try {
+            keyFactory = KeyFactory.getInstance("RSA");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        RSAPublicKeySpec rsaPublicKeySpec = new RSAPublicKeySpec(modulus, publicExponent);
         java.security.interfaces.RSAPublicKey publicKey = null;
         try {
-            // TODO: replace RSAPublicKeyImpl
-            // http://stackoverflow.com/questions/29622811/open-source-replacement-for-sun-security-rsa-rsapublickeyimpl
-            publicKey = new RSAPublicKeyImpl(modulus, publicExponent);
-        } catch (InvalidKeyException e) {
+            publicKey = (java.security.interfaces.RSAPublicKey) keyFactory.generatePublic(rsaPublicKeySpec);
+        } catch (InvalidKeySpecException e) {
             e.printStackTrace();
         }
 

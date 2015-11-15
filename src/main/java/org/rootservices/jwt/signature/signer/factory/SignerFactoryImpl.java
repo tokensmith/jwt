@@ -1,6 +1,7 @@
 package org.rootservices.jwt.signature.signer.factory;
 
 import org.rootservices.jwt.entity.jwk.Key;
+import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
@@ -35,9 +36,9 @@ public class SignerFactoryImpl implements SignerFactory {
     @Override
     public Signer makeSigner(Algorithm alg, Key jwk) {
         Signer signer = null;
-        if (alg == Algorithm.HS256) {
+        if (jwk.getKeyType() == KeyType.OCT) {
             signer = makeMacSigner(alg, jwk);
-        } else if ( alg == Algorithm.RS256) {
+        } else if ( jwk.getKeyType() == KeyType.RSA) {
             signer = makeRSASigner(alg, (RSAKeyPair) jwk);
         }
         return signer;
