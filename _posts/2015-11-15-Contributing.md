@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Contributing
-date: 2015-09-02 11:59:57
+date: 2015-11-15 11:59:54
 ---
 
 ### {{ page.title }} ###

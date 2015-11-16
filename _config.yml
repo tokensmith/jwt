@@ -8,4 +8,4 @@ kramdown:
 gems:
   - jekyll-mentions
 
-latest_release: "1.0"
+latest_release: "1.1"

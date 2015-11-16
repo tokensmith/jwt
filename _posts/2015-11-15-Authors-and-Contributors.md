@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Authors and Contributors
-date: 2015-09-02 11:59:55
+date: 2015-11-15 11:59:53
 ---
 
 ### {{ page.title }} ###
