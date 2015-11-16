@@ -35,7 +35,7 @@ public class VerifyRsaSignatureTest {
         VerifySignature subject = appFactory.verifyRsaSignature(Algorithm.RS256, publicKey);
 
         // verify the signature
-        boolean isVerified = subject.run(token, publicKey);
+        boolean isVerified = subject.run(token);
 
         assertThat(isVerified, is(true));
 

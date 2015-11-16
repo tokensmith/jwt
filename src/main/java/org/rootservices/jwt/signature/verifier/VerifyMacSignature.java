@@ -20,7 +20,7 @@ public class VerifyMacSignature extends VerifySignature {
     }
 
     @Override
-    public boolean run(Token token, Key jwk) {
+    public boolean run(Token token) {
         String generatedSignature = "";
         String actualSignature = "";
 

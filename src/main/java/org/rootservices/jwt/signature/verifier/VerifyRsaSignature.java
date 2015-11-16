@@ -20,7 +20,7 @@ public class VerifyRsaSignature extends VerifySignature {
     }
 
     @Override
-    public boolean run(Token token, Key jwk) {
+    public boolean run(Token token) {
 
         boolean isVerified = false;
 

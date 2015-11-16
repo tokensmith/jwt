@@ -43,7 +43,7 @@ public class VerifyMacSignatureTest {
 
         VerifySignature subject = appFactory.verifyMacSignature(Algorithm.HS256, key);
 
-        boolean actual = subject.run(token, key);
+        boolean actual = subject.run(token);
         assertTrue(actual);
     }
 
@@ -61,7 +61,7 @@ public class VerifyMacSignatureTest {
 
         VerifySignature subject = appFactory.verifyMacSignature(Algorithm.HS256, key);
 
-        boolean actual = subject.run(token, key);
+        boolean actual = subject.run(token);
         assertTrue(actual);
     }
 
