@@ -4,6 +4,8 @@ title: Unsecured JWT Example
 date: 2015-11-15 11:59:57
 ---
 
+See [Getting Started]({{ site.baseurl }}{% post_url 2015-11-15-Getting-started %}) for maven dependency and definition of `Claim`.
+
 ~~~
 AppFactory appFactory = new AppFactory();
 UnsecureTokenBuilder unsecureTokenBuilder = appFactory.unsecureTokenBuilder();

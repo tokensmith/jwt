@@ -5,6 +5,7 @@ date: 2015-11-15 11:59:56
 ---
 
 ##### Secured JWT signed with HS256 symmetric key example #####
+See [Getting Started]({{ site.baseurl }}{% post_url 2015-11-15-Getting-started %}) for maven dependency and definition of `Claim`.
 
 ~~~
 Key key = new Key();
@@ -42,5 +43,5 @@ key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4h
 VerifySignatureFactory verifySignatureFactory = appConfig.verifySignatureFactory();
 VerifySignature verifySignature = verifySignatureFactory.makeVerifySignature(Algorithm.HS256, key);
 
-boolean isVerified = verifySignature.run(token, key);
+boolean isVerified = verifySignature.run(token);
 ~~~

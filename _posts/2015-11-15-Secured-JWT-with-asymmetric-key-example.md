@@ -5,7 +5,8 @@ date: 2015-11-15 11:59:55
 ---
 
 ##### Secured JWT signed with XXX #####
-
+See [Getting Started]({{ site.baseurl }}{% post_url 2015-11-15-Getting-started %}) for maven dependency and definition of `Claim`.
+ 
 ~~~
 RSAKeyPair keyPair = new RSAKeyPair(
     KeyType.RSA,
@@ -48,5 +49,5 @@ Token token = jwtSerializer.jwtToToken(jwt, Claim.class);
 VerifySignatureFactory verifySignatureFactory = appConfig.verifySignatureFactory();
 VerifySignature verifySignature = verifySignatureFactory.makeVerifySignature(Algorithm.RS256, publicKey);
 
-boolean isVerified = verifySignature.run(token, publicKey);
+boolean isVerified = verifySignature.run(token);
 ~~~
