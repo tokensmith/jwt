@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
+import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.Token;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.Header;
@@ -20,12 +21,12 @@ import static org.junit.Assert.*;
 /**
  * Created by tommackenzie on 8/19/15.
  */
-public class MacSignerImplTest {
+public class MacSignerTest {
     Signer subject;
 
     @Before
     public void setUp() {
-        Key key = new Key();
+        SymmetricKey key = new SymmetricKey();
         key.setKeyType(KeyType.OCT);
         key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
 
@@ -46,7 +47,7 @@ public class MacSignerImplTest {
         // header
         Header header = new Header();
         header.setAlgorithm(Algorithm.HS256);
-        header.setType(TokenType.JWT);
+        header.setType(Optional.of(TokenType.JWT));
 
         // claim of the token.
         Claim claim = new Claim();

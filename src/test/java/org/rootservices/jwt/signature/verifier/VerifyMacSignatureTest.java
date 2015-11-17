@@ -1,29 +1,30 @@
-package org.rootservices.jwt.signature;
+package org.rootservices.jwt.signature.verifier;
 
 
 import helper.entity.Claim;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
-import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
+import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
+import org.rootservices.jwt.signature.verifier.VerifySignature;
 
 import static org.junit.Assert.assertTrue;
 
 /**
  * Created by tommackenzie on 8/30/15.
  */
-public class VerifySignatureImplTest {
+public class VerifyMacSignatureTest {
 
-    private VerifySignature subject;
+    private AppFactory appFactory;
     private JWTSerializer jwtSerializer;
 
     @Before
     public void setUp() {
-        AppFactory appFactory = new AppFactory();
-        subject = appFactory.verifySignature();
+        appFactory = new AppFactory();
         jwtSerializer = appFactory.jwtSerializer();
     }
 
@@ -36,11 +37,13 @@ public class VerifySignatureImplTest {
 
         Token token = jwtSerializer.jwtToToken(jwt, Claim.class);
 
-        Key key = new Key();
+        SymmetricKey key = new SymmetricKey();
         key.setKeyType(KeyType.OCT);
         key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
 
-        boolean actual = subject.run(token, key);
+        VerifySignature subject = appFactory.verifyMacSignature(Algorithm.HS256, key);
+
+        boolean actual = subject.run(token);
         assertTrue(actual);
     }
 
@@ -52,11 +55,13 @@ public class VerifySignatureImplTest {
 
         Token token = jwtSerializer.jwtToToken(jwt, Claim.class);
 
-        Key key = new Key();
+        SymmetricKey key = new SymmetricKey();
         key.setKeyType(KeyType.OCT);
         key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
 
-        boolean actual = subject.run(token, key);
+        VerifySignature subject = appFactory.verifyMacSignature(Algorithm.HS256, key);
+
+        boolean actual = subject.run(token);
         assertTrue(actual);
     }
 

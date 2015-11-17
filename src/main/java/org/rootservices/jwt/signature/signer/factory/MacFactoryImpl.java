@@ -1,6 +1,7 @@
 package org.rootservices.jwt.signature.signer.factory;
 
 import org.rootservices.jwt.entity.jwk.KeyType;
+import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 
@@ -17,7 +18,7 @@ import java.util.Base64;
 public class MacFactoryImpl implements MacFactory {
 
     @Override
-    public Key makeKey(Algorithm alg, org.rootservices.jwt.entity.jwk.Key jwk) {
+    public Key makeKey(Algorithm alg, SymmetricKey jwk) {
         Key key = null;
 
         if (alg == Algorithm.HS256 && jwk.getKeyType() == KeyType.OCT) {
@@ -28,8 +29,8 @@ public class MacFactoryImpl implements MacFactory {
     }
 
     @Override
-    public Mac makeMac(Algorithm alg, org.rootservices.jwt.entity.jwk.Key jwk) {
-        java.security.Key securityKey = makeKey(alg, jwk);
+    public Mac makeMac(Algorithm alg, SymmetricKey jwk) {
+        java.security.Key securityKey = makeKey(alg, (SymmetricKey) jwk);
         Mac mac = null;
 
         try {

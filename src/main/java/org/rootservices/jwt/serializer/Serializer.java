@@ -7,5 +7,5 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  */
 public interface Serializer {
     String objectToJson(Object object) throws JsonProcessingException;
-    Object jsonBytesToObject(byte[] json, Class c);
+    Object jsonBytesToObject(byte[] json, Class<?> c);
 }

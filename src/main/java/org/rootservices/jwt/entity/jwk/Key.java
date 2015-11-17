@@ -8,8 +8,13 @@ import java.util.Base64;
  * JSON Web Key, https://tools.ietf.org/html/rfc7517
  */
 public class Key {
-    private KeyType keyType;
-    private String key;
+    protected KeyType keyType;
+
+    public Key() {}
+
+    public Key(KeyType keyType) {
+        this.keyType = keyType;
+    }
 
     public KeyType getKeyType() {
         return keyType;
@@ -19,11 +24,5 @@ public class Key {
         this.keyType = keyType;
     }
 
-    public String getKey() {
-        return key;
-    }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
 }

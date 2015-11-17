@@ -10,4 +10,5 @@ import org.rootservices.jwt.signature.signer.Signer;
  */
 public interface SignerFactory {
     Signer makeSigner(Algorithm algorithm, Key jwk);
+    Signer makeMacSigner(Algorithm algorithm, Key key);
 }

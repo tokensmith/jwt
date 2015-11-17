@@ -2,6 +2,8 @@ package org.rootservices.jwt.entity.jwt.header;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Optional;
+
 /**
  * Created by tommackenzie on 8/9/15.
  *
@@ -9,15 +11,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Header {
     @JsonProperty(value="typ")
-    TokenType type;
+    Optional<TokenType> type;
     @JsonProperty(value="alg")
     Algorithm algorithm;
 
-    public TokenType getType() {
+    public Optional<TokenType> getType() {
         return type;
     }
 
-    public void setType(TokenType type) {
+    public void setType(Optional<TokenType> type) {
         this.type = type;
     }
 

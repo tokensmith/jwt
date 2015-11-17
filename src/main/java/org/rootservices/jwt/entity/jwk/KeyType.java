@@ -4,7 +4,8 @@ package org.rootservices.jwt.entity.jwk;
  * Created by tommackenzie on 8/19/15.
  */
 public enum KeyType {
-    OCT ("oct");
+    OCT ("oct"),
+    RSA ("RSA");
 
     private String value;
 
