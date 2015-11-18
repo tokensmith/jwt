@@ -20,9 +20,9 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by tommackenzie on 8/11/15.
  */
-public class UnsecureTokenBuilderTest {
+public class UnsecureJwtBuilderTest {
 
-    private UnsecureTokenBuilder subject;
+    private UnsecureJwtBuilder subject;
 
     @Before
     public void setUp(){
@@ -31,7 +31,7 @@ public class UnsecureTokenBuilderTest {
         key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
 
         AppFactory appFactory = new AppFactory();
-        subject = appFactory.unsecureTokenBuilder();
+        subject = appFactory.unsecureJwtBuilder();
     }
 
     @Test

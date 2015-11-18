@@ -40,8 +40,8 @@ public abstract class Signer {
         return encode(input.getBytes(Charset.forName("UTF-8")));
     }
 
-    public String run(JsonWebToken token) {
-        String signInput = makeSignInput(token.getHeader(), token.getClaims());
+    public String run(JsonWebToken jwt) {
+        String signInput = makeSignInput(jwt.getHeader(), jwt.getClaims());
         return run(signInput.getBytes());
     }
 

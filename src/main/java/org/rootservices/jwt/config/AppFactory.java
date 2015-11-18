@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import org.rootservices.jwt.builder.SecureTokenBuilder;
-import org.rootservices.jwt.builder.UnsecureTokenBuilder;
+import org.rootservices.jwt.builder.SecureJwtBuilder;
+import org.rootservices.jwt.builder.UnsecureJwtBuilder;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
@@ -108,12 +108,12 @@ public class AppFactory {
         return new VerifySignatureFactoryImpl(signerFactory(), publicKeySignatureFactory(), urlDecoder());
     }
 
-    public UnsecureTokenBuilder unsecureTokenBuilder(){
-        return new UnsecureTokenBuilder(jwtSerializer());
+    public UnsecureJwtBuilder unsecureJwtBuilder(){
+        return new UnsecureJwtBuilder();
     }
 
-    public SecureTokenBuilder secureTokenBuilder(Algorithm alg, Key jwk){
+    public SecureJwtBuilder secureJwtBuilder(Algorithm alg, Key jwk){
         Signer signer = signerFactory().makeSigner(alg, jwk);
-        return new SecureTokenBuilder(signer);
+        return new SecureJwtBuilder(signer);
     }
 }

@@ -41,14 +41,14 @@ public class MacSignerTest {
      * Which is why the signature is different than the rfc.
      */
     @Test
-    public void shouldSignTokenCorrectly() {
+    public void shouldSignJwtCorrectly() {
 
         // header
         Header header = new Header();
         header.setAlgorithm(Algorithm.HS256);
         header.setType(Optional.of(TokenType.JWT));
 
-        // claim of the token.
+        // claim of the jwt.
         Claim claim = new Claim();
         Optional<String> issuer = Optional.of("joe");
         Optional<Long> expirationTime = Optional.of(1300819380L);
@@ -56,9 +56,9 @@ public class MacSignerTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        JsonWebToken token = new JsonWebToken(header, claim);
+        JsonWebToken jwt = new JsonWebToken(header, claim);
 
-        String actual = subject.run(token);
+        String actual = subject.run(jwt);
         assertThat(actual, is("lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY"));
     }
 

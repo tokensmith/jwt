@@ -28,13 +28,13 @@ public class VerifyMacSignatureTest {
     }
 
     @Test
-    public void verifySecureTokenWithJwtShouldBeTrue() {
+    public void verifySecureJwtWithJwtShouldBeTrue() {
 
-        String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
+        String jwtAsText = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
                 "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
 
-        JsonWebToken token = jwtSerializer.jwtToToken(jwt, Claim.class);
+        JsonWebToken jwt = jwtSerializer.stringToJwt(jwtAsText, Claim.class);
 
         SymmetricKey key = new SymmetricKey();
         key.setKeyType(KeyType.OCT);
@@ -42,17 +42,17 @@ public class VerifyMacSignatureTest {
 
         VerifySignature subject = appFactory.verifyMacSignature(Algorithm.HS256, key);
 
-        boolean actual = subject.run(token);
+        boolean actual = subject.run(jwt);
         assertTrue(actual);
     }
 
     @Test
-    public void verifyUnsecureTokenWithJwtShouldBeTrue() {
+    public void verifyUnsecureJwtWithJwtShouldBeTrue() {
 
-        String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
+        String jwtAsText = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";
 
-        JsonWebToken token = jwtSerializer.jwtToToken(jwt, Claim.class);
+        JsonWebToken jwt = jwtSerializer.stringToJwt(jwtAsText, Claim.class);
 
         SymmetricKey key = new SymmetricKey();
         key.setKeyType(KeyType.OCT);
@@ -60,7 +60,7 @@ public class VerifyMacSignatureTest {
 
         VerifySignature subject = appFactory.verifyMacSignature(Algorithm.HS256, key);
 
-        boolean actual = subject.run(token);
+        boolean actual = subject.run(jwt);
         assertTrue(actual);
     }
 

@@ -12,22 +12,17 @@ import java.util.Optional;
 /**
  * Created by tommackenzie on 8/11/15.
  */
-public class UnsecureTokenBuilder {
-    private JWTSerializer jwtSerializer;
+public class UnsecureJwtBuilder {
 
-    public UnsecureTokenBuilder(JWTSerializer jwtSerializer) {
-        this.jwtSerializer = jwtSerializer;
-    }
-    
     public JsonWebToken build(Claims claimNames) {
         Header header = new Header();
         header.setAlgorithm(Algorithm.NONE);
 
-        JsonWebToken token = new JsonWebToken();
-        token.setHeader(header);
-        token.setClaims(claimNames);
-        token.setSignature(Optional.<String>empty());
+        JsonWebToken jwt = new JsonWebToken();
+        jwt.setHeader(header);
+        jwt.setClaims(claimNames);
+        jwt.setSignature(Optional.<String>empty());
 
-        return token;
+        return jwt;
     };
 }

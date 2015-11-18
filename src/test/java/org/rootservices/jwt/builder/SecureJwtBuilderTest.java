@@ -21,7 +21,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by tommackenzie on 9/15/15.
  */
-public class SecureTokenBuilderTest {
+public class SecureJwtBuilderTest {
 
     private AppFactory appFactory;
 
@@ -44,7 +44,7 @@ public class SecureTokenBuilderTest {
 
         // prepare subject of the test.
         SymmetricKey key = Factory.makeSymmetricKey();
-        SecureTokenBuilder subject = appFactory.secureTokenBuilder(Algorithm.HS256, key);
+        SecureJwtBuilder subject = appFactory.secureJwtBuilder(Algorithm.HS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
@@ -94,7 +94,7 @@ public class SecureTokenBuilderTest {
 
         // prepare subject of the test.
         RSAKeyPair key = Factory.makeRSAKeyPair();
-        SecureTokenBuilder subject = appFactory.secureTokenBuilder(Algorithm.RS256, key);
+        SecureJwtBuilder subject = appFactory.secureJwtBuilder(Algorithm.RS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
