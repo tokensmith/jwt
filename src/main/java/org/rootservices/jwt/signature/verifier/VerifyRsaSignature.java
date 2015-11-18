@@ -1,7 +1,6 @@
 package org.rootservices.jwt.signature.verifier;
 
-import org.rootservices.jwt.entity.jwk.Key;
-import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 
 import java.security.Signature;
 import java.security.SignatureException;
@@ -20,7 +19,7 @@ public class VerifyRsaSignature extends VerifySignature {
     }
 
     @Override
-    public boolean run(Token token) {
+    public boolean run(JsonWebToken token) {
 
         boolean isVerified = false;
 

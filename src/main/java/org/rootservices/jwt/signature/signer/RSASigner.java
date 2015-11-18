@@ -1,6 +1,5 @@
 package org.rootservices.jwt.signature.signer;
 
-import org.rootservices.jwt.entity.jwt.Token;
 import org.rootservices.jwt.serializer.Serializer;
 
 import java.security.Signature;

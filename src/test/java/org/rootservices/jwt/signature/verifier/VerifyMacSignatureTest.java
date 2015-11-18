@@ -7,10 +7,9 @@ import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
-import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
-import org.rootservices.jwt.signature.verifier.VerifySignature;
 
 import static org.junit.Assert.assertTrue;
 
@@ -35,7 +34,7 @@ public class VerifyMacSignatureTest {
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
                 "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
 
-        Token token = jwtSerializer.jwtToToken(jwt, Claim.class);
+        JsonWebToken token = jwtSerializer.jwtToToken(jwt, Claim.class);
 
         SymmetricKey key = new SymmetricKey();
         key.setKeyType(KeyType.OCT);
@@ -53,7 +52,7 @@ public class VerifyMacSignatureTest {
         String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";
 
-        Token token = jwtSerializer.jwtToToken(jwt, Claim.class);
+        JsonWebToken token = jwtSerializer.jwtToToken(jwt, Claim.class);
 
         SymmetricKey key = new SymmetricKey();
         key.setKeyType(KeyType.OCT);

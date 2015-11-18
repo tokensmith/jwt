@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
-import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 
 import helper.entity.Claim;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
@@ -45,7 +45,7 @@ public class UnsecureTokenBuilderTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        Token actual = subject.build(claim);
+        JsonWebToken actual = subject.build(claim);
 
         assertThat(actual, is(notNullValue()));
 

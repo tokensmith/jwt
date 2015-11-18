@@ -2,7 +2,7 @@ package org.rootservices.jwt.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.rootservices.jwt.entity.jwt.Claims;
-import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Header;
 
 import java.nio.charset.Charset;
@@ -31,7 +31,7 @@ public class JWTSerializerImpl implements JWTSerializer {
     }
 
     @Override
-    public String tokenToJwt(Token token) {
+    public String tokenToJwt(JsonWebToken token) {
         String jwt = "";
         String headerJson = "";
         String claimsJson = "";
@@ -56,7 +56,7 @@ public class JWTSerializerImpl implements JWTSerializer {
     }
 
     @Override
-    public Token jwtToToken(String jwt, Class claimClass) {
+    public JsonWebToken jwtToToken(String jwt, Class claimClass) {
         String[] jwtParts = jwt.split("\\.");
 
         byte[] headerJson = decoder.decode(jwtParts[0]);
@@ -65,7 +65,7 @@ public class JWTSerializerImpl implements JWTSerializer {
         Header header = (Header) serializer.jsonBytesToObject(headerJson, Header.class);
         Claims claim = (Claims) serializer.jsonBytesToObject(claimsJson, claimClass);
 
-        Token token = new Token(header, claim, Optional.of(jwt));
+        JsonWebToken token = new JsonWebToken(header, claim, Optional.of(jwt));
 
         if (jwtParts.length == SECURE_TOKEN_LENGTH && jwtParts[SECURE_TOKEN_LENGTH-1] != null)
             token.setSignature(Optional.of(jwtParts[SECURE_TOKEN_LENGTH-1]));

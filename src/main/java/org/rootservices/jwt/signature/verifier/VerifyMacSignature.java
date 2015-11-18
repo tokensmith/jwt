@@ -1,10 +1,7 @@
 package org.rootservices.jwt.signature.verifier;
 
-import org.rootservices.jwt.entity.jwk.Key;
-import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.signature.signer.Signer;
-import org.rootservices.jwt.signature.signer.factory.MacFactory;
-import org.rootservices.jwt.signature.signer.factory.SignerFactory;
 
 
 /**
@@ -20,7 +17,7 @@ public class VerifyMacSignature extends VerifySignature {
     }
 
     @Override
-    public boolean run(Token token) {
+    public boolean run(JsonWebToken token) {
         String generatedSignature = "";
         String actualSignature = "";
 

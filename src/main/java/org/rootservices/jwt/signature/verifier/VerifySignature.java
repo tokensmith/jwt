@@ -1,8 +1,6 @@
 package org.rootservices.jwt.signature.verifier;
 
-import org.rootservices.jwt.entity.jwk.Key;
-import org.rootservices.jwt.entity.jwt.Token;
-import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 
 import java.nio.charset.Charset;
 
@@ -16,5 +14,5 @@ public abstract class VerifySignature {
         return (inputParts[0] + "." + inputParts[1]).getBytes(Charset.forName("UTF-8"));
 
     }
-    abstract boolean run(Token token);
+    abstract boolean run(JsonWebToken token);
 }

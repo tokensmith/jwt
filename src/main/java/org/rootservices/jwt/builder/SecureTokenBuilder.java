@@ -1,7 +1,7 @@
 package org.rootservices.jwt.builder;
 
 import org.rootservices.jwt.entity.jwt.Claims;
-import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
@@ -19,12 +19,12 @@ public class SecureTokenBuilder {
         this.signer = signer;
     }
 
-    public Token build(Algorithm alg, Claims claimNames) {
+    public JsonWebToken build(Algorithm alg, Claims claimNames) {
         Header header = new Header();
         header.setAlgorithm(alg);
         header.setType(Optional.of(TokenType.JWT));
 
-        Token token = new Token();
+        JsonWebToken token = new JsonWebToken();
         token.setHeader(header);
         token.setClaims(claimNames);
 

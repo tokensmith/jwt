@@ -1,12 +1,10 @@
 package org.rootservices.jwt.builder;
 
 import org.rootservices.jwt.entity.jwt.Claims;
-import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.entity.jwt.header.TokenType;
 import org.rootservices.jwt.serializer.JWTSerializer;
-import org.rootservices.jwt.signature.signer.Signer;
 
 
 import java.util.Optional;
@@ -21,11 +19,11 @@ public class UnsecureTokenBuilder {
         this.jwtSerializer = jwtSerializer;
     }
     
-    public Token build(Claims claimNames) {
+    public JsonWebToken build(Claims claimNames) {
         Header header = new Header();
         header.setAlgorithm(Algorithm.NONE);
 
-        Token token = new Token();
+        JsonWebToken token = new JsonWebToken();
         token.setHeader(header);
         token.setClaims(claimNames);
         token.setSignature(Optional.<String>empty());

@@ -6,10 +6,9 @@ import org.junit.Test;
 import org.rootservices.jwt.builder.SecureTokenBuilder;
 import org.rootservices.jwt.builder.UnsecureTokenBuilder;
 import org.rootservices.jwt.config.AppFactory;
-import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
-import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
 
@@ -55,7 +54,7 @@ public class JWTSerializerImplTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        Token tokenToMarshal = unsecureTokenBuilder.build(claim);
+        JsonWebToken tokenToMarshal = unsecureTokenBuilder.build(claim);
         String actual = subject.tokenToJwt(tokenToMarshal);
         assertThat(actual, is(expectedJwt));
     }
@@ -75,7 +74,7 @@ public class JWTSerializerImplTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        Token tokenToMarshal = secureTokenBuilder.build(Algorithm.HS256, claim);
+        JsonWebToken tokenToMarshal = secureTokenBuilder.build(Algorithm.HS256, claim);
         String actual = subject.tokenToJwt(tokenToMarshal);
 
         assertThat(actual, is(expectedJwt));
@@ -87,7 +86,7 @@ public class JWTSerializerImplTest {
         String jwt = "eyJhbGciOiJub25lIn0=." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ==.";
 
-        Token actual = subject.jwtToToken(jwt, Claim.class);
+        JsonWebToken actual = subject.jwtToToken(jwt, Claim.class);
         assertThat(actual, is(notNullValue()));
 
         // header
@@ -120,7 +119,7 @@ public class JWTSerializerImplTest {
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
                 signature;
 
-        Token actual = subject.jwtToToken(jwt, Claim.class);
+        JsonWebToken actual = subject.jwtToToken(jwt, Claim.class);
         assertThat(actual, is(notNullValue()));
 
         // header
