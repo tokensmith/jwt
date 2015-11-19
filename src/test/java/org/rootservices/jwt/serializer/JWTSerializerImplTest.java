@@ -3,13 +3,12 @@ package org.rootservices.jwt.serializer;
 import helper.entity.Claim;
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.builder.SecureTokenBuilder;
-import org.rootservices.jwt.builder.UnsecureTokenBuilder;
+import org.rootservices.jwt.builder.SecureJwtBuilder;
+import org.rootservices.jwt.builder.UnsecureJwtBuilder;
 import org.rootservices.jwt.config.AppFactory;
-import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
-import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
 
@@ -27,8 +26,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class JWTSerializerImplTest {
 
-    private UnsecureTokenBuilder unsecureTokenBuilder;
-    private SecureTokenBuilder secureTokenBuilder;
+    private UnsecureJwtBuilder unsecureTokenBuilder;
+    private SecureJwtBuilder secureJwtBuilder;
     private JWTSerializer subject;
 
     @Before
@@ -38,13 +37,13 @@ public class JWTSerializerImplTest {
         key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
 
         AppFactory appFactory = new AppFactory();
-        unsecureTokenBuilder = appFactory.unsecureTokenBuilder();
-        secureTokenBuilder = appFactory.secureTokenBuilder(Algorithm.HS256, key);
+        unsecureTokenBuilder = appFactory.unsecureJwtBuilder();
+        secureJwtBuilder = appFactory.secureJwtBuilder(Algorithm.HS256, key);
         subject = appFactory.jwtSerializer();
     }
 
     @Test
-    public void UnsecuredJwtToJwtStringExpectValidJWT() {
+    public void UnsecuredJwtToStringShouldBeValidJWT() {
 
         String expectedJwt = "eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";
 
@@ -55,13 +54,13 @@ public class JWTSerializerImplTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        Token tokenToMarshal = unsecureTokenBuilder.build(claim);
-        String actual = subject.tokenToJwt(tokenToMarshal);
+        JsonWebToken tokenToMarshal = unsecureTokenBuilder.build(claim);
+        String actual = subject.jwtToString(tokenToMarshal);
         assertThat(actual, is(expectedJwt));
     }
 
     @Test
-    public void SecuredJwtToJwtStringExpectValidSecureJWT() {
+    public void SecuredJwtToStringShouldBeValid() {
         String signature = "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
 
         String expectedJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
@@ -75,19 +74,19 @@ public class JWTSerializerImplTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        Token tokenToMarshal = secureTokenBuilder.build(Algorithm.HS256, claim);
-        String actual = subject.tokenToJwt(tokenToMarshal);
+        JsonWebToken tokenToMarshal = secureJwtBuilder.build(Algorithm.HS256, claim);
+        String actual = subject.jwtToString(tokenToMarshal);
 
         assertThat(actual, is(expectedJwt));
     }
 
     @Test
-    public void jwtToTokenExpectUnsecuredToken() {
+    public void stringToJwtShouldBeUnsecuredJwt() {
 
-        String jwt = "eyJhbGciOiJub25lIn0=." +
+        String jwtAsText = "eyJhbGciOiJub25lIn0=." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ==.";
 
-        Token actual = subject.jwtToToken(jwt, Claim.class);
+        JsonWebToken actual = subject.stringToJwt(jwtAsText, Claim.class);
         assertThat(actual, is(notNullValue()));
 
         // header
@@ -112,15 +111,15 @@ public class JWTSerializerImplTest {
     }
 
     @Test
-    public void jwtToTokenExpectSecuredToken() {
+    public void stringToJwtShouldBeSecuredJwt() {
 
         String signature = "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
 
-        String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
+        String jwtAsText = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
                 signature;
 
-        Token actual = subject.jwtToToken(jwt, Claim.class);
+        JsonWebToken actual = subject.stringToJwt(jwtAsText, Claim.class);
         assertThat(actual, is(notNullValue()));
 
         // header
@@ -147,7 +146,7 @@ public class JWTSerializerImplTest {
         assertThat(actual.getSignature().get(), is(signature));
 
         assertThat(actual.getJwt().isPresent(), is(true));
-        assertThat(actual.getJwt().get(), is(jwt));
+        assertThat(actual.getJwt().get(), is(jwtAsText));
     }
 
 

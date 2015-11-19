@@ -2,7 +2,7 @@ package org.rootservices.jwt.signature.signer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.rootservices.jwt.entity.jwt.Claims;
-import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.serializer.Serializer;
 
@@ -40,8 +40,8 @@ public abstract class Signer {
         return encode(input.getBytes(Charset.forName("UTF-8")));
     }
 
-    public String run(Token token) {
-        String signInput = makeSignInput(token.getHeader(), token.getClaims());
+    public String run(JsonWebToken jwt) {
+        String signInput = makeSignInput(jwt.getHeader(), jwt.getClaims());
         return run(signInput.getBytes());
     }
 

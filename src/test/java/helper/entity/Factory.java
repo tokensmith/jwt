@@ -1,7 +1,7 @@
 package helper.entity;
 
 import org.rootservices.jwt.entity.jwk.*;
-import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
@@ -58,7 +58,7 @@ public class Factory {
         return claim;
     }
 
-    public static Token makeToken(Algorithm algorithm, Optional<TokenType> tokenType) {
+    public static JsonWebToken makeToken(Algorithm algorithm, Optional<TokenType> tokenType) {
 
         // header
         Header header = new Header();
@@ -68,6 +68,6 @@ public class Factory {
         // claim of the token.
         Claim claim = makeClaim();
 
-        return new Token(header, claim);
+        return new JsonWebToken(header, claim);
     }
 }

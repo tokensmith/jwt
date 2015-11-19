@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
-import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 
 
@@ -71,7 +71,7 @@ public class RSASignerTest {
         RSAKeyPair jwk = Factory.makeRSAKeyPair();
         Signer subject =  appFactory.RSASigner(Algorithm.RS256, jwk);
 
-        Token jwt = Factory.makeToken(Algorithm.RS256, Optional.empty());
+        JsonWebToken jwt = Factory.makeToken(Algorithm.RS256, Optional.empty());
 
         String actual = subject.run(jwt);
 

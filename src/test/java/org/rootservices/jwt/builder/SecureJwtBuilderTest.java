@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
-import org.rootservices.jwt.entity.jwt.Token;
+import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
 
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by tommackenzie on 9/15/15.
  */
-public class SecureTokenBuilderTest {
+public class SecureJwtBuilderTest {
 
     private AppFactory appFactory;
 
@@ -44,12 +44,12 @@ public class SecureTokenBuilderTest {
 
         // prepare subject of the test.
         SymmetricKey key = Factory.makeSymmetricKey();
-        SecureTokenBuilder subject = appFactory.secureTokenBuilder(Algorithm.HS256, key);
+        SecureJwtBuilder subject = appFactory.secureJwtBuilder(Algorithm.HS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        Token actual = subject.build(Algorithm.HS256, claim);
+        JsonWebToken actual = subject.build(Algorithm.HS256, claim);
 
         assertThat(actual, is(notNullValue()));
 
@@ -94,12 +94,12 @@ public class SecureTokenBuilderTest {
 
         // prepare subject of the test.
         RSAKeyPair key = Factory.makeRSAKeyPair();
-        SecureTokenBuilder subject = appFactory.secureTokenBuilder(Algorithm.RS256, key);
+        SecureJwtBuilder subject = appFactory.secureJwtBuilder(Algorithm.RS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        Token actual = subject.build(Algorithm.RS256, claim);
+        JsonWebToken actual = subject.build(Algorithm.RS256, claim);
 
         assertThat(actual, is(notNullValue()));
 
