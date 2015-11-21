@@ -25,9 +25,11 @@ public class MacSignerTest {
 
     @Before
     public void setUp() {
-        SymmetricKey key = new SymmetricKey();
-        key.setKeyType(KeyType.OCT);
-        key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
+        SymmetricKey key = new SymmetricKey(
+                Optional.<String>empty(),
+                KeyType.OCT,
+                "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
+        );
 
         AppFactory appFactory = new AppFactory();
         subject = appFactory.signerFactory().makeSigner(Algorithm.HS256, key);

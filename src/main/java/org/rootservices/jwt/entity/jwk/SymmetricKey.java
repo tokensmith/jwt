@@ -1,15 +1,15 @@
 package org.rootservices.jwt.entity.jwk;
 
+import java.util.Optional;
+
 /**
  * Created by tommackenzie on 11/4/15.
  */
 public class SymmetricKey extends Key {
     private String key;
 
-    public SymmetricKey() {}
-
-    public SymmetricKey(KeyType keyType, String key) {
-        super(keyType);
+    public SymmetricKey(Optional<String> keyId, KeyType keyType, String key) {
+        super(keyId, keyType);
         this.key = key;
     }
 

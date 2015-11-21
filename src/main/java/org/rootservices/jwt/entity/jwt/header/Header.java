@@ -14,6 +14,8 @@ public class Header {
     Optional<TokenType> type;
     @JsonProperty(value="alg")
     Algorithm algorithm;
+    @JsonProperty(value="kid")
+    private Optional<String> keyId = Optional.empty();
 
     public Optional<TokenType> getType() {
         return type;
@@ -31,4 +33,11 @@ public class Header {
         this.algorithm = algorithm;
     }
 
+    public Optional<String> getKeyId() {
+        return keyId;
+    }
+
+    public void setKeyId(Optional<String> keyId) {
+        this.keyId = keyId;
+    }
 }

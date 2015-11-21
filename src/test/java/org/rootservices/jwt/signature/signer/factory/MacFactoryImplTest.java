@@ -11,6 +11,7 @@ import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 
 import java.util.Base64;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -27,9 +28,11 @@ public class MacFactoryImplTest {
 
     @Test
     public void makeKeyShouldBeHS256WithSecretKey() {
-        SymmetricKey key = new SymmetricKey();
-        key.setKeyType(KeyType.OCT);
-        key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
+        SymmetricKey key = new SymmetricKey(
+                Optional.<String>empty(),
+                KeyType.OCT,
+                "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
+        );
 
         java.security.Key actual = macFactory.makeKey(Algorithm.HS256, key);
         assertNotNull(actual);

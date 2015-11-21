@@ -20,9 +20,14 @@ public class SecureJwtBuilder {
     }
 
     public JsonWebToken build(Algorithm alg, Claims claimNames) {
+        return build(alg, claimNames, Optional.<String>empty());
+    }
+
+    public JsonWebToken build(Algorithm alg, Claims claimNames, Optional<String> keyId) {
         Header header = new Header();
         header.setAlgorithm(alg);
         header.setType(Optional.of(TokenType.JWT));
+        header.setKeyId(keyId);
 
         JsonWebToken jwt = new JsonWebToken();
         jwt.setHeader(header);
@@ -33,4 +38,5 @@ public class SecureJwtBuilder {
 
         return jwt;
     }
+
 }

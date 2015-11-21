@@ -19,7 +19,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+
 
 /**
  * Created by tommackenzie on 8/13/15.
@@ -32,9 +32,11 @@ public class JWTSerializerImplTest {
 
     @Before
     public void setUp(){
-        SymmetricKey key = new SymmetricKey();
-        key.setKeyType(KeyType.OCT);
-        key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
+        SymmetricKey key = new SymmetricKey(
+                Optional.<String>empty(),
+                KeyType.OCT,
+                "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
+        );
 
         AppFactory appFactory = new AppFactory();
         unsecureTokenBuilder = appFactory.unsecureJwtBuilder();
@@ -81,6 +83,27 @@ public class JWTSerializerImplTest {
     }
 
     @Test
+    public void SecuredJwtWithKeyIdToStringShouldBeValid() {
+        String signature = "YiFm03WWrDAbFn7omROmU2GHACkaGI30xdbWFzyoCNQ";
+
+        String expectedJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6InRlc3Qta2V5LWlkIn0." +
+                "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
+                signature;
+
+        Claim claim = new Claim();
+        Optional<String> issuer = Optional.of("joe");
+        Optional<Long> expirationTime = Optional.of(1300819380L);
+        claim.setUriIsRoot(true);
+        claim.setIssuer(issuer);
+        claim.setExpirationTime(expirationTime);
+
+        JsonWebToken tokenToMarshal = secureJwtBuilder.build(Algorithm.HS256, claim, Optional.of("test-key-id"));
+        String actual = subject.jwtToString(tokenToMarshal);
+
+        assertThat(actual, is(expectedJwt));
+    }
+
+    @Test
     public void stringToJwtShouldBeUnsecuredJwt() {
 
         String jwtAsText = "eyJhbGciOiJub25lIn0=." +
@@ -92,6 +115,7 @@ public class JWTSerializerImplTest {
         // header
         assertThat(actual.getHeader(), is(notNullValue()));
         assertThat(actual.getHeader().getAlgorithm(), is(Algorithm.NONE));
+        assertThat(actual.getHeader().getKeyId().isPresent(), is(false));
 
         // claim
         assertThat(actual.getClaims(), is(notNullValue()));
@@ -127,6 +151,48 @@ public class JWTSerializerImplTest {
         assertThat(actual.getHeader().getAlgorithm(), is(Algorithm.HS256));
         assertThat(actual.getHeader().getType().isPresent(), is(true));
         assertThat(actual.getHeader().getType().get(), is(TokenType.JWT));
+        assertThat(actual.getHeader().getKeyId().isPresent(), is(false));
+
+        // claim
+        assertThat(actual.getClaims(), is(notNullValue()));
+        assertThat(actual.getClaims(), instanceOf(Claim.class));
+        assertThat(((Claim) actual.getClaims()).isUriIsRoot(), is(true));
+        assertThat(actual.getClaims().getIssuer().isPresent(), is(true));
+        assertThat(actual.getClaims().getIssuer().get(), is("joe"));
+        assertThat(actual.getClaims().getExpirationTime().isPresent(), is(true));
+        assertThat(actual.getClaims().getExpirationTime().get(), is(1300819380L));
+        assertThat(actual.getClaims().getSubject().isPresent(), is(false));
+        assertThat(actual.getClaims().getAudience(), is(nullValue()));
+        assertThat(actual.getClaims().getNotBefore().isPresent(), is(false));
+        assertThat(actual.getClaims().getIssuedAt().isPresent(), is(false));
+        assertThat(actual.getClaims().getJwtId().isPresent(), is(false));
+
+        assertThat(actual.getSignature().isPresent(), is(true));
+        assertThat(actual.getSignature().get(), is(signature));
+
+        assertThat(actual.getJwt().isPresent(), is(true));
+        assertThat(actual.getJwt().get(), is(jwtAsText));
+    }
+
+    @Test
+    public void stringToJwtShouldBeSecuredJwtWithKeyId() {
+
+        String signature = "YiFm03WWrDAbFn7omROmU2GHACkaGI30xdbWFzyoCNQ";
+
+        String jwtAsText = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6InRlc3Qta2V5LWlkIn0." +
+                "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
+                signature;
+
+        JsonWebToken actual = subject.stringToJwt(jwtAsText, Claim.class);
+        assertThat(actual, is(notNullValue()));
+
+        // header
+        assertThat(actual.getHeader(), is(notNullValue()));
+        assertThat(actual.getHeader().getAlgorithm(), is(Algorithm.HS256));
+        assertThat(actual.getHeader().getType().isPresent(), is(true));
+        assertThat(actual.getHeader().getType().get(), is(TokenType.JWT));
+        assertThat(actual.getHeader().getKeyId().isPresent(), is(true));
+        assertThat(actual.getHeader().getKeyId().get(), is("test-key-id"));
 
         // claim
         assertThat(actual.getClaims(), is(notNullValue()));
