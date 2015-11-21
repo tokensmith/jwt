@@ -1,5 +1,7 @@
 package org.rootservices.jwt.entity.jwk;
 
+import java.util.Optional;
+
 /**
  * Created by tommackenzie on 11/4/15.
  *
@@ -22,8 +24,8 @@ public class RSAKeyPair extends Key {
     private String dq;
     private String qi;
 
-    public RSAKeyPair(KeyType keyType, Use use, String n, String e, String d, String p, String q, String dp, String dq, String qi) {
-        super(keyType);
+    public RSAKeyPair(Optional<String> keyId, KeyType keyType, Use use, String n, String e, String d, String p, String q, String dp, String dq, String qi) {
+        super(keyId, keyType);
         this.use = use;
         this.n = n;
         this.e = e;

@@ -11,6 +11,8 @@ import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -36,9 +38,11 @@ public class VerifyMacSignatureTest {
 
         JsonWebToken jwt = jwtSerializer.stringToJwt(jwtAsText, Claim.class);
 
-        SymmetricKey key = new SymmetricKey();
-        key.setKeyType(KeyType.OCT);
-        key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
+        SymmetricKey key = new SymmetricKey(
+                Optional.<String>empty(),
+                KeyType.OCT,
+                "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
+        );
 
         VerifySignature subject = appFactory.verifyMacSignature(Algorithm.HS256, key);
 
@@ -54,9 +58,11 @@ public class VerifyMacSignatureTest {
 
         JsonWebToken jwt = jwtSerializer.stringToJwt(jwtAsText, Claim.class);
 
-        SymmetricKey key = new SymmetricKey();
-        key.setKeyType(KeyType.OCT);
-        key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
+        SymmetricKey key = new SymmetricKey(
+                Optional.<String>empty(),
+                KeyType.OCT,
+                "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
+        );
 
         VerifySignature subject = appFactory.verifyMacSignature(Algorithm.HS256, key);
 

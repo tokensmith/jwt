@@ -1,5 +1,7 @@
 package org.rootservices.jwt.entity.jwk;
 
+import java.util.Optional;
+
 /**
  * Created by tommackenzie on 11/6/15.
  */
@@ -8,8 +10,8 @@ public class RSAPublicKey extends Key {
     private String n; // modulus
     private String e; // public exponent
 
-    public RSAPublicKey(KeyType keyType, Use use, String n, String e) {
-        super(keyType);
+    public RSAPublicKey(Optional<String> keyId, KeyType keyType, Use use, String n, String e) {
+        super(keyId, keyType);
         this.use = use;
         this.n = n;
         this.e = e;

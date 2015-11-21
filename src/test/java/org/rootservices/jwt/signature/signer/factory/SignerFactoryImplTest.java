@@ -12,6 +12,8 @@ import org.rootservices.jwt.signature.signer.MacSigner;
 import org.rootservices.jwt.signature.signer.RSASigner;
 import org.rootservices.jwt.signature.signer.Signer;
 
+import java.util.Optional;
+
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.*;
 
@@ -29,9 +31,11 @@ public class SignerFactoryImplTest {
 
     @Test
     public void shouldCreateMacSigner() {
-        SymmetricKey key = new SymmetricKey();
-        key.setKeyType(KeyType.OCT);
-        key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
+        SymmetricKey key = new SymmetricKey(
+                Optional.<String>empty(),
+                KeyType.OCT,
+                "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
+        );
 
         Signer actual = subject.makeSigner(Algorithm.HS256, key);
         assertThat(actual, instanceOf(MacSigner.class));

@@ -11,6 +11,8 @@ import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
 
+import java.util.Optional;
+
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -65,6 +67,7 @@ public class SecureJwtBuilderTest {
         assertThat(actual.getHeader().getAlgorithm(), is(Algorithm.HS256));
         assertThat(actual.getHeader().getType().isPresent(), is(true));
         assertThat(actual.getHeader().getType().get(), is(TokenType.JWT));
+        assertThat(actual.getHeader().getKeyId().isPresent(), is(false));
 
         // inspect signature.
         assertThat(actual.getSignature().isPresent(), is(true));
@@ -115,6 +118,7 @@ public class SecureJwtBuilderTest {
         assertThat(actual.getHeader().getAlgorithm(), is(Algorithm.RS256));
         assertThat(actual.getHeader().getType().isPresent(), is(true));
         assertThat(actual.getHeader().getType().get(), is(TokenType.JWT));
+        assertThat(actual.getHeader().getKeyId().isPresent(), is(false));
 
         // inspect signature.
         assertThat(actual.getSignature().isPresent(), is(true));
@@ -126,5 +130,23 @@ public class SecureJwtBuilderTest {
         assertThat(actualClaim.getNotBefore().isPresent(), is(false));
         assertThat(actualClaim.getIssuedAt().isPresent(), is(false));
         assertThat(actualClaim.getJwtId().isPresent(), is(false));
+    }
+
+    @Test
+    public void makeSecureJwtWithKeyId() {
+        Optional<String> keyId = Optional.of("test-key-id");
+
+        // prepare subject of the test.
+        RSAKeyPair key = Factory.makeRSAKeyPair();
+        key.setKeyId(keyId);
+        SecureJwtBuilder subject = appFactory.secureJwtBuilder(Algorithm.RS256, key);
+
+        // claim of the token.
+        Claim claim = Factory.makeClaim();
+
+        JsonWebToken actual = subject.build(Algorithm.RS256, claim, keyId);
+
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.getHeader().getKeyId(), is(keyId));
     }
 }
