@@ -4,13 +4,12 @@ import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
-import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
+import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
 
 import java.math.BigInteger;
-import java.security.PublicKey;
 import java.security.Signature;
 
 import static org.hamcrest.CoreMatchers.notNullValue;

@@ -9,6 +9,8 @@ import org.rootservices.jwt.serializer.Serializer;
 import org.rootservices.jwt.signature.signer.MacSigner;
 import org.rootservices.jwt.signature.signer.RSASigner;
 import org.rootservices.jwt.signature.signer.Signer;
+import org.rootservices.jwt.signature.signer.factory.hmac.MacFactory;
+import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
 
 
 import javax.crypto.Mac;
