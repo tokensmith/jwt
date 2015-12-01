@@ -33,8 +33,8 @@ public class KeyPairToRSAKeyPairTest {
     @Test
     public void shouldMakeCorrectRSAKeyPair() throws Exception {
         URL privateKeyURL = getClass().getResource("/certs/rsa-private-key.pem");
-        KeyPairToRSAKeyPair subject = appFactory.pemToRSAKeyPair(privateKeyURL);
         PemToKeyPair pemToKeyPair = appFactory.pemToKeyPair(privateKeyURL);
+        KeyPairToRSAKeyPair subject = appFactory.pemToRSAKeyPair();
 
         KeyPair keyPair = pemToKeyPair.toKeyPair();
         RSAKeyPair actual = subject.toRSAKeyPair(keyPair, Optional.of("test-key-id"), Use.SIGNATURE);

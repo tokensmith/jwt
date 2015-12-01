@@ -149,8 +149,7 @@ public class AppFactory {
         return new PemToKeyPair(pemParser(pemFileURL), jcaPEMKeyConverter());
     }
 
-    public KeyPairToRSAKeyPair pemToRSAKeyPair(URL pemFileURL) throws NoSuchAlgorithmException {
-        KeyPair keyPair = pemToKeyPair(pemFileURL).toKeyPair();
+    public KeyPairToRSAKeyPair pemToRSAKeyPair() throws NoSuchAlgorithmException {
         return new KeyPairToRSAKeyPair(encoder(), KeyFactory.getInstance("RSA"));
     }
 }
