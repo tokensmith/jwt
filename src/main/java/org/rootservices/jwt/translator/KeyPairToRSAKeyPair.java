@@ -33,7 +33,7 @@ public class KeyPairToRSAKeyPair {
         return encoder.encodeToString(value.toByteArray());
     }
 
-    public RSAKeyPair toRSAKeyPair(KeyPair keyPair, Optional<String> keyId, Use use) {
+    public RSAKeyPair translate(KeyPair keyPair, Optional<String> keyId, Use use) {
 
         RSAPrivateCrtKeySpec privateKey = null;
         try {

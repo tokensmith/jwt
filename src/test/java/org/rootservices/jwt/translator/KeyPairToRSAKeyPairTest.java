@@ -36,8 +36,8 @@ public class KeyPairToRSAKeyPairTest {
         PemToKeyPair pemToKeyPair = appFactory.pemToKeyPair(privateKeyURL);
         KeyPairToRSAKeyPair subject = appFactory.pemToRSAKeyPair();
 
-        KeyPair keyPair = pemToKeyPair.toKeyPair();
-        RSAKeyPair actual = subject.toRSAKeyPair(keyPair, Optional.of("test-key-id"), Use.SIGNATURE);
+        KeyPair keyPair = pemToKeyPair.translate();
+        RSAKeyPair actual = subject.translate(keyPair, Optional.of("test-key-id"), Use.SIGNATURE);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getKeyId().isPresent(), is(true));

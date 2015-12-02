@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.rootservices.jwt.translator.CSRToRSAPublicKey;
 import org.rootservices.jwt.translator.KeyPairToRSAKeyPair;
 import org.rootservices.jwt.translator.PemToKeyPair;
 import org.rootservices.jwt.builder.SecureJwtBuilder;
@@ -39,6 +40,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.net.URL;
 import java.security.*;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.Base64;
 
 /**
@@ -151,5 +154,9 @@ public class AppFactory {
 
     public KeyPairToRSAKeyPair pemToRSAKeyPair() throws NoSuchAlgorithmException {
         return new KeyPairToRSAKeyPair(encoder(), KeyFactory.getInstance("RSA"));
+    }
+
+    public CSRToRSAPublicKey csrToRSAPublicKey() {
+        return new CSRToRSAPublicKey(encoder());
     }
 }

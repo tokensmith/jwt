@@ -21,7 +21,7 @@ public class PemToKeyPair {
         this.converter = converter;
     }
 
-    public KeyPair toKeyPair() {
+    public KeyPair translate() {
         Object pemObject = null;
         try {
             pemObject = pemParser.readObject();
