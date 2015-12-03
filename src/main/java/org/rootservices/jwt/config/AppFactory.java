@@ -5,11 +5,9 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.rootservices.jwt.translator.CSRToRSAPublicKey;
-import org.rootservices.jwt.translator.KeyPairToRSAKeyPair;
-import org.rootservices.jwt.translator.PemToKeyPair;
+import org.rootservices.jwt.translator.PemToRSAKeyPair;
 import org.rootservices.jwt.builder.SecureJwtBuilder;
 import org.rootservices.jwt.builder.UnsecureJwtBuilder;
 import org.rootservices.jwt.entity.jwk.Key;
@@ -36,12 +34,7 @@ import org.rootservices.jwt.signature.signer.factory.*;
 import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactory;
 import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactoryImpl;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.net.URL;
 import java.security.*;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.util.Base64;
 
 /**
@@ -138,22 +131,14 @@ public class AppFactory {
         return new JcaPEMKeyConverter().setProvider("BC");
     }
 
-    public PEMParser pemParser(URL pemFileURL) {
-        FileReader pemFileReader = null;
+    public PemToRSAKeyPair pemToRSAKeyPair() {
+        KeyFactory RSAKeyFactory = null;
         try {
-            pemFileReader = new FileReader(pemFileURL.getFile());
-        } catch (FileNotFoundException e) {
+            RSAKeyFactory = KeyFactory.getInstance("RSA");
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return new PEMParser(pemFileReader);
-    }
-
-    public PemToKeyPair pemToKeyPair(URL pemFileURL) {
-        return new PemToKeyPair(pemParser(pemFileURL), jcaPEMKeyConverter());
-    }
-
-    public KeyPairToRSAKeyPair pemToRSAKeyPair() throws NoSuchAlgorithmException {
-        return new KeyPairToRSAKeyPair(encoder(), KeyFactory.getInstance("RSA"));
+        return new PemToRSAKeyPair(jcaPEMKeyConverter(), encoder(), RSAKeyFactory);
     }
 
     public CSRToRSAPublicKey csrToRSAPublicKey() {
