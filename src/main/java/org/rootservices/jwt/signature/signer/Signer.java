@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.rootservices.jwt.entity.jwt.Claims;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Header;
+import org.rootservices.jwt.serializer.JsonException;
 import org.rootservices.jwt.serializer.Serializer;
 
 import java.nio.charset.Charset;
@@ -29,7 +30,7 @@ public abstract class Signer {
         try {
             headerJson = serializer.objectToJson(header);
             claimsJson = serializer.objectToJson(claims);
-        } catch (JsonProcessingException e) {
+        } catch (JsonException e) {
             e.printStackTrace();
         }
 

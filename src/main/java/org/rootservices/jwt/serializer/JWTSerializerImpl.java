@@ -39,7 +39,7 @@ public class JWTSerializerImpl implements JWTSerializer {
         try {
             headerJson = serializer.objectToJson(jwt.getHeader());
             claimsJson = serializer.objectToJson(jwt.getClaims());
-        } catch (JsonProcessingException e) {
+        } catch (JsonException e) {
             e.printStackTrace();
         }
 
@@ -62,8 +62,14 @@ public class JWTSerializerImpl implements JWTSerializer {
         byte[] headerJson = decoder.decode(jwtParts[0]);
         byte[] claimsJson = decoder.decode(jwtParts[1]);
 
-        Header header = (Header) serializer.jsonBytesToObject(headerJson, Header.class);
-        Claims claim = (Claims) serializer.jsonBytesToObject(claimsJson, claimClass);
+        Header header = null;
+        Claims claim = null;
+        try {
+            header = (Header) serializer.jsonBytesToObject(headerJson, Header.class);
+            claim = (Claims) serializer.jsonBytesToObject(claimsJson, claimClass);
+        } catch (JsonException e) {
+            e.printStackTrace();
+        }
 
         JsonWebToken jwt = new JsonWebToken(header, claim, Optional.of(jwtAsText));
 
