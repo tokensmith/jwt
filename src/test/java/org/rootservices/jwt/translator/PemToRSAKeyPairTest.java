@@ -3,6 +3,7 @@ package org.rootservices.jwt.translator;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.DependencyException;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.Use;
@@ -30,17 +31,21 @@ public class PemToRSAKeyPairTest {
     }
 
     @Test
-    public void shouldMakeCorrectKeyPair(){
+    public void shouldMakeCorrectKeyPair() throws DependencyException {
 
         PemToRSAKeyPair pemToRSAKeyPair = appFactory.pemToRSAKeyPair();
 
         URL privateKeyURL = getClass().getResource("/certs/rsa-private-key.pem");
 
+        if (privateKeyURL == null) {
+            fail("Could not find file the pem file");
+        }
+
         FileReader pemFileReader = null;
         try {
             pemFileReader = new FileReader(privateKeyURL.getFile());
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            fail("Could not find file the pem file");
         }
 
         RSAKeyPair actual = pemToRSAKeyPair.translate(pemFileReader, Optional.of("test-key-id"), Use.SIGNATURE);
