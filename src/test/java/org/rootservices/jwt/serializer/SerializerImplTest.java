@@ -1,20 +1,18 @@
 package org.rootservices.jwt.serializer;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import helper.entity.Claim;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.serializer.exception.JsonException;
 
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;

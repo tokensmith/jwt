@@ -1,6 +1,6 @@
 package org.rootservices.jwt.serializer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import org.rootservices.jwt.serializer.exception.JsonException;
 
 /**
  * Created by tommackenzie on 8/12/15.

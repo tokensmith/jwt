@@ -1,4 +1,4 @@
-package org.rootservices.jwt.serializer;
+package org.rootservices.jwt.serializer.exception;
 
 /**
  * Created by tommackenzie on 12/5/15.
