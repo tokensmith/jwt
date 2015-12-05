@@ -131,12 +131,13 @@ public class AppFactory {
         return new JcaPEMKeyConverter().setProvider("BC");
     }
 
-    public PemToRSAKeyPair pemToRSAKeyPair() throws DependencyException {
+    public PemToRSAKeyPair pemToRSAKeyPair() {
         KeyFactory RSAKeyFactory = null;
         try {
             RSAKeyFactory = KeyFactory.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
-            throw new DependencyException("Could not create KeyFactory", e);
+            // will never reach here.
+            e.printStackTrace();
         }
         return new PemToRSAKeyPair(jcaPEMKeyConverter(), encoder(), RSAKeyFactory);
     }

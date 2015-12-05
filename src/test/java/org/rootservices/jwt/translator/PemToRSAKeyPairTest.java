@@ -3,7 +3,6 @@ package org.rootservices.jwt.translator;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
-import org.rootservices.jwt.config.DependencyException;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.Use;
@@ -11,7 +10,6 @@ import org.rootservices.jwt.entity.jwk.Use;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.net.URL;
-import java.security.KeyPair;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -31,7 +29,7 @@ public class PemToRSAKeyPairTest {
     }
 
     @Test
-    public void shouldMakeCorrectKeyPair() throws DependencyException {
+    public void shouldMakeCorrectKeyPair() {
 
         PemToRSAKeyPair pemToRSAKeyPair = appFactory.pemToRSAKeyPair();
 
