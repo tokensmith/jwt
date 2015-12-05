@@ -5,6 +5,9 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.rootservices.jwt.translator.CSRToRSAPublicKey;
+import org.rootservices.jwt.translator.PemToRSAKeyPair;
 import org.rootservices.jwt.builder.SecureJwtBuilder;
 import org.rootservices.jwt.builder.UnsecureJwtBuilder;
 import org.rootservices.jwt.entity.jwk.Key;
@@ -16,6 +19,12 @@ import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.JWTSerializerImpl;
 import org.rootservices.jwt.serializer.Serializer;
 import org.rootservices.jwt.serializer.SerializerImpl;
+import org.rootservices.jwt.signature.signer.factory.hmac.MacFactory;
+import org.rootservices.jwt.signature.signer.factory.hmac.MacFactoryImpl;
+import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
+import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactoryImpl;
+import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
+import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactoryImpl;
 import org.rootservices.jwt.signature.verifier.VerifyRsaSignature;
 import org.rootservices.jwt.signature.verifier.VerifySignature;
 import org.rootservices.jwt.signature.verifier.VerifyMacSignature;
@@ -25,7 +34,7 @@ import org.rootservices.jwt.signature.signer.factory.*;
 import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactory;
 import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactoryImpl;
 
-import java.security.Signature;
+import java.security.*;
 import java.util.Base64;
 
 /**
@@ -115,5 +124,24 @@ public class AppFactory {
     public SecureJwtBuilder secureJwtBuilder(Algorithm alg, Key jwk){
         Signer signer = signerFactory().makeSigner(alg, jwk);
         return new SecureJwtBuilder(signer);
+    }
+
+    public JcaPEMKeyConverter jcaPEMKeyConverter() {
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        return new JcaPEMKeyConverter().setProvider("BC");
+    }
+
+    public PemToRSAKeyPair pemToRSAKeyPair() {
+        KeyFactory RSAKeyFactory = null;
+        try {
+            RSAKeyFactory = KeyFactory.getInstance("RSA");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return new PemToRSAKeyPair(jcaPEMKeyConverter(), encoder(), RSAKeyFactory);
+    }
+
+    public CSRToRSAPublicKey csrToRSAPublicKey() {
+        return new CSRToRSAPublicKey(encoder());
     }
 }

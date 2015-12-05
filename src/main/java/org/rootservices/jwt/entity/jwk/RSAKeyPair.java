@@ -1,5 +1,7 @@
 package org.rootservices.jwt.entity.jwk;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Optional;
 
 /**
@@ -14,6 +16,7 @@ import java.util.Optional;
  *
  */
 public class RSAKeyPair extends Key {
+
     private Use use;
     private String n; // modulus
     private String e; // public exponent

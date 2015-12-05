@@ -1,10 +1,11 @@
-package org.rootservices.jwt.signature.signer.factory;
+package org.rootservices.jwt.signature.signer.factory.rsa;
 
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 
 import java.math.BigInteger;
+import java.net.URI;
 import java.security.*;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.interfaces.RSAPrivateKey;
@@ -64,7 +65,6 @@ public class PrivateKeySignatureFactoryImpl implements PrivateKeySignatureFactor
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
 
         RSAPrivateCrtKey privateKey = null;
         try {

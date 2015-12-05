@@ -1,4 +1,4 @@
-package org.rootservices.jwt.signature.signer.factory;
+package org.rootservices.jwt.signature.signer.factory.hmac;
 
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;

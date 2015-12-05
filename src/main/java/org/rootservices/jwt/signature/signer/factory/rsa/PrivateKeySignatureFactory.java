@@ -1,8 +1,9 @@
-package org.rootservices.jwt.signature.signer.factory;
+package org.rootservices.jwt.signature.signer.factory.rsa;
 
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 
+import java.net.URI;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.interfaces.RSAPrivateCrtKey;

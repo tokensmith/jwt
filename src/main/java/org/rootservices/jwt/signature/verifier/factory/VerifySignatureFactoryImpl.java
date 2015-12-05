@@ -6,7 +6,7 @@ import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.Signer;
-import org.rootservices.jwt.signature.signer.factory.PublicKeySignatureFactory;
+import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
 import org.rootservices.jwt.signature.signer.factory.SignerFactory;
 import org.rootservices.jwt.signature.verifier.VerifyMacSignature;
 import org.rootservices.jwt.signature.verifier.VerifyRsaSignature;

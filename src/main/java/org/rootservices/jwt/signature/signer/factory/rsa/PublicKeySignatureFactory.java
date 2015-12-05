@@ -1,4 +1,4 @@
-package org.rootservices.jwt.signature.signer.factory;
+package org.rootservices.jwt.signature.signer.factory.rsa;
 
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;

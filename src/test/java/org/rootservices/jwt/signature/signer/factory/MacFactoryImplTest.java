@@ -4,11 +4,12 @@ package org.rootservices.jwt.signature.signer.factory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
+import org.rootservices.jwt.signature.signer.factory.hmac.MacFactory;
+import org.rootservices.jwt.signature.signer.factory.hmac.MacFactoryImpl;
 
 import java.util.Base64;
 import java.util.Optional;
