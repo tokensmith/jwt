@@ -31,7 +31,6 @@ public class MacFactoryImplTest {
     public void makeKeyShouldBeHS256WithSecretKey() {
         SymmetricKey key = new SymmetricKey(
                 Optional.<String>empty(),
-                KeyType.OCT,
                 "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
         );
 
