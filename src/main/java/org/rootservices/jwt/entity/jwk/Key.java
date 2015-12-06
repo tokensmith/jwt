@@ -10,12 +10,14 @@ import java.util.Optional;
 public class Key {
     protected Optional<String> keyId;
     protected KeyType keyType;
+    private Use use;
 
     public Key() {}
 
-    public Key(Optional<String> keyId, KeyType keyType) {
+    public Key(Optional<String> keyId, KeyType keyType, Use use) {
         this.keyId = keyId;
         this.keyType = keyType;
+        this.use = use;
     }
 
     public KeyType getKeyType() {
@@ -32,5 +34,13 @@ public class Key {
 
     public void setKeyId(Optional<String> keyId) {
         this.keyId = keyId;
+    }
+
+    public Use getUse() {
+        return use;
+    }
+
+    public void setUse(Use use) {
+        this.use = use;
     }
 }

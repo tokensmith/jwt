@@ -31,11 +31,7 @@ public class SignerFactoryImplTest {
 
     @Test
     public void shouldCreateMacSigner() {
-        SymmetricKey key = new SymmetricKey(
-                Optional.<String>empty(),
-                KeyType.OCT,
-                "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
-        );
+        SymmetricKey key = Factory.makeSymmetricKey();
 
         Signer actual = subject.makeSigner(Algorithm.HS256, key);
         assertThat(actual, instanceOf(MacSigner.class));

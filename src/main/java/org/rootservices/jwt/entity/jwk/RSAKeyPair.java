@@ -17,7 +17,6 @@ import java.util.Optional;
  */
 public class RSAKeyPair extends Key {
 
-    private Use use;
     private String n; // modulus
     private String e; // public exponent
     private String d; // private exponent
@@ -28,8 +27,7 @@ public class RSAKeyPair extends Key {
     private String qi;
 
     public RSAKeyPair(Optional<String> keyId, KeyType keyType, Use use, String n, String e, String d, String p, String q, String dp, String dq, String qi) {
-        super(keyId, keyType);
-        this.use = use;
+        super(keyId, keyType, use);
         this.n = n;
         this.e = e;
         this.d = d;
@@ -40,13 +38,6 @@ public class RSAKeyPair extends Key {
         this.qi = qi;
     }
 
-    public Use getUse() {
-        return use;
-    }
-
-    public void setUse(Use use) {
-        this.use = use;
-    }
 
     public String getN() {
         return n;
