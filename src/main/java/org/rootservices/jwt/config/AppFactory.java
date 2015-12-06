@@ -136,6 +136,7 @@ public class AppFactory {
         try {
             RSAKeyFactory = KeyFactory.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
+            // will never reach here.
             e.printStackTrace();
         }
         return new PemToRSAKeyPair(jcaPEMKeyConverter(), encoder(), RSAKeyFactory);

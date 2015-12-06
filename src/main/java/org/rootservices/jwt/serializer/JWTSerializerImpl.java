@@ -1,9 +1,10 @@
 package org.rootservices.jwt.serializer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.rootservices.jwt.entity.jwt.Claims;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Header;
+import org.rootservices.jwt.serializer.exception.InvalidJwtException;
+import org.rootservices.jwt.serializer.exception.JsonException;
 
 import java.nio.charset.Charset;
 
@@ -31,7 +32,7 @@ public class JWTSerializerImpl implements JWTSerializer {
     }
 
     @Override
-    public String jwtToString(JsonWebToken jwt) {
+    public String jwtToString(JsonWebToken jwt) throws InvalidJwtException {
         String jwtAsText = "";
         String headerJson = "";
         String claimsJson = "";
@@ -39,8 +40,8 @@ public class JWTSerializerImpl implements JWTSerializer {
         try {
             headerJson = serializer.objectToJson(jwt.getHeader());
             claimsJson = serializer.objectToJson(jwt.getClaims());
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        } catch (JsonException e) {
+            throw new InvalidJwtException("JWT json is invalid", e);
         }
 
         jwtAsText = encode(headerJson) + "." + encode(claimsJson) + ".";
@@ -56,14 +57,20 @@ public class JWTSerializerImpl implements JWTSerializer {
     }
 
     @Override
-    public JsonWebToken stringToJwt(String jwtAsText, Class claimClass) {
+    public JsonWebToken stringToJwt(String jwtAsText, Class claimClass) throws InvalidJwtException {
         String[] jwtParts = jwtAsText.split("\\.");
 
         byte[] headerJson = decoder.decode(jwtParts[0]);
         byte[] claimsJson = decoder.decode(jwtParts[1]);
 
-        Header header = (Header) serializer.jsonBytesToObject(headerJson, Header.class);
-        Claims claim = (Claims) serializer.jsonBytesToObject(claimsJson, claimClass);
+        Header header = null;
+        Claims claim = null;
+        try {
+            header = (Header) serializer.jsonBytesToObject(headerJson, Header.class);
+            claim = (Claims) serializer.jsonBytesToObject(claimsJson, claimClass);
+        } catch (JsonException e) {
+            throw new InvalidJwtException("JWT json is invalid", e);
+        }
 
         JsonWebToken jwt = new JsonWebToken(header, claim, Optional.of(jwtAsText));
 

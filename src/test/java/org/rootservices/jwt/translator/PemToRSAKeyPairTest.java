@@ -10,7 +10,6 @@ import org.rootservices.jwt.entity.jwk.Use;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.net.URL;
-import java.security.KeyPair;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -30,17 +29,21 @@ public class PemToRSAKeyPairTest {
     }
 
     @Test
-    public void shouldMakeCorrectKeyPair(){
+    public void shouldMakeCorrectKeyPair() {
 
         PemToRSAKeyPair pemToRSAKeyPair = appFactory.pemToRSAKeyPair();
 
         URL privateKeyURL = getClass().getResource("/certs/rsa-private-key.pem");
 
+        if (privateKeyURL == null) {
+            fail("Could not find file the pem file");
+        }
+
         FileReader pemFileReader = null;
         try {
             pemFileReader = new FileReader(privateKeyURL.getFile());
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            fail("Could not find file the pem file");
         }
 
         RSAKeyPair actual = pemToRSAKeyPair.translate(pemFileReader, Optional.of("test-key-id"), Use.SIGNATURE);

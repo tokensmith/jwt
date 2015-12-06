@@ -11,6 +11,7 @@ import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
+import org.rootservices.jwt.serializer.exception.InvalidJwtException;
 
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ public class JWTSerializerImplTest {
     }
 
     @Test
-    public void UnsecuredJwtToStringShouldBeValidJWT() {
+    public void UnsecuredJwtToStringShouldBeValidJWT() throws InvalidJwtException {
 
         String expectedJwt = "eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";
 
@@ -62,7 +63,7 @@ public class JWTSerializerImplTest {
     }
 
     @Test
-    public void SecuredJwtToStringShouldBeValid() {
+    public void SecuredJwtToStringShouldBeValid() throws InvalidJwtException {
         String signature = "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
 
         String expectedJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
@@ -83,7 +84,7 @@ public class JWTSerializerImplTest {
     }
 
     @Test
-    public void SecuredJwtWithKeyIdToStringShouldBeValid() {
+    public void SecuredJwtWithKeyIdToStringShouldBeValid() throws InvalidJwtException {
         String signature = "YiFm03WWrDAbFn7omROmU2GHACkaGI30xdbWFzyoCNQ";
 
         String expectedJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6InRlc3Qta2V5LWlkIn0." +
@@ -104,7 +105,7 @@ public class JWTSerializerImplTest {
     }
 
     @Test
-    public void stringToJwtShouldBeUnsecuredJwt() {
+    public void stringToJwtShouldBeUnsecuredJwt() throws InvalidJwtException {
 
         String jwtAsText = "eyJhbGciOiJub25lIn0=." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ==.";
@@ -135,7 +136,7 @@ public class JWTSerializerImplTest {
     }
 
     @Test
-    public void stringToJwtShouldBeSecuredJwt() {
+    public void stringToJwtShouldBeSecuredJwt() throws InvalidJwtException {
 
         String signature = "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
 
@@ -175,7 +176,7 @@ public class JWTSerializerImplTest {
     }
 
     @Test
-    public void stringToJwtShouldBeSecuredJwtWithKeyId() {
+    public void stringToJwtShouldBeSecuredJwtWithKeyId() throws InvalidJwtException {
 
         String signature = "YiFm03WWrDAbFn7omROmU2GHACkaGI30xdbWFzyoCNQ";
 
@@ -214,6 +215,4 @@ public class JWTSerializerImplTest {
         assertThat(actual.getJwt().isPresent(), is(true));
         assertThat(actual.getJwt().get(), is(jwtAsText));
     }
-
-
 }

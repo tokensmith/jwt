@@ -1,13 +1,13 @@
 package org.rootservices.jwt.serializer;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import helper.entity.Claim;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.serializer.exception.JsonException;
 
 import java.util.Optional;
 
@@ -15,6 +15,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * Created by tommackenzie on 8/12/15.
@@ -22,16 +23,15 @@ import static org.junit.Assert.assertThat;
 public class SerializerImplTest {
 
     private AppFactory appFactory;
-    private Serializer subject;
 
     @Before
     public void setUp() {
         appFactory = new AppFactory();
-        subject = appFactory.serializer();
     }
 
     @Test
-    public void headerToJson() throws JsonProcessingException {
+    public void headerToJson() throws JsonException {
+        Serializer subject = appFactory.serializer();
         Header header = new Header();
         header.setAlgorithm(Algorithm.NONE);
         String json = subject.objectToJson(header);
@@ -39,7 +39,8 @@ public class SerializerImplTest {
     }
 
     @Test
-    public void claimToJsonExpectExcludesNullAndOptionalEmpty() throws JsonProcessingException {
+    public void claimToJsonExpectExcludesNullAndOptionalEmpty() throws JsonException {
+        Serializer subject = appFactory.serializer();
         Claim claim = new Claim();
 
         Optional<String> issuer = Optional.of("joe");
@@ -54,14 +55,16 @@ public class SerializerImplTest {
     }
 
     @Test
-    public void jsonToUnsecuredHeader() {
+    public void jsonToUnsecuredHeader() throws JsonException {
+        Serializer subject = appFactory.serializer();
         byte[] json = "{\"alg\":\"none\"}".getBytes();
         Header actual = (Header) subject.jsonBytesToObject(json, Header.class);
         assertThat(actual.getAlgorithm(), is(Algorithm.NONE));
     }
 
     @Test
-    public void jsonToClaim() {
+    public void jsonToClaim() throws JsonException {
+        Serializer subject = appFactory.serializer();
         byte[] json = "{\"iss\":\"joe\",\"exp\":1300819380,\"http://example.com/is_root\":true}".getBytes();
         Claim actual = (Claim) subject.jsonBytesToObject(json, Claim.class);
 
@@ -76,5 +79,13 @@ public class SerializerImplTest {
         assertThat(actual.getNotBefore().isPresent(), is(false));
         assertThat(actual.getIssuedAt().isPresent(), is(false));
         assertThat(actual.getJwtId().isPresent(), is(false));
+    }
+
+    @Test(expected=JsonException.class)
+    public void jsonBytesToObjectShouldThrowJsonException() throws JsonException {
+        Serializer subject = appFactory.serializer();
+        byte[] invalidJson = "{\"iss\":\"joe\"".getBytes();
+
+        subject.jsonBytesToObject(invalidJson, Claim.class);
     }
 }

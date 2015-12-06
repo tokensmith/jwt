@@ -10,6 +10,7 @@ import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
+import org.rootservices.jwt.serializer.exception.InvalidJwtException;
 
 import java.util.Optional;
 
@@ -36,7 +37,12 @@ public class VerifyMacSignatureTest {
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
                 "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
 
-        JsonWebToken jwt = jwtSerializer.stringToJwt(jwtAsText, Claim.class);
+        JsonWebToken jwt = null;
+        try {
+            jwt = jwtSerializer.stringToJwt(jwtAsText, Claim.class);
+        } catch (InvalidJwtException e) {
+            e.printStackTrace();
+        }
 
         SymmetricKey key = new SymmetricKey(
                 Optional.<String>empty(),
@@ -56,7 +62,12 @@ public class VerifyMacSignatureTest {
         String jwtAsText = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";
 
-        JsonWebToken jwt = jwtSerializer.stringToJwt(jwtAsText, Claim.class);
+        JsonWebToken jwt = null;
+        try {
+            jwt = jwtSerializer.stringToJwt(jwtAsText, Claim.class);
+        } catch (InvalidJwtException e) {
+            e.printStackTrace();
+        }
 
         SymmetricKey key = new SymmetricKey(
                 Optional.<String>empty(),
