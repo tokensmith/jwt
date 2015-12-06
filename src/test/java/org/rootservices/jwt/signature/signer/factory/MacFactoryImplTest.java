@@ -1,6 +1,7 @@
 package org.rootservices.jwt.signature.signer.factory;
 
 
+import helper.entity.Factory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,10 +30,7 @@ public class MacFactoryImplTest {
 
     @Test
     public void makeKeyShouldBeHS256WithSecretKey() {
-        SymmetricKey key = new SymmetricKey(
-                Optional.<String>empty(),
-                "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
-        );
+        SymmetricKey key = Factory.makeSymmetricKey();
 
         java.security.Key actual = macFactory.makeKey(Algorithm.HS256, key);
         assertNotNull(actual);

@@ -8,8 +8,8 @@ import java.util.Optional;
 public class SymmetricKey extends Key {
     private String key;
 
-    public SymmetricKey(Optional<String> keyId, String key) {
-        super(keyId, KeyType.OCT);
+    public SymmetricKey(Optional<String> keyId, String key, Use use) {
+        super(keyId, KeyType.OCT, use);
         this.key = key;
     }
 

@@ -1,6 +1,7 @@
 package org.rootservices.jwt.serializer;
 
 import helper.entity.Claim;
+import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.builder.SecureJwtBuilder;
@@ -33,10 +34,7 @@ public class JWTSerializerImplTest {
 
     @Before
     public void setUp(){
-        SymmetricKey key = new SymmetricKey(
-                Optional.<String>empty(),
-                "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
-        );
+        SymmetricKey key = Factory.makeSymmetricKey();
 
         AppFactory appFactory = new AppFactory();
         unsecureTokenBuilder = appFactory.unsecureJwtBuilder();

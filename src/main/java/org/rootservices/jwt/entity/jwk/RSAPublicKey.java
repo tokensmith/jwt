@@ -6,23 +6,13 @@ import java.util.Optional;
  * Created by tommackenzie on 11/6/15.
  */
 public class RSAPublicKey extends Key {
-    private Use use;
     private String n; // modulus
     private String e; // public exponent
 
     public RSAPublicKey(Optional<String> keyId, KeyType keyType, Use use, String n, String e) {
-        super(keyId, keyType);
-        this.use = use;
+        super(keyId, keyType, use);
         this.n = n;
         this.e = e;
-    }
-
-    public Use getUse() {
-        return use;
-    }
-
-    public void setUse(Use use) {
-        this.use = use;
     }
 
     public String getN() {

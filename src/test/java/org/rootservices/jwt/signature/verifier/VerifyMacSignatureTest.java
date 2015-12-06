@@ -2,11 +2,13 @@ package org.rootservices.jwt.signature.verifier;
 
 
 import helper.entity.Claim;
+import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
+import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
@@ -44,10 +46,7 @@ public class VerifyMacSignatureTest {
             e.printStackTrace();
         }
 
-        SymmetricKey key = new SymmetricKey(
-                Optional.<String>empty(),
-                "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
-        );
+        SymmetricKey key = Factory.makeSymmetricKey();
 
         VerifySignature subject = appFactory.verifyMacSignature(Algorithm.HS256, key);
 
@@ -68,10 +67,7 @@ public class VerifyMacSignatureTest {
             e.printStackTrace();
         }
 
-        SymmetricKey key = new SymmetricKey(
-                Optional.<String>empty(),
-                "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
-        );
+        SymmetricKey key = Factory.makeSymmetricKey();
 
         VerifySignature subject = appFactory.verifyMacSignature(Algorithm.HS256, key);
 
