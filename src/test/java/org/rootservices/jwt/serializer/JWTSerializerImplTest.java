@@ -7,12 +7,14 @@ import org.junit.Test;
 import org.rootservices.jwt.builder.SecureJwtBuilder;
 import org.rootservices.jwt.builder.UnsecureJwtBuilder;
 import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.exception.DependencyException;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
 import org.rootservices.jwt.serializer.exception.InvalidJwtException;
+import org.rootservices.jwt.signature.signer.InvalidJsonWebToken;
 
 import java.util.Optional;
 
@@ -33,7 +35,7 @@ public class JWTSerializerImplTest {
     private JWTSerializer subject;
 
     @Before
-    public void setUp(){
+    public void setUp() throws DependencyException {
         SymmetricKey key = Factory.makeSymmetricKey();
 
         AppFactory appFactory = new AppFactory();
@@ -60,7 +62,7 @@ public class JWTSerializerImplTest {
     }
 
     @Test
-    public void SecuredJwtToStringShouldBeValid() throws InvalidJwtException {
+    public void SecuredJwtToStringShouldBeValid() throws InvalidJwtException, InvalidJsonWebToken {
         String signature = "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
 
         String expectedJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
@@ -81,7 +83,7 @@ public class JWTSerializerImplTest {
     }
 
     @Test
-    public void SecuredJwtWithKeyIdToStringShouldBeValid() throws InvalidJwtException {
+    public void SecuredJwtWithKeyIdToStringShouldBeValid() throws InvalidJwtException, InvalidJsonWebToken {
         String signature = "YiFm03WWrDAbFn7omROmU2GHACkaGI30xdbWFzyoCNQ";
 
         String expectedJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6InRlc3Qta2V5LWlkIn0." +

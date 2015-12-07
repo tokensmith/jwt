@@ -8,6 +8,7 @@ import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
+import org.rootservices.jwt.signature.signer.factory.rsa.exception.PrivateKeyException;
 
 import java.math.BigInteger;
 import java.security.*;
@@ -57,8 +58,16 @@ public class PrivateKeySignatureFactoryImplTest {
         assertThat(privateKey.getCrtCoefficient(), is(crtCoefficient));
     }
 
-    @Test
-    public void testMakeSignatureShouldBeRS256() throws NoSuchAlgorithmException, NoSuchProviderException {
+    @Test(expected = PrivateKeyException.class)
+    public void makePrivateKeyFailsLengthShouldThrowPrivateKeyException() throws PrivateKeyException {
+        RSAKeyPair jwk = Factory.makeRSAKeyPair();
+        jwk.setN("AA");
+
+        RSAPrivateCrtKey privateKey = subject.makePrivateKey(jwk);
+
+    }
+
+    public void testMakeSignatureShouldBeRS256() throws SignatureException {
         RSAKeyPair jwk = Factory.makeRSAKeyPair();
         Signature signature = subject.makeSignature(Algorithm.RS256, jwk);
 

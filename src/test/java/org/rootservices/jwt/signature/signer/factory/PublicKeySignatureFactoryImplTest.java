@@ -8,9 +8,11 @@ import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
+import org.rootservices.jwt.signature.signer.factory.rsa.exception.PublicKeyException;
 
 import java.math.BigInteger;
 import java.security.Signature;
+import java.security.SignatureException;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
@@ -30,7 +32,7 @@ public class PublicKeySignatureFactoryImplTest {
     }
 
     @Test
-    public void testMakePublicKeyShouldHaveDecodedJWK() throws Exception {
+    public void testMakePublicKeyShouldHaveDecodedJWK() throws PublicKeyException {
 
         RSAPublicKey publicKey = Factory.makeRSAPublicKey();
 
@@ -47,8 +49,16 @@ public class PublicKeySignatureFactoryImplTest {
 
     }
 
+    @Test(expected = PublicKeyException.class)
+    public void makePublicKeyFailsLengthShouldThrowPrivateKeyException() throws PublicKeyException {
+        RSAPublicKey publicKey = Factory.makeRSAPublicKey();
+        publicKey.setN("AA");
+
+        subject.makePublicKey(publicKey);
+    }
+
     @Test
-    public void testMakeSignatureShouldBeRS256() throws Exception {
+    public void testMakeSignatureShouldBeRS256() throws SignatureException {
         RSAPublicKey publicKey = Factory.makeRSAPublicKey();
         Signature signature = subject.makeSignature(Algorithm.RS256, publicKey);
 
