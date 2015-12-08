@@ -9,12 +9,15 @@ import org.rootservices.jwt.serializer.Serializer;
 import org.rootservices.jwt.signature.signer.MacSigner;
 import org.rootservices.jwt.signature.signer.RSASigner;
 import org.rootservices.jwt.signature.signer.Signer;
+import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
 import org.rootservices.jwt.signature.signer.factory.hmac.MacFactory;
+import org.rootservices.jwt.signature.signer.factory.hmac.exception.MacException;
 import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
 
 
 import javax.crypto.Mac;
 import java.security.Signature;
+import java.security.SignatureException;
 import java.util.Base64;
 
 /**
@@ -36,7 +39,7 @@ public class SignerFactoryImpl implements SignerFactory {
     }
 
     @Override
-    public Signer makeSigner(Algorithm alg, Key jwk) {
+    public Signer makeSigner(Algorithm alg, Key jwk) throws SignerException {
         Signer signer = null;
         if (jwk.getKeyType() == KeyType.OCT) {
             signer = makeMacSigner(alg, jwk);
@@ -47,13 +50,25 @@ public class SignerFactoryImpl implements SignerFactory {
     }
 
     @Override
-    public Signer makeMacSigner(Algorithm algorithm, Key key) {
-        Mac mac = macFactory.makeMac(algorithm, (SymmetricKey) key);
+    public Signer makeMacSigner(Algorithm algorithm, Key key) throws SignerException {
+        Mac mac = null;
+
+        try {
+            mac = macFactory.makeMac(algorithm, (SymmetricKey) key);
+        } catch (MacException e) {
+            throw new SignerException("Couldn't create signer", e);
+        }
+
         return new MacSigner(serializer, mac, encoder);
     }
 
-    private Signer makeRSASigner(Algorithm algorithm, RSAKeyPair keyPair) {
-        Signature signature = privateKeySignatureFactory.makeSignature(algorithm, keyPair);
+    private Signer makeRSASigner(Algorithm algorithm, RSAKeyPair keyPair) throws SignerException {
+        Signature signature = null;
+        try {
+            signature = privateKeySignatureFactory.makeSignature(algorithm, keyPair);
+        } catch (SignatureException e) {
+            throw new SignerException("Couldn't create signer", e);
+        }
         return new RSASigner(signature, serializer, encoder);
     }
 }

@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.rootservices.jwt.config.exception.DependencyException;
+import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
 import org.rootservices.jwt.translator.CSRToRSAPublicKey;
 import org.rootservices.jwt.translator.PemToRSAKeyPair;
 import org.rootservices.jwt.builder.SecureJwtBuilder;
@@ -81,13 +83,18 @@ public class AppFactory {
         return new PublicKeySignatureFactoryImpl(urlDecoder());
     }
 
-    public VerifyRsaSignature verifyRsaSignature(Algorithm algorithm, RSAPublicKey jwk) {
-        Signature signature = publicKeySignatureFactory().makeSignature(algorithm, jwk);
+    public VerifyRsaSignature verifyRsaSignature(Algorithm algorithm, RSAPublicKey jwk) throws DependencyException {
+        Signature signature = null;
+        try {
+            signature = publicKeySignatureFactory().makeSignature(algorithm, jwk);
+        } catch (SignatureException e) {
+            throw new DependencyException("Could not create dependency, Signature", e);
+        }
         return new VerifyRsaSignature(signature, urlDecoder());
     }
 
     public MacFactory macFactory() {
-        return new MacFactoryImpl();
+        return new MacFactoryImpl(urlDecoder());
     }
 
     public PrivateKeySignatureFactory privateKeySignatureFactory() {
@@ -103,13 +110,13 @@ public class AppFactory {
         );
     }
 
-    public Signer RSASigner(Algorithm alg, RSAKeyPair jwk) {
-        Signature signature = privateKeySignatureFactory().makeSignature(alg, jwk);
-        return new RSASigner(signature, serializer(), encoder());
-    }
-
-    public VerifySignature verifyMacSignature(Algorithm algorithm, SymmetricKey key) {
-        Signer macSigner = signerFactory().makeMacSigner(algorithm, key);
+    public VerifySignature verifyMacSignature(Algorithm algorithm, SymmetricKey key) throws DependencyException {
+        Signer macSigner = null;
+        try {
+            macSigner = signerFactory().makeMacSigner(algorithm, key);
+        } catch (SignerException e) {
+            throw new DependencyException("Could not create dependency, Signer", e);
+        }
         return new VerifyMacSignature(macSigner);
     }
 
@@ -121,8 +128,13 @@ public class AppFactory {
         return new UnsecureJwtBuilder();
     }
 
-    public SecureJwtBuilder secureJwtBuilder(Algorithm alg, Key jwk){
-        Signer signer = signerFactory().makeSigner(alg, jwk);
+    public SecureJwtBuilder secureJwtBuilder(Algorithm alg, Key jwk) throws DependencyException {
+        Signer signer = null;
+        try {
+            signer = signerFactory().makeSigner(alg, jwk);
+        } catch (SignerException e) {
+            throw new DependencyException("Could not create dependency, Signer", e);
+        }
         return new SecureJwtBuilder(signer);
     }
 

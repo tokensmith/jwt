@@ -7,6 +7,7 @@ import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
 
 
 import java.util.Optional;
@@ -37,7 +38,7 @@ public class RSASignerTest {
         String expected = "cC4hiUPoj9Eetdgtv3hF80EGrhuB__dzERat0XF9g2VtQgr9PJbu3XOiZj5RZmh7AAuHIm4Bh-0Qc_lF5YKt_O8W2Fp5jujGbds9uJdbF9CUAr7t1dnZcAcQjbKBYNX4BAynRFdiuB--f_nZLgrnbyTyWzO75vRK5h6xBArLIARNPvkSjtQBMHlb1L07Qe7K0GarZRmB_eSN9383LcOLn6_dO--xi12jzDwusC-eOkHWEsqtFZESc6BfI7noOPqvhJ1phCnvWh6IeYI2w9QOYEUipUTI8np6LbgGY9Fs98rqVt5AXLIhWkWywlVmtVrBp0igcN_IoypGlUPQGe77Rw";
 
         RSAKeyPair jwk = Factory.makeRSAKeyPair();
-        Signer subject =  appFactory.RSASigner(Algorithm.RS256, jwk);
+        Signer subject =  appFactory.signerFactory().makeSigner(Algorithm.RS256, jwk);
 
         byte[] signInput = new byte[] {
                 101, 121, 74, 104, 98, 71, 99, 105, 79, 105, 74, 83, 85, 122, 73,
@@ -65,11 +66,11 @@ public class RSASignerTest {
      * @throws Exception
      */
     @Test
-    public void signTokenWithRS256ShouldSignCorrectly() throws Exception {
+    public void signTokenWithRS256ShouldSignCorrectly() throws SignerException, InvalidJsonWebToken {
         String expected = "el3lmx2zFYSGmoOC5sJFjV4nCFyb6_2nY5WDSv_d9L2cw857vQBhjV2xybTQz5_4IIVLxpollxyomEQpC1xwZSZoU9lrmNau2TGg1iFGjyIXrtZy-UxV0t_xSwujFlA_WNFjw6eLI00ji3EcuOiMpqPa8IOTfXijtgkCx7oVweb2IVO6ZjMcssvhA7s3ezF8YHf6ewHK74UF4o0RuKn4K1PjBbmxDu3TXMOp69IvbnCj2ku--9QI7H9DFjiNVyWWnpz3wekGZuUePAj5GkrbPgvwhVVUiTcczYy55MUaF7mPjkb7JGEk2sH4lCa1Jlvz9xgYMdYTfbwmT9Wgvq_Usg";
 
         RSAKeyPair jwk = Factory.makeRSAKeyPair();
-        Signer subject =  appFactory.RSASigner(Algorithm.RS256, jwk);
+        Signer subject =  appFactory.signerFactory().makeSigner(Algorithm.RS256, jwk);
 
         JsonWebToken jwt = Factory.makeToken(Algorithm.RS256, Optional.empty());
 

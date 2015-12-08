@@ -6,6 +6,7 @@ import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.Signer;
+import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
 import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
 import org.rootservices.jwt.signature.signer.factory.SignerFactory;
 import org.rootservices.jwt.signature.verifier.VerifyMacSignature;
@@ -13,6 +14,7 @@ import org.rootservices.jwt.signature.verifier.VerifyRsaSignature;
 import org.rootservices.jwt.signature.verifier.VerifySignature;
 
 import java.security.Signature;
+import java.security.SignatureException;
 import java.util.Base64.Decoder;
 
 /**
@@ -30,7 +32,7 @@ public class VerifySignatureFactoryImpl implements VerifySignatureFactory {
         this.decoder = decoder;
     }
 
-    public VerifySignature makeVerifySignature(Algorithm algorithm, Key key) {
+    public VerifySignature makeVerifySignature(Algorithm algorithm, Key key) throws SignerException, SignatureException {
         VerifySignature verifySignature = null;
 
         if (key.getKeyType() == KeyType.OCT) {

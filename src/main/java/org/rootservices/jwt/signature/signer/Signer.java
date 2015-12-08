@@ -5,6 +5,7 @@ import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.serializer.exception.JsonException;
 import org.rootservices.jwt.serializer.Serializer;
+import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
 
 import java.nio.charset.Charset;
 import java.util.Base64.Encoder;
@@ -21,7 +22,7 @@ public abstract class Signer {
         this.encoder = encoder;
     }
 
-    private String makeSignInput(Header header, Claims claims) {
+    private String makeSignInput(Header header, Claims claims) throws InvalidJsonWebToken {
 
         String headerJson = "";
         String claimsJson = "";
@@ -30,7 +31,7 @@ public abstract class Signer {
             headerJson = serializer.objectToJson(header);
             claimsJson = serializer.objectToJson(claims);
         } catch (JsonException e) {
-            e.printStackTrace();
+            throw new InvalidJsonWebToken("Could not generate json", e);
         }
 
         return encode(headerJson) + "." + encode(claimsJson);
@@ -40,7 +41,7 @@ public abstract class Signer {
         return encode(input.getBytes(Charset.forName("UTF-8")));
     }
 
-    public String run(JsonWebToken jwt) {
+    public String run(JsonWebToken jwt) throws InvalidJsonWebToken {
         String signInput = makeSignInput(jwt.getHeader(), jwt.getClaims());
         return run(signInput.getBytes());
     }

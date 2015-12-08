@@ -3,9 +3,9 @@ package org.rootservices.jwt.signature.signer.factory.rsa;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
+import org.rootservices.jwt.signature.signer.factory.rsa.exception.PrivateKeyException;
 
 import java.math.BigInteger;
-import java.net.URI;
 import java.security.*;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.interfaces.RSAPrivateKey;
@@ -36,7 +36,7 @@ public class PrivateKeySignatureFactoryImpl implements PrivateKeySignatureFactor
      * @param jwk
      * @return
      */
-    public RSAPrivateCrtKey makePrivateKey(RSAKeyPair jwk) {
+    public RSAPrivateCrtKey makePrivateKey(RSAKeyPair jwk) throws PrivateKeyException {
         RSAPrivateKeySpec keySpec = null;
 
         BigInteger modulus = decode(jwk.getN());
@@ -63,34 +63,43 @@ public class PrivateKeySignatureFactoryImpl implements PrivateKeySignatureFactor
         try {
             keyFactory = KeyFactory.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            // should never reach here - tests prove it.
+            throw new PrivateKeyException("Could not make KeyFactory", e);
         }
 
         RSAPrivateCrtKey privateKey = null;
         try {
-            privateKey = (RSAPrivateCrtKey)
-                    keyFactory.generatePrivate(keySpec);
+            privateKey = (RSAPrivateCrtKey) keyFactory.generatePrivate(keySpec);
         } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
+            // will only reach here if there's something wrong with the rsa key pair
+            throw new PrivateKeyException("Could not make RSAPrivateCrtKey", e);
         }
 
         return privateKey;
     }
 
     @Override
-    public Signature makeSignature(Algorithm alg, RSAKeyPair jwk) {
-        RSAPrivateKey privateKey = makePrivateKey(jwk);
+    public Signature makeSignature(Algorithm alg, RSAKeyPair jwk) throws SignatureException {
+        RSAPrivateKey privateKey = null;
+        try {
+            privateKey = makePrivateKey(jwk);
+        } catch (PrivateKeyException e) {
+            throw new SignatureException("Could not make java.security.interfaces.RSAPrivateKey", e);
+        }
         Signature signature = null;
 
         try {
             signature = Signature.getInstance(SignAlgorithm.RS256.getValue());
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            // should never reach here - tests prove it.
+            throw new SignatureException("Could not create Signature", e);
         }
+
         try {
             signature.initSign(privateKey);
         } catch (InvalidKeyException e) {
-            e.printStackTrace();
+            // should never reach here - it will fail creating the key first
+            throw new SignatureException("Failed adding key to Signature", e);
         }
         return signature;
     }
