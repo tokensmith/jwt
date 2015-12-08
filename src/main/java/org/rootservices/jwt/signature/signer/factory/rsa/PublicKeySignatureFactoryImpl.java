@@ -16,21 +16,9 @@ import java.util.Base64.Decoder;
  */
 public class PublicKeySignatureFactoryImpl implements PublicKeySignatureFactory {
 
-    private Decoder decoder;
-
-    public PublicKeySignatureFactoryImpl(Decoder decoder) {
-        this.decoder = decoder;
-    }
-
-    private BigInteger decode(String value) {
-        byte[] decodedBytes = decoder.decode(value);
-        return new BigInteger(1, decodedBytes);
-    }
 
     @Override
     public java.security.interfaces.RSAPublicKey makePublicKey(RSAPublicKey jwk) throws PublicKeyException {
-        BigInteger modulus = decode(jwk.getN());
-        BigInteger publicExponent = decode(jwk.getE());
 
         KeyFactory keyFactory = null;
         try {
@@ -40,7 +28,7 @@ public class PublicKeySignatureFactoryImpl implements PublicKeySignatureFactory 
             throw new PublicKeyException("Could not make KeyFactory", e);
         }
 
-        RSAPublicKeySpec rsaPublicKeySpec = new RSAPublicKeySpec(modulus, publicExponent);
+        RSAPublicKeySpec rsaPublicKeySpec = new RSAPublicKeySpec(jwk.getN(), jwk.getE());
         java.security.interfaces.RSAPublicKey publicKey = null;
         try {
             publicKey = (java.security.interfaces.RSAPublicKey) keyFactory.generatePublic(rsaPublicKeySpec);

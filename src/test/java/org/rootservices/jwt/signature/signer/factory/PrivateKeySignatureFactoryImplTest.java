@@ -32,7 +32,7 @@ public class PrivateKeySignatureFactoryImplTest {
     }
 
     @Test
-    public void testMakePrivateKeyShouldHaveDecodedJWK() throws Exception {
+    public void testMakePrivateKeyShouldMakeRSAPrivateCrtKey() throws Exception {
         RSAKeyPair jwk = Factory.makeRSAKeyPair();
         RSAPrivateCrtKey privateKey = subject.makePrivateKey(jwk);
 
@@ -58,15 +58,7 @@ public class PrivateKeySignatureFactoryImplTest {
         assertThat(privateKey.getCrtCoefficient(), is(crtCoefficient));
     }
 
-    @Test(expected = PrivateKeyException.class)
-    public void makePrivateKeyFailsLengthShouldThrowPrivateKeyException() throws PrivateKeyException {
-        RSAKeyPair jwk = Factory.makeRSAKeyPair();
-        jwk.setN("AA");
-
-        RSAPrivateCrtKey privateKey = subject.makePrivateKey(jwk);
-
-    }
-
+    @Test
     public void testMakeSignatureShouldBeRS256() throws SignatureException {
         RSAKeyPair jwk = Factory.makeRSAKeyPair();
         Signature signature = subject.makeSignature(Algorithm.RS256, jwk);

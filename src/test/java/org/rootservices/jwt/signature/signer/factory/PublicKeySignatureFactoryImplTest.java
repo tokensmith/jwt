@@ -49,14 +49,6 @@ public class PublicKeySignatureFactoryImplTest {
 
     }
 
-    @Test(expected = PublicKeyException.class)
-    public void makePublicKeyFailsLengthShouldThrowPrivateKeyException() throws PublicKeyException {
-        RSAPublicKey publicKey = Factory.makeRSAPublicKey();
-        publicKey.setN("AA");
-
-        subject.makePublicKey(publicKey);
-    }
-
     @Test
     public void testMakeSignatureShouldBeRS256() throws SignatureException {
         RSAPublicKey publicKey = Factory.makeRSAPublicKey();
