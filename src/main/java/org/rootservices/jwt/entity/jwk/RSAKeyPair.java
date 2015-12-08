@@ -2,6 +2,7 @@ package org.rootservices.jwt.entity.jwk;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.math.BigInteger;
 import java.util.Optional;
 
 /**
@@ -17,16 +18,16 @@ import java.util.Optional;
  */
 public class RSAKeyPair extends Key {
 
-    private String n; // modulus
-    private String e; // public exponent
-    private String d; // private exponent
-    private String p;
-    private String q;
-    private String dp;
-    private String dq;
-    private String qi;
+    private BigInteger n; // modulus
+    private BigInteger e; // public exponent
+    private BigInteger d; // private exponent
+    private BigInteger p;
+    private BigInteger q;
+    private BigInteger dp;
+    private BigInteger dq;
+    private BigInteger qi;
 
-    public RSAKeyPair(Optional<String> keyId, KeyType keyType, Use use, String n, String e, String d, String p, String q, String dp, String dq, String qi) {
+    public RSAKeyPair(Optional<String> keyId, KeyType keyType, Use use, BigInteger n, BigInteger e, BigInteger d, BigInteger p, BigInteger q, BigInteger dp, BigInteger dq, BigInteger qi) {
         super(keyId, keyType, use);
         this.n = n;
         this.e = e;
@@ -39,67 +40,67 @@ public class RSAKeyPair extends Key {
     }
 
 
-    public String getN() {
+    public BigInteger getN() {
         return n;
     }
 
-    public void setN(String n) {
+    public void setN(BigInteger n) {
         this.n = n;
     }
 
-    public String getE() {
+    public BigInteger getE() {
         return e;
     }
 
-    public void setE(String e) {
+    public void setE(BigInteger e) {
         this.e = e;
     }
 
-    public String getD() {
+    public BigInteger getD() {
         return d;
     }
 
-    public void setD(String d) {
+    public void setD(BigInteger d) {
         this.d = d;
     }
 
-    public String getP() {
+    public BigInteger getP() {
         return p;
     }
 
-    public void setP(String p) {
+    public void setP(BigInteger p) {
         this.p = p;
     }
 
-    public String getQ() {
+    public BigInteger getQ() {
         return q;
     }
 
-    public void setQ(String q) {
+    public void setQ(BigInteger q) {
         this.q = q;
     }
 
-    public String getDp() {
+    public BigInteger getDp() {
         return dp;
     }
 
-    public void setDp(String dp) {
+    public void setDp(BigInteger dp) {
         this.dp = dp;
     }
 
-    public String getDq() {
+    public BigInteger getDq() {
         return dq;
     }
 
-    public void setDq(String dq) {
+    public void setDq(BigInteger dq) {
         this.dq = dq;
     }
 
-    public String getQi() {
+    public BigInteger getQi() {
         return qi;
     }
 
-    public void setQi(String qi) {
+    public void setQi(BigInteger qi) {
         this.qi = qi;
     }
 }

@@ -20,12 +20,6 @@ import java.util.Optional;
  */
 public class CSRToRSAPublicKey {
 
-    private Base64.Encoder encoder;
-
-    public CSRToRSAPublicKey(Base64.Encoder encoder) {
-        this.encoder = encoder;
-    }
-
     public RSAPublicKey translate(FileReader csr, Optional<String> keyId, Use use) {
 
         PEMParser pemParser = new PEMParser(csr);
@@ -52,12 +46,9 @@ public class CSRToRSAPublicKey {
                 keyId,
                 KeyType.RSA,
                 use,
-                encode(publicKey.getModulus()),
-                encode(publicKey.getPublicExponent())
+                publicKey.getModulus(),
+                publicKey.getPublicExponent()
         );
     }
 
-    private String encode(BigInteger value) {
-        return encoder.encodeToString(value.toByteArray());
-    }
 }

@@ -18,16 +18,7 @@ import java.util.Base64;
  * Created by tommackenzie on 11/4/15.
  */
 public class PrivateKeySignatureFactoryImpl implements PrivateKeySignatureFactory {
-    private Base64.Decoder decoder;
 
-    public PrivateKeySignatureFactoryImpl(Base64.Decoder decoder) {
-        this.decoder = decoder;
-    }
-
-    private BigInteger decode(String value) {
-        byte[] decodedBytes = decoder.decode(value);
-        return new BigInteger(1, decodedBytes);
-    }
 
     /**
      * Returns a, RSAPrivateCrtKey, which is built from the input parameter, jwk.
@@ -39,24 +30,15 @@ public class PrivateKeySignatureFactoryImpl implements PrivateKeySignatureFactor
     public RSAPrivateCrtKey makePrivateKey(RSAKeyPair jwk) throws PrivateKeyException {
         RSAPrivateKeySpec keySpec = null;
 
-        BigInteger modulus = decode(jwk.getN());
-        BigInteger publicExponent = decode(jwk.getE());
-        BigInteger privateExponent = decode(jwk.getD());
-        BigInteger primeP = decode(jwk.getP());
-        BigInteger primeQ = decode(jwk.getQ());
-        BigInteger primeExponentP = decode(jwk.getDp());
-        BigInteger primeExponentQ = decode(jwk.getDq());
-        BigInteger crtCoefficient = decode(jwk.getQi());
-
         keySpec = new RSAPrivateCrtKeySpec(
-                modulus,
-                publicExponent,
-                privateExponent,
-                primeP,
-                primeQ,
-                primeExponentP,
-                primeExponentQ,
-                crtCoefficient
+                jwk.getN(), // modulus
+                jwk.getE(), // publicExponent
+                jwk.getD(), // privateExponent
+                jwk.getP(), // primeP
+                jwk.getQ(), // primeQ
+                jwk.getDp(), // primeExponentP
+                jwk.getDq(), // primeExponentQ
+                jwk.getQi() // crtCoefficient
         );
 
         KeyFactory keyFactory = null;

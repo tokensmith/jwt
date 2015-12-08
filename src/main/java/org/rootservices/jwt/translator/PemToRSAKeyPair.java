@@ -24,18 +24,13 @@ import java.util.Optional;
 public class PemToRSAKeyPair {
 
     private JcaPEMKeyConverter converter;
-    private Base64.Encoder encoder;
     private KeyFactory RSAKeyFactory;
 
-    public PemToRSAKeyPair(JcaPEMKeyConverter converter, Base64.Encoder encoder, KeyFactory RSAKeyFactory) {
+    public PemToRSAKeyPair(JcaPEMKeyConverter converter, KeyFactory RSAKeyFactory) {
         this.converter = converter;
-        this.encoder = encoder;
         this.RSAKeyFactory = RSAKeyFactory;
     }
 
-    private String encode(BigInteger value) {
-        return encoder.encodeToString(value.toByteArray());
-    }
 
     public RSAKeyPair translate(FileReader pemFileReader, Optional<String> keyId, Use use) {
         PEMParser pemParser = new PEMParser(pemFileReader);
@@ -67,14 +62,14 @@ public class PemToRSAKeyPair {
                 keyId,
                 KeyType.RSA,
                 use,
-                encode(privateKey.getModulus()),
-                encode(privateKey.getPublicExponent()),
-                encode(privateKey.getPrivateExponent()),
-                encode(privateKey.getPrimeP()),
-                encode(privateKey.getPrimeQ()),
-                encode(privateKey.getPrimeExponentP()),
-                encode(privateKey.getPrimeExponentQ()),
-                encode(privateKey.getCrtCoefficient())
+                privateKey.getModulus(),
+                privateKey.getPublicExponent(),
+                privateKey.getPrivateExponent(),
+                privateKey.getPrimeP(),
+                privateKey.getPrimeQ(),
+                privateKey.getPrimeExponentP(),
+                privateKey.getPrimeExponentQ(),
+                privateKey.getCrtCoefficient()
         );
 
         return rsaKeyPair;

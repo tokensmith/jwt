@@ -13,7 +13,6 @@ import org.rootservices.jwt.translator.PemToRSAKeyPair;
 import org.rootservices.jwt.builder.SecureJwtBuilder;
 import org.rootservices.jwt.builder.UnsecureJwtBuilder;
 import org.rootservices.jwt.entity.jwk.Key;
-import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
@@ -80,7 +79,7 @@ public class AppFactory {
     }
 
     public PublicKeySignatureFactory publicKeySignatureFactory() {
-        return new PublicKeySignatureFactoryImpl(urlDecoder());
+        return new PublicKeySignatureFactoryImpl();
     }
 
     public VerifyRsaSignature verifyRsaSignature(Algorithm algorithm, RSAPublicKey jwk) throws DependencyException {
@@ -98,7 +97,7 @@ public class AppFactory {
     }
 
     public PrivateKeySignatureFactory privateKeySignatureFactory() {
-        return new PrivateKeySignatureFactoryImpl(urlDecoder());
+        return new PrivateKeySignatureFactoryImpl();
     }
 
     public SignerFactory signerFactory() {
@@ -151,10 +150,10 @@ public class AppFactory {
             // will never reach here.
             e.printStackTrace();
         }
-        return new PemToRSAKeyPair(jcaPEMKeyConverter(), encoder(), RSAKeyFactory);
+        return new PemToRSAKeyPair(jcaPEMKeyConverter(), RSAKeyFactory);
     }
 
     public CSRToRSAPublicKey csrToRSAPublicKey() {
-        return new CSRToRSAPublicKey(encoder());
+        return new CSRToRSAPublicKey();
     }
 }
