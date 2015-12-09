@@ -6,6 +6,7 @@ import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.Use;
+import org.rootservices.jwt.translator.exception.InvalidKeyException;
 import org.rootservices.jwt.translator.exception.InvalidPemException;
 
 import java.io.FileNotFoundException;
@@ -50,7 +51,7 @@ public class PemToRSAKeyPairTest {
     }
 
     @Test
-    public void shouldMakeCorrectKeyPair() throws InvalidPemException {
+    public void shouldMakeCorrectKeyPair() throws InvalidPemException, InvalidKeyException {
 
         PemToRSAKeyPair pemToRSAKeyPair = appFactory.pemToRSAKeyPair();
 
@@ -87,7 +88,7 @@ public class PemToRSAKeyPairTest {
     }
 
     @Test(expected = InvalidPemException.class)
-    public void closedFileReaderShouldThrowInvalidPemException() throws InvalidPemException, IOException {
+    public void closedFileReaderShouldThrowInvalidPemException() throws InvalidPemException, IOException, InvalidKeyException {
         PemToRSAKeyPair pemToRSAKeyPair = appFactory.pemToRSAKeyPair();
 
         FileReader pemFileReader = makeFileReader("/certs/rsa-private-key.pem");
@@ -97,7 +98,7 @@ public class PemToRSAKeyPairTest {
     }
 
     @Test(expected = InvalidPemException.class)
-    public void emptyPemFileShouldThrowInvalidPemException() throws InvalidPemException {
+    public void emptyPemFileShouldThrowInvalidPemException() throws InvalidPemException, InvalidKeyException {
         PemToRSAKeyPair pemToRSAKeyPair = appFactory.pemToRSAKeyPair();
 
         FileReader pemFileReader = makeFileReader("/certs/rsa-private-key-bad.pem");
@@ -105,7 +106,7 @@ public class PemToRSAKeyPairTest {
     }
 
     @Test(expected = InvalidPemException.class)
-    public void csrFileShouldThrowInvalidPemException() throws InvalidPemException {
+    public void csrFileShouldThrowInvalidPemException() throws InvalidPemException, InvalidKeyException {
         PemToRSAKeyPair pemToRSAKeyPair = appFactory.pemToRSAKeyPair();
 
         FileReader pemFileReader = makeFileReader("/certs/rsa-cert.csr");

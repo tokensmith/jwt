@@ -8,6 +8,7 @@ import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.translator.exception.InvalidCsrException;
+import org.rootservices.jwt.translator.exception.InvalidKeyException;
 import org.rootservices.jwt.translator.exception.InvalidPemException;
 
 import java.io.FileReader;
@@ -34,7 +35,7 @@ public class PemToRSAKeyPair {
     }
 
 
-    public RSAKeyPair translate(FileReader pemFileReader, Optional<String> keyId, Use use) throws InvalidPemException {
+    public RSAKeyPair translate(FileReader pemFileReader, Optional<String> keyId, Use use) throws InvalidPemException, InvalidKeyException {
         PEMParser pemParser = new PEMParser(pemFileReader);
 
         PEMKeyPair pemKeyPair = null;
@@ -61,7 +62,7 @@ public class PemToRSAKeyPair {
         try {
             privateKey = RSAKeyFactory.getKeySpec(keyPair.getPrivate(), RSAPrivateCrtKeySpec.class);
         } catch (InvalidKeySpecException e) {
-            throw new InvalidPemException("Could not create RSAPrivateCrtKeySpec");
+            throw new InvalidKeyException("Could not create RSAPrivateCrtKeySpec", e);
         }
 
         RSAKeyPair rsaKeyPair = new RSAKeyPair(
