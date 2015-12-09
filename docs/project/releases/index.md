@@ -5,6 +5,13 @@ title: Releases
 
 ### {{ page.title }} ###
 
+#### 1.1 - Published on, 2015-11-16 ####
+ - Sign a JWT with RSASSA-PKCS1-v1_5 SHA-256
+ - Verify a RSASSA-PKCS1-v1_5 SHA-256 signature
+ - Renamed Token to JsonWebToken
+ - Renamed interfaces that reference Token to Jwt.
+ - Jose Header has the optional key, "kid" (Key Id).
+
 #### 1.0 - Published on, 2015-09-20 ####
 - Marshal a JWT to a [token](https://github.com/RootServices/jwt/blob/development/src/main/java/org/rootservices/jwt/entity/jwt/Token.java)
 - Verify a secure token's signature with symmetric signing.
