@@ -6,9 +6,11 @@ import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.Use;
+import org.rootservices.jwt.translator.exception.InvalidPemException;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.Optional;
@@ -29,12 +31,9 @@ public class PemToRSAKeyPairTest {
         this.appFactory = new AppFactory();
     }
 
-    @Test
-    public void shouldMakeCorrectKeyPair() {
+    private FileReader makeFileReader(String filePath) {
 
-        PemToRSAKeyPair pemToRSAKeyPair = appFactory.pemToRSAKeyPair();
-
-        URL privateKeyURL = getClass().getResource("/certs/rsa-private-key.pem");
+        URL privateKeyURL = getClass().getResource(filePath);
 
         if (privateKeyURL == null) {
             fail("Could not find file the pem file");
@@ -46,6 +45,16 @@ public class PemToRSAKeyPairTest {
         } catch (FileNotFoundException e) {
             fail("Could not find file the pem file");
         }
+
+        return pemFileReader;
+    }
+
+    @Test
+    public void shouldMakeCorrectKeyPair() throws InvalidPemException {
+
+        PemToRSAKeyPair pemToRSAKeyPair = appFactory.pemToRSAKeyPair();
+
+        FileReader pemFileReader = makeFileReader("/certs/rsa-private-key.pem");
 
         // expected
         BigInteger modulus = new BigInteger("31547363068675167897756930554362079780191578737192115507526898964667457901907675194501789280350861000129589859093278343756085398379306366123730728103421370791175356895018543806044325144818946471653951140470823139449286798248410821533402163473721370921654197140946196794921284894039254456107355893831146589487500059843522247062489436603543693162592270480345794243004091939582347569432019753837113712433864529566521319428801714421137033495634109852983552061952143849954383008111368867567356581104016991597045919263898215285259909976858081430303755638022211078978491982452596141052654560597952703737488015089139469137261");
@@ -76,4 +85,33 @@ public class PemToRSAKeyPairTest {
         assertThat(actual.getDq(), is(primeExponentQ));
         assertThat(actual.getQi(), is(crtCoefficient));
     }
+
+    @Test(expected = InvalidPemException.class)
+    public void closedFileReaderShouldThrowInvalidPemException() throws InvalidPemException, IOException {
+        PemToRSAKeyPair pemToRSAKeyPair = appFactory.pemToRSAKeyPair();
+
+        FileReader pemFileReader = makeFileReader("/certs/rsa-private-key.pem");
+        pemFileReader.close();
+
+        pemToRSAKeyPair.translate(pemFileReader, Optional.of("test-key-id"), Use.SIGNATURE);
+    }
+
+    @Test(expected = InvalidPemException.class)
+    public void emptyPemFileShouldThrowInvalidPemException() throws InvalidPemException {
+        PemToRSAKeyPair pemToRSAKeyPair = appFactory.pemToRSAKeyPair();
+
+        FileReader pemFileReader = makeFileReader("/certs/rsa-private-key-bad.pem");
+        pemToRSAKeyPair.translate(pemFileReader, Optional.of("test-key-id"), Use.SIGNATURE);
+    }
+
+    @Test(expected = InvalidPemException.class)
+    public void csrFileShouldThrowInvalidPemException() throws InvalidPemException {
+        PemToRSAKeyPair pemToRSAKeyPair = appFactory.pemToRSAKeyPair();
+
+        FileReader pemFileReader = makeFileReader("/certs/rsa-cert.csr");
+        pemToRSAKeyPair.translate(pemFileReader, Optional.of("test-key-id"), Use.SIGNATURE);
+    }
+
+
+
 }

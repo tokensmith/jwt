@@ -7,6 +7,8 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.Use;
+import org.rootservices.jwt.translator.exception.InvalidCsrException;
+import org.rootservices.jwt.translator.exception.InvalidPemException;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -32,30 +34,34 @@ public class PemToRSAKeyPair {
     }
 
 
-    public RSAKeyPair translate(FileReader pemFileReader, Optional<String> keyId, Use use) {
+    public RSAKeyPair translate(FileReader pemFileReader, Optional<String> keyId, Use use) throws InvalidPemException {
         PEMParser pemParser = new PEMParser(pemFileReader);
 
-        Object pemObject = null;
+        PEMKeyPair pemKeyPair = null;
         try {
-            pemObject = pemParser.readObject();
+            pemKeyPair = (PEMKeyPair) pemParser.readObject();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new InvalidPemException("invalid file reader", e);
+        } catch (ClassCastException e) {
+            throw new InvalidPemException("pem did not not have a key pair", e);
+        }
+
+        if (pemKeyPair == null) {
+            throw new InvalidPemException("Could not parse the file reader");
         }
 
         KeyPair keyPair = null;
-        PEMKeyPair pemKeyPair = (PEMKeyPair) pemObject;
-
         try {
             keyPair = converter.getKeyPair(pemKeyPair);
         } catch (PEMException e) {
-            e.printStackTrace();
+            throw new InvalidPemException("Could not translate PEMKeyPair to a KeyPair");
         }
 
         RSAPrivateCrtKeySpec privateKey = null;
         try {
             privateKey = RSAKeyFactory.getKeySpec(keyPair.getPrivate(), RSAPrivateCrtKeySpec.class);
         } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
+            throw new InvalidPemException("Could not create RSAPrivateCrtKeySpec");
         }
 
         RSAKeyPair rsaKeyPair = new RSAKeyPair(

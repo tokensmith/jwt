@@ -6,13 +6,12 @@ import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequest;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.Use;
+import org.rootservices.jwt.translator.exception.InvalidKeyException;
+import org.rootservices.jwt.translator.exception.InvalidCsrException;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.Optional;
 
 /**
@@ -20,26 +19,31 @@ import java.util.Optional;
  */
 public class CSRToRSAPublicKey {
 
-    public RSAPublicKey translate(FileReader csr, Optional<String> keyId, Use use) {
+    public RSAPublicKey translate(FileReader csr, Optional<String> keyId, Use use) throws InvalidCsrException, InvalidKeyException {
 
         PEMParser pemParser = new PEMParser(csr);
-        Object obj = null;
+        PKCS10CertificationRequest certRequest = null;
         try {
-            obj = pemParser.readObject();
+            certRequest = (PKCS10CertificationRequest) pemParser.readObject();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new InvalidCsrException("invalid file reader", e);
+        } catch (ClassCastException e) {
+            throw new InvalidCsrException("csr file is not a valid csr", e);
         }
 
-        PKCS10CertificationRequest certRequest = (PKCS10CertificationRequest) obj;
+        if (certRequest == null) {
+            throw new InvalidCsrException("Could not parse the file reader");
+        }
+
         JcaPKCS10CertificationRequest jcaPKCS10CertificationRequest = new JcaPKCS10CertificationRequest(certRequest);
 
         java.security.interfaces.RSAPublicKey publicKey = null;
         try {
             publicKey = (java.security.interfaces.RSAPublicKey) jcaPKCS10CertificationRequest.getPublicKey();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
+        } catch (java.security.InvalidKeyException e) {
+            throw new InvalidKeyException("RSA public key from pem file is invalid", e);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            throw new InvalidKeyException("Could not create RSA public key", e);
         }
 
         return new RSAPublicKey(
