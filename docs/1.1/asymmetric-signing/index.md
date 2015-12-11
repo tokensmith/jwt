@@ -1,10 +1,11 @@
 ---
 layout: default
 title: Secured JWT with Asymmetric Key Example
+categories: [1.1]
 ---
 
 ##### Secured JWT signed with RS256 #####
-See [Getting Started]({{ site.baseurl }}{% post_url 2015-11-15-Getting-started %}) for maven dependency and definition of `Claim`.
+See [Getting Started]({{ site.baseurl }}/1.1/docs/getting-started) for maven dependency and definition of `Claim`.
  
 ~~~
 RSAKeyPair keyPair = new RSAKeyPair(

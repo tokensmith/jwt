@@ -1,6 +1,7 @@
 ---
 layout: default
 title:  CSR file to RSAPublicKey
+categories: [1.1]
 ---
 
 ##### Translate a csr file to a RSAPublicKey #####

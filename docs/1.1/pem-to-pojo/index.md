@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Pem file to RSAKeyPair
-date: 2015-11-15 11:59:54
+categories: [1.1]
 ---
 
 ##### Translate a pem file (private key) to a RSAKeyPair #####

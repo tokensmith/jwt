@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Getting started
+categories: [1.1]
 ---
 
 ### {{ page.title }} ###

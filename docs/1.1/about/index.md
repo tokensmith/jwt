@@ -1,6 +1,7 @@
 ---
 layout: default
 title: About JWT
+categories: [1.1]
 ---
 
 ### {{ page.title }} ###

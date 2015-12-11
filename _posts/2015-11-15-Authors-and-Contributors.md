@@ -1,9 +1,0 @@
----
-layout: default
-title: Authors and Contributors
-date: 2015-11-15 11:59:51
----
-
-### {{ page.title }} ###
-
-Tom MacKenzie [@tmackenzie](https://github.com/tmackenzie)
