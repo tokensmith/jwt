@@ -14,5 +14,5 @@ public abstract class VerifySignature {
         return (inputParts[0] + "." + inputParts[1]).getBytes(Charset.forName("UTF-8"));
 
     }
-    abstract boolean run(JsonWebToken token);
+    public abstract boolean run(JsonWebToken token);
 }

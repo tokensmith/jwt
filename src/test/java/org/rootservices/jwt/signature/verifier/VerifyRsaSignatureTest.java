@@ -31,7 +31,7 @@ public class VerifyRsaSignatureTest {
         JsonWebToken jwt = serializer.stringToJwt(jwtAsText, Claim.class);
 
         RSAPublicKey publicKey = Factory.makeRSAPublicKey();
-        VerifySignature subject = appFactory.verifyRsaSignature(Algorithm.RS256, publicKey);
+        VerifySignature subject = appFactory.verifySignature(Algorithm.RS256, publicKey);
 
         // verify the signature
         boolean isVerified = subject.run(jwt);

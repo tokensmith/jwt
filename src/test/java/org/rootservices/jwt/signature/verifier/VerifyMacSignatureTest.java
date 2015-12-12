@@ -7,15 +7,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.config.exception.DependencyException;
-import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
-import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
-import org.rootservices.jwt.serializer.exception.InvalidJwtException;
-
-import java.util.Optional;
+import org.rootservices.jwt.serializer.exception.JsonToJwtException;
 
 import static org.junit.Assert.assertTrue;
 
@@ -43,13 +39,13 @@ public class VerifyMacSignatureTest {
         JsonWebToken jwt = null;
         try {
             jwt = jwtSerializer.stringToJwt(jwtAsText, Claim.class);
-        } catch (InvalidJwtException e) {
+        } catch (JsonToJwtException e) {
             e.printStackTrace();
         }
 
         SymmetricKey key = Factory.makeSymmetricKey();
 
-        VerifySignature subject = appFactory.verifyMacSignature(Algorithm.HS256, key);
+        VerifySignature subject = appFactory.verifySignature(Algorithm.HS256, key);
 
         boolean actual = subject.run(jwt);
         assertTrue(actual);
@@ -64,13 +60,13 @@ public class VerifyMacSignatureTest {
         JsonWebToken jwt = null;
         try {
             jwt = jwtSerializer.stringToJwt(jwtAsText, Claim.class);
-        } catch (InvalidJwtException e) {
+        } catch (JsonToJwtException e) {
             e.printStackTrace();
         }
 
         SymmetricKey key = Factory.makeSymmetricKey();
 
-        VerifySignature subject = appFactory.verifyMacSignature(Algorithm.HS256, key);
+        VerifySignature subject = appFactory.verifySignature(Algorithm.HS256, key);
 
         boolean actual = subject.run(jwt);
         assertTrue(actual);
