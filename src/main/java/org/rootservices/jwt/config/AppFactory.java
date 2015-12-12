@@ -14,7 +14,6 @@ import org.rootservices.jwt.builder.SecureJwtBuilder;
 import org.rootservices.jwt.builder.UnsecureJwtBuilder;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
-import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.JWTSerializerImpl;
@@ -26,10 +25,7 @@ import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFact
 import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactoryImpl;
 import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
 import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactoryImpl;
-import org.rootservices.jwt.signature.verifier.VerifyRsaSignature;
 import org.rootservices.jwt.signature.verifier.VerifySignature;
-import org.rootservices.jwt.signature.verifier.VerifyMacSignature;
-import org.rootservices.jwt.signature.signer.RSASigner;
 import org.rootservices.jwt.signature.signer.Signer;
 import org.rootservices.jwt.signature.signer.factory.*;
 import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactory;
@@ -82,16 +78,6 @@ public class AppFactory {
         return new PublicKeySignatureFactoryImpl();
     }
 
-    public VerifyRsaSignature verifyRsaSignature(Algorithm algorithm, RSAPublicKey jwk) throws DependencyException {
-        Signature signature = null;
-        try {
-            signature = publicKeySignatureFactory().makeSignature(algorithm, jwk);
-        } catch (SignatureException e) {
-            throw new DependencyException("Could not create dependency, Signature", e);
-        }
-        return new VerifyRsaSignature(signature, urlDecoder());
-    }
-
     public MacFactory macFactory() {
         return new MacFactoryImpl(urlDecoder());
     }
@@ -104,23 +90,26 @@ public class AppFactory {
         return new SignerFactoryImpl(
                 macFactory(),
                 privateKeySignatureFactory(),
-                serializer(),
+                jwtSerializer(),
                 encoder()
         );
     }
 
-    public VerifySignature verifyMacSignature(Algorithm algorithm, SymmetricKey key) throws DependencyException {
-        Signer macSigner = null;
-        try {
-            macSigner = signerFactory().makeMacSigner(algorithm, key);
-        } catch (SignerException e) {
-            throw new DependencyException("Could not create dependency, Signer", e);
-        }
-        return new VerifyMacSignature(macSigner);
-    }
-
     public VerifySignatureFactory verifySignatureFactory() {
         return new VerifySignatureFactoryImpl(signerFactory(), publicKeySignatureFactory(), urlDecoder());
+    }
+
+    public VerifySignature verifySignature(Algorithm algorithm, Key key) throws DependencyException {
+        VerifySignature verifySignature = null;
+        try {
+            verifySignature = verifySignatureFactory().makeVerifySignature(algorithm, key);
+        } catch (SignerException e) {
+            throw new DependencyException("Could not create dependency, Signer", e);
+        } catch (SignatureException e) {
+            throw new DependencyException("Could not create dependency, Signature", e);
+        }
+
+        return verifySignature;
     }
 
     public UnsecureJwtBuilder unsecureJwtBuilder(){

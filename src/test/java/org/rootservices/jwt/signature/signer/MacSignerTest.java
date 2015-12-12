@@ -6,12 +6,12 @@ import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
-import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
+import org.rootservices.jwt.serializer.exception.JwtToJsonException;
 import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
 
 import java.util.Optional;
@@ -41,7 +41,7 @@ public class MacSignerTest {
      * Which is why the signature is different than the rfc.
      */
     @Test
-    public void shouldSignJwtCorrectly() throws InvalidJsonWebToken {
+    public void shouldSignJwtCorrectly() throws JwtToJsonException {
 
         // header
         Header header = new Header();

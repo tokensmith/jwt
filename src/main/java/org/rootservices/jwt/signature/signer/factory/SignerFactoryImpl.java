@@ -5,6 +5,7 @@ import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.Serializer;
 import org.rootservices.jwt.signature.signer.MacSigner;
 import org.rootservices.jwt.signature.signer.RSASigner;
@@ -28,13 +29,13 @@ import java.util.Base64;
 public class SignerFactoryImpl implements SignerFactory {
     private MacFactory macFactory;
     private PrivateKeySignatureFactory privateKeySignatureFactory;
-    private Serializer serializer;
     private Base64.Encoder encoder;
+    private JWTSerializer jwtSerializer;
 
-    public SignerFactoryImpl(MacFactory macFactory, PrivateKeySignatureFactory privateKeySignatureFactory, Serializer serializer, Base64.Encoder encoder){
+    public SignerFactoryImpl(MacFactory macFactory, PrivateKeySignatureFactory privateKeySignatureFactory, JWTSerializer jwtSerializer, Base64.Encoder encoder){
         this.macFactory = macFactory;
         this.privateKeySignatureFactory = privateKeySignatureFactory;
-        this.serializer = serializer;
+        this.jwtSerializer = jwtSerializer;
         this.encoder = encoder;
     }
 
@@ -59,7 +60,7 @@ public class SignerFactoryImpl implements SignerFactory {
             throw new SignerException("Couldn't create signer", e);
         }
 
-        return new MacSigner(serializer, mac, encoder);
+        return new MacSigner(jwtSerializer, mac, encoder);
     }
 
     private Signer makeRSASigner(Algorithm algorithm, RSAKeyPair keyPair) throws SignerException {
@@ -69,6 +70,6 @@ public class SignerFactoryImpl implements SignerFactory {
         } catch (SignatureException e) {
             throw new SignerException("Couldn't create signer", e);
         }
-        return new RSASigner(signature, serializer, encoder);
+        return new RSASigner(signature, jwtSerializer, encoder);
     }
 }

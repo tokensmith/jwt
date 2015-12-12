@@ -3,8 +3,9 @@ package org.rootservices.jwt.serializer;
 import org.rootservices.jwt.entity.jwt.Claims;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Header;
-import org.rootservices.jwt.serializer.exception.InvalidJwtException;
+import org.rootservices.jwt.serializer.exception.JsonToJwtException;
 import org.rootservices.jwt.serializer.exception.JsonException;
+import org.rootservices.jwt.serializer.exception.JwtToJsonException;
 
 import java.nio.charset.Charset;
 
@@ -24,6 +25,7 @@ public class JWTSerializerImpl implements JWTSerializer {
     private Serializer serializer;
     private Encoder encoder;
     private Decoder decoder;
+    private final String DELIMITTER = ".";
 
     public JWTSerializerImpl(Serializer serializer, Encoder encoder, Decoder decoder) {
         this.serializer = serializer;
@@ -32,22 +34,28 @@ public class JWTSerializerImpl implements JWTSerializer {
     }
 
     @Override
-    public String jwtToString(JsonWebToken jwt) throws InvalidJwtException {
-        String jwtAsText = "";
+    public String makeSignInput(Header header, Claims claims) throws JwtToJsonException {
+
         String headerJson = "";
         String claimsJson = "";
 
         try {
-            headerJson = serializer.objectToJson(jwt.getHeader());
-            claimsJson = serializer.objectToJson(jwt.getClaims());
+            headerJson = serializer.objectToJson(header);
+            claimsJson = serializer.objectToJson(claims);
         } catch (JsonException e) {
-            throw new InvalidJwtException("JWT json is invalid", e);
+            throw new JwtToJsonException("Could not make sign input", e);
         }
 
-        jwtAsText = encode(headerJson) + "." + encode(claimsJson) + ".";
+        return encode(headerJson) + DELIMITTER + encode(claimsJson);
+    }
+
+    @Override
+    public String jwtToString(JsonWebToken jwt) throws JwtToJsonException {
+
+        String jwtAsText = makeSignInput(jwt.getHeader(), jwt.getClaims()) + DELIMITTER;
 
         if (jwt.getSignature().isPresent())
-            jwtAsText+=jwt.getSignature().get();
+            jwtAsText+= jwt.getSignature().get();
 
         return jwtAsText;
     }
@@ -57,7 +65,7 @@ public class JWTSerializerImpl implements JWTSerializer {
     }
 
     @Override
-    public JsonWebToken stringToJwt(String jwtAsText, Class claimClass) throws InvalidJwtException {
+    public JsonWebToken stringToJwt(String jwtAsText, Class claimClass) throws JsonToJwtException {
         String[] jwtParts = jwtAsText.split("\\.");
 
         byte[] headerJson = decoder.decode(jwtParts[0]);
@@ -69,7 +77,7 @@ public class JWTSerializerImpl implements JWTSerializer {
             header = (Header) serializer.jsonBytesToObject(headerJson, Header.class);
             claim = (Claims) serializer.jsonBytesToObject(claimsJson, claimClass);
         } catch (JsonException e) {
-            throw new InvalidJwtException("JWT json is invalid", e);
+            throw new JsonToJwtException("JWT json is invalid", e);
         }
 
         JsonWebToken jwt = new JsonWebToken(header, claim, Optional.of(jwtAsText));

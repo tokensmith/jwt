@@ -5,7 +5,8 @@ import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
-import org.rootservices.jwt.signature.signer.InvalidJsonWebToken;
+import org.rootservices.jwt.serializer.exception.JsonToJwtException;
+import org.rootservices.jwt.serializer.exception.JwtToJsonException;
 import org.rootservices.jwt.signature.signer.Signer;
 
 import java.util.Optional;
@@ -20,11 +21,11 @@ public class SecureJwtBuilder {
         this.signer = signer;
     }
 
-    public JsonWebToken build(Algorithm alg, Claims claimNames) throws InvalidJsonWebToken {
+    public JsonWebToken build(Algorithm alg, Claims claimNames) throws JwtToJsonException {
         return build(alg, claimNames, Optional.<String>empty());
     }
 
-    public JsonWebToken build(Algorithm alg, Claims claimNames, Optional<String> keyId) throws InvalidJsonWebToken {
+    public JsonWebToken build(Algorithm alg, Claims claimNames, Optional<String> keyId) throws JwtToJsonException {
         Header header = new Header();
         header.setAlgorithm(alg);
         header.setType(Optional.of(TokenType.JWT));

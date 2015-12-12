@@ -11,7 +11,8 @@ import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
-import org.rootservices.jwt.signature.signer.InvalidJsonWebToken;
+import org.rootservices.jwt.serializer.exception.JsonToJwtException;
+import org.rootservices.jwt.serializer.exception.JwtToJsonException;
 
 import java.util.Optional;
 
@@ -135,7 +136,7 @@ public class SecureJwtBuilderTest {
     }
 
     @Test
-    public void makeSecureJwtWithKeyId() throws DependencyException, InvalidJsonWebToken {
+    public void makeSecureJwtWithKeyId() throws DependencyException, JwtToJsonException {
         Optional<String> keyId = Optional.of("test-key-id");
 
         // prepare subject of the test.

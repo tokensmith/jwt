@@ -1,11 +1,8 @@
 package org.rootservices.jwt.signature.signer;
 
-import org.rootservices.jwt.entity.jwt.Claims;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
-import org.rootservices.jwt.entity.jwt.header.Header;
-import org.rootservices.jwt.serializer.exception.JsonException;
-import org.rootservices.jwt.serializer.Serializer;
-import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
+import org.rootservices.jwt.serializer.JWTSerializer;
+import org.rootservices.jwt.serializer.exception.JwtToJsonException;
 
 import java.nio.charset.Charset;
 import java.util.Base64.Encoder;
@@ -14,35 +11,20 @@ import java.util.Base64.Encoder;
  * Created by tommackenzie on 8/19/15.
  */
 public abstract class Signer {
-    private Serializer serializer;
+    private JWTSerializer jwtSerializer;
     private Encoder encoder;
 
-    public Signer(Serializer serializer, Encoder encoder) {
-        this.serializer = serializer;
+    public Signer(JWTSerializer jwtSerializer, Encoder encoder) {
+        this.jwtSerializer = jwtSerializer;
         this.encoder = encoder;
-    }
-
-    private String makeSignInput(Header header, Claims claims) throws InvalidJsonWebToken {
-
-        String headerJson = "";
-        String claimsJson = "";
-
-        try {
-            headerJson = serializer.objectToJson(header);
-            claimsJson = serializer.objectToJson(claims);
-        } catch (JsonException e) {
-            throw new InvalidJsonWebToken("Could not generate json", e);
-        }
-
-        return encode(headerJson) + "." + encode(claimsJson);
     }
 
     private String encode(String input) {
         return encode(input.getBytes(Charset.forName("UTF-8")));
     }
 
-    public String run(JsonWebToken jwt) throws InvalidJsonWebToken {
-        String signInput = makeSignInput(jwt.getHeader(), jwt.getClaims());
+    public String run(JsonWebToken jwt) throws JwtToJsonException {
+        String signInput = jwtSerializer.makeSignInput(jwt.getHeader(), jwt.getClaims());
         return run(signInput.getBytes());
     }
 
