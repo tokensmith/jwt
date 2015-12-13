@@ -5,7 +5,7 @@ import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.translator.CSRToRSAPublicKey;
 import org.rootservices.jwt.translator.exception.InvalidCsrException;
-import org.rootservices.jwt.translator.exception.InvalidKeyException;
+import org.rootservices.jwt.exception.InvalidKeyException;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

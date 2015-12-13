@@ -8,9 +8,11 @@ import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.exception.InvalidKeyException;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.signature.signer.factory.exception.SecurityKeyException;
 import org.rootservices.jwt.signature.signer.factory.hmac.MacFactory;
-import org.rootservices.jwt.signature.signer.factory.hmac.exception.MacException;
 
 import javax.crypto.Mac;
 import java.util.Base64;
@@ -30,7 +32,7 @@ public class MacFactoryImplTest {
     }
 
     @Test
-    public void makeKeyShouldBeHS256WithSecretKey() {
+    public void makeKeyShouldBeHS256WithSecretKey() throws InvalidKeyException {
         SymmetricKey key = Factory.makeSymmetricKey();
 
         java.security.Key actual = subject.makeKey(Algorithm.HS256, key);
@@ -41,8 +43,15 @@ public class MacFactoryImplTest {
         assertEquals(encoder.encodeToString(actual.getEncoded()), key.getKey());
     }
 
+    @Test(expected = InvalidKeyException.class)
+    public void makeKeyWithRS256ShouldThrowInvalidKey() throws InvalidKeyException {
+        SymmetricKey key = Factory.makeSymmetricKey();
+
+        subject.makeKey(Algorithm.RS256, key);
+    }
+
     @Test
-    public void makeMacShouldBeHS256Alg() throws MacException {
+    public void makeMacShouldBeHS256Alg() throws InvalidAlgorithmException, SecurityKeyException, InvalidKeyException {
         SymmetricKey key = Factory.makeSymmetricKey();
 
         Mac actual = subject.makeMac(Algorithm.HS256, key);

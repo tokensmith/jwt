@@ -5,14 +5,15 @@ import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.exception.InvalidKeyException;
 import org.rootservices.jwt.serializer.JWTSerializer;
-import org.rootservices.jwt.serializer.Serializer;
 import org.rootservices.jwt.signature.signer.MacSigner;
 import org.rootservices.jwt.signature.signer.RSASigner;
 import org.rootservices.jwt.signature.signer.Signer;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.signature.signer.factory.exception.SecurityKeyException;
 import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
 import org.rootservices.jwt.signature.signer.factory.hmac.MacFactory;
-import org.rootservices.jwt.signature.signer.factory.hmac.exception.MacException;
 import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
 
 
@@ -52,11 +53,15 @@ public class SignerFactoryImpl implements SignerFactory {
 
     @Override
     public Signer makeMacSigner(Algorithm algorithm, Key key) throws SignerException {
-        Mac mac = null;
+        Mac mac;
 
         try {
             mac = macFactory.makeMac(algorithm, (SymmetricKey) key);
-        } catch (MacException e) {
+        } catch (SecurityKeyException e) {
+            throw new SignerException("Couldn't create signer", e);
+        } catch (InvalidAlgorithmException e) {
+            throw new SignerException("Couldn't create signer", e);
+        } catch (InvalidKeyException e) {
             throw new SignerException("Couldn't create signer", e);
         }
 

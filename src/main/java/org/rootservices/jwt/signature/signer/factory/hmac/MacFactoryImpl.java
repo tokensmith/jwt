@@ -3,12 +3,13 @@ package org.rootservices.jwt.signature.signer.factory.hmac;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.exception.InvalidKeyException;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
-import org.rootservices.jwt.signature.signer.factory.hmac.exception.MacException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.signature.signer.factory.exception.SecurityKeyException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -24,34 +25,35 @@ public class MacFactoryImpl implements MacFactory {
     }
 
     @Override
-    public Key makeKey(Algorithm alg, SymmetricKey jwk) {
+    public Key makeKey(Algorithm alg, SymmetricKey jwk) throws InvalidKeyException {
         Key key = null;
 
         if (alg == Algorithm.HS256 && jwk.getKeyType() == KeyType.OCT) {
             byte[] secretKey = decoder.decode(jwk.getKey());
             key = new SecretKeySpec(secretKey, SignAlgorithm.HS256.getValue());
+        } else {
+            throw new InvalidKeyException("Unexpected key and algorithm");
         }
         return key;
     }
 
     @Override
-    public Mac makeMac(Algorithm alg, SymmetricKey jwk) throws MacException {
+    public Mac makeMac(Algorithm alg, SymmetricKey jwk) throws InvalidAlgorithmException, SecurityKeyException, InvalidKeyException {
         java.security.Key securityKey = makeKey(alg, jwk);
-        Mac mac = null;
+        Mac mac;
 
         try {
             mac = Mac.getInstance(securityKey.getAlgorithm());
-            // TODO: could possibly throw a npe ^
         } catch (NoSuchAlgorithmException e) {
             // should never reach here - tests prove it.
-            throw new MacException("Could not create mac", e);
+            throw new InvalidAlgorithmException("Algorithm is not supported.", e);
         }
 
         try {
             mac.init(securityKey);
-        } catch (InvalidKeyException e) {
+        } catch (java.security.InvalidKeyException e) {
             // should never reach here - it will fail creating the key first
-            throw new MacException("Invalid java.security.Key", e);
+            throw new SecurityKeyException("Inappropriate key for initializing MAC", e);
         }
 
         return mac;
