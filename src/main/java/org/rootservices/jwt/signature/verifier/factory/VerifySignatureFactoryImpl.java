@@ -41,23 +41,31 @@ public class VerifySignatureFactoryImpl implements VerifySignatureFactory {
         VerifySignature verifySignature = null;
 
         if (key.getKeyType() == KeyType.OCT) {
-            Signer macSigner = signerFactory.makeMacSigner(algorithm, key);
-            verifySignature = new VerifyMacSignature(macSigner);
+            verifySignature = makeVerifyMacSignature(algorithm, key);
         } else if (key.getKeyType() == KeyType.RSA){
-
-            Signature signature = null;
-            try {
-                signature = publicKeySignatureFactory.makeSignature(SignAlgorithm.RS256, (RSAPublicKey)key);
-            } catch (PublicKeyException e) {
-                throw new InvalidJsonWebTokenException("", e);
-            } catch (RSAPublicKeyException e) {
-                throw new InvalidJsonWebTokenException("", e);
-            } catch (InvalidAlgorithmException e) {
-                throw e;
-            }
-
-            verifySignature =  new VerifyRsaSignature(signature, decoder);
+            verifySignature =  makeVerifyRsaSignature(algorithm, (RSAPublicKey) key);
         }
         return verifySignature;
+    }
+
+    private VerifySignature makeVerifyMacSignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebTokenException {
+        Signer macSigner = signerFactory.makeMacSigner(algorithm, key);
+        return new VerifyMacSignature(macSigner);
+    }
+
+    private VerifySignature makeVerifyRsaSignature(Algorithm algorithm, RSAPublicKey key) throws InvalidJsonWebTokenException, InvalidAlgorithmException {
+        Signature signature;
+
+        try {
+            signature = publicKeySignatureFactory.makeSignature(SignAlgorithm.RS256, key);
+        } catch (PublicKeyException e) {
+            throw new InvalidJsonWebTokenException("", e);
+        } catch (RSAPublicKeyException e) {
+            throw new InvalidJsonWebTokenException("", e);
+        } catch (InvalidAlgorithmException e) {
+            throw e;
+        }
+
+        return new VerifyRsaSignature(signature, decoder);
     }
 }
