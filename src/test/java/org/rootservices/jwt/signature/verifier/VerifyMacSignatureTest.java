@@ -6,12 +6,13 @@ import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
-import org.rootservices.jwt.config.exception.DependencyException;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.exception.JsonToJwtException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
 
 import static org.junit.Assert.assertTrue;
 
@@ -30,7 +31,7 @@ public class VerifyMacSignatureTest {
     }
 
     @Test
-    public void verifySecureJwtWithJwtShouldBeTrue() throws DependencyException {
+    public void verifySecureJwtWithJwtShouldBeTrue() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
 
         String jwtAsText = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
@@ -52,7 +53,7 @@ public class VerifyMacSignatureTest {
     }
 
     @Test
-    public void verifyUnsecureJwtWithJwtShouldBeTrue() throws DependencyException {
+    public void verifyUnsecureJwtWithJwtShouldBeTrue() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
 
         String jwtAsText = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";

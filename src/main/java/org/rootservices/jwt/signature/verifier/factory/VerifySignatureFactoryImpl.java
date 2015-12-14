@@ -3,18 +3,15 @@ package org.rootservices.jwt.signature.verifier.factory;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
-import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.Signer;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebTokenException;
-import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
 import org.rootservices.jwt.signature.signer.factory.SignerFactory;
 import org.rootservices.jwt.signature.signer.factory.rsa.exception.PublicKeyException;
 import org.rootservices.jwt.signature.signer.factory.rsa.exception.RSAPublicKeyException;
-import org.rootservices.jwt.signature.signer.factory.rsa.exception.SignatureException;
 import org.rootservices.jwt.signature.verifier.VerifyMacSignature;
 import org.rootservices.jwt.signature.verifier.VerifyRsaSignature;
 import org.rootservices.jwt.signature.verifier.VerifySignature;
@@ -37,7 +34,7 @@ public class VerifySignatureFactoryImpl implements VerifySignatureFactory {
         this.decoder = decoder;
     }
 
-    public VerifySignature makeVerifySignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebTokenException {
+    public VerifySignature makeVerifySignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         VerifySignature verifySignature = null;
 
         if (key.getKeyType() == KeyType.OCT) {
@@ -48,20 +45,20 @@ public class VerifySignatureFactoryImpl implements VerifySignatureFactory {
         return verifySignature;
     }
 
-    private VerifySignature makeVerifyMacSignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebTokenException {
+    private VerifySignature makeVerifyMacSignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         Signer macSigner = signerFactory.makeMacSigner(algorithm, key);
         return new VerifyMacSignature(macSigner);
     }
 
-    private VerifySignature makeVerifyRsaSignature(Algorithm algorithm, RSAPublicKey key) throws InvalidJsonWebTokenException, InvalidAlgorithmException {
+    private VerifySignature makeVerifyRsaSignature(Algorithm algorithm, RSAPublicKey key) throws InvalidJsonWebKeyException, InvalidAlgorithmException {
         Signature signature;
 
         try {
             signature = publicKeySignatureFactory.makeSignature(SignAlgorithm.RS256, key);
         } catch (PublicKeyException e) {
-            throw new InvalidJsonWebTokenException("", e);
+            throw new InvalidJsonWebKeyException("", e);
         } catch (RSAPublicKeyException e) {
-            throw new InvalidJsonWebTokenException("", e);
+            throw new InvalidJsonWebKeyException("", e);
         } catch (InvalidAlgorithmException e) {
             throw e;
         }

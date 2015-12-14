@@ -11,9 +11,8 @@ import org.rootservices.jwt.signature.signer.RSASigner;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.Signer;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebTokenException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.signature.signer.factory.hmac.exception.SecurityKeyException;
-import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
 import org.rootservices.jwt.signature.signer.factory.hmac.MacFactory;
 import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
 import org.rootservices.jwt.signature.signer.factory.rsa.exception.PrivateKeyException;
@@ -43,7 +42,7 @@ public class SignerFactoryImpl implements SignerFactory {
     }
 
     @Override
-    public Signer makeSigner(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebTokenException {
+    public Signer makeSigner(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         Signer signer = null;
         if (jwk.getKeyType() == KeyType.OCT) {
             signer = makeMacSigner(alg, jwk);
@@ -54,13 +53,13 @@ public class SignerFactoryImpl implements SignerFactory {
     }
 
     @Override
-    public Signer makeMacSigner(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebTokenException {
+    public Signer makeMacSigner(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         Mac mac;
 
         try {
             mac = macFactory.makeMac(SignAlgorithm.HS256, (SymmetricKey) key);
         } catch (SecurityKeyException e) {
-            throw new InvalidJsonWebTokenException("", e);
+            throw new InvalidJsonWebKeyException("", e);
         } catch (InvalidAlgorithmException e) {
             throw e;
         }
@@ -68,14 +67,14 @@ public class SignerFactoryImpl implements SignerFactory {
         return new MacSigner(jwtSerializer, mac, encoder);
     }
 
-    private Signer makeRSASigner(Algorithm algorithm, RSAKeyPair keyPair) throws InvalidAlgorithmException, InvalidJsonWebTokenException {
+    private Signer makeRSASigner(Algorithm algorithm, RSAKeyPair keyPair) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         Signature signature = null;
         try {
             signature = privateKeySignatureFactory.makeSignature(SignAlgorithm.RS256, keyPair);
         } catch (PrivateKeyException e) {
-            throw new InvalidJsonWebTokenException("", e);
+            throw new InvalidJsonWebKeyException("", e);
         } catch (RSAPrivateKeyException e) {
-            throw new InvalidJsonWebTokenException("", e);
+            throw new InvalidJsonWebKeyException("", e);
         } catch (InvalidAlgorithmException e) {
             throw e;
         }

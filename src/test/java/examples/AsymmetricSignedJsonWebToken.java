@@ -1,10 +1,8 @@
 package examples;
 
 import helper.entity.Claim;
-import org.junit.Test;
 import org.rootservices.jwt.builder.SecureJwtBuilder;
 import org.rootservices.jwt.config.AppFactory;
-import org.rootservices.jwt.config.exception.DependencyException;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
@@ -14,12 +12,11 @@ import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.exception.JsonToJwtException;
 import org.rootservices.jwt.serializer.exception.JwtToJsonException;
-import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.signature.verifier.VerifySignature;
-import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactory;
 
 import java.math.BigInteger;
-import java.security.SignatureException;
 import java.util.Optional;
 
 /**
@@ -27,7 +24,7 @@ import java.util.Optional;
  */
 public class AsymmetricSignedJsonWebToken {
 
-    public String toJson() throws DependencyException, JwtToJsonException {
+    public String toJson() throws JwtToJsonException, InvalidAlgorithmException, InvalidJsonWebKeyException {
 
         RSAKeyPair keyPair = new RSAKeyPair(
                 Optional.of("test-key-id"),
@@ -48,8 +45,9 @@ public class AsymmetricSignedJsonWebToken {
         SecureJwtBuilder secureTokenBuilder = null;
         try {
             secureTokenBuilder = appFactory.secureJwtBuilder(Algorithm.RS256, keyPair);
-        } catch (DependencyException e) {
-            // could not construct a SecureJwtBuilder, e.cause will provide details
+        } catch (InvalidJsonWebKeyException e) {
+            throw e;
+        } catch (InvalidAlgorithmException e) {
             throw e;
         }
 
@@ -76,7 +74,7 @@ public class AsymmetricSignedJsonWebToken {
         return jwt;
     }
 
-    public Boolean verifySignature() throws JsonToJwtException, DependencyException {
+    public Boolean verifySignature() throws JsonToJwtException, InvalidAlgorithmException, InvalidJsonWebKeyException {
         String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZX0.ZaZoTp-lb3C7Sb7BKQm3BZyGiMxtehBtAeN9anuDPgO_F3eR8o9UU4c1RgCFDLqO_Ftg6QCmoZ1SEDuNw8AskJWSqcuJwcOttrqf46BHB89QuGtfmhEb5fIbyuqD-n2XM2hHhvPL6yJvLd3VQNvW2VexSL3fmutC5MYoPa8IfvjGZ_QKMwA7BBwcm4Djnnlu9HwiNg3a_y6-JJxr_jW5GD8VomHZbLasokR6h5N-y-DXIIYL3-oMl-_rE1BPdm_gE76p4Lo49BM-AyUxbShAHDl-EBKsz_Vo-Pgk_4rXkBOMMJQI95FrK5FeJs2yZxMoZ_V_f5_VGnXYNzq3SFJwnQ";
 
         RSAPublicKey publicKey = new RSAPublicKey(
@@ -101,8 +99,9 @@ public class AsymmetricSignedJsonWebToken {
         VerifySignature verifySignature = null;
         try {
             verifySignature = appFactory.verifySignature(Algorithm.RS256, publicKey);
-        } catch (DependencyException e) {
-            // could not construct VerifySignature, e.cause will provide reason
+        } catch (InvalidJsonWebKeyException e) {
+            throw e;
+        } catch (InvalidAlgorithmException e) {
             throw e;
         }
 

@@ -6,11 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.rootservices.jwt.config.exception.DependencyException;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebTokenException;
-import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
-import org.rootservices.jwt.signature.signer.factory.rsa.exception.SignatureException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.translator.CSRToRSAPublicKey;
 import org.rootservices.jwt.translator.PemToRSAKeyPair;
 import org.rootservices.jwt.builder.SecureJwtBuilder;
@@ -104,32 +101,16 @@ public class AppFactory {
         return new VerifySignatureFactoryImpl(signerFactory(), publicKeySignatureFactory(), urlDecoder());
     }
 
-    public VerifySignature verifySignature(Algorithm algorithm, Key key) throws DependencyException {
-        VerifySignature verifySignature = null;
-        try {
-            verifySignature = verifySignatureFactory().makeVerifySignature(algorithm, key);
-        } catch (InvalidJsonWebTokenException e) {
-            throw new DependencyException("Could not create dependency, Signer", e);
-        } catch (InvalidAlgorithmException e) {
-            throw new DependencyException("Could not create dependency, Signer", e);
-        }
-
-        return verifySignature;
+    public VerifySignature verifySignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+        return verifySignatureFactory().makeVerifySignature(algorithm, key);
     }
 
     public UnsecureJwtBuilder unsecureJwtBuilder(){
         return new UnsecureJwtBuilder();
     }
 
-    public SecureJwtBuilder secureJwtBuilder(Algorithm alg, Key jwk) throws DependencyException {
-        Signer signer;
-        try {
-            signer = signerFactory().makeSigner(alg, jwk);
-        } catch (InvalidJsonWebTokenException e) {
-            throw new DependencyException("Could not create dependency, Signer", e);
-        } catch (InvalidAlgorithmException e) {
-            throw new DependencyException("Could not create dependency, Signer", e);
-        }
+    public SecureJwtBuilder secureJwtBuilder(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+        Signer signer = signerFactory().makeSigner(alg, jwk);
         return new SecureJwtBuilder(signer);
     }
 

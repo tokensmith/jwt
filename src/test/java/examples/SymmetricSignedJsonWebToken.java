@@ -1,10 +1,8 @@
 package examples;
 
 import helper.entity.Claim;
-import org.junit.Test;
 import org.rootservices.jwt.builder.SecureJwtBuilder;
 import org.rootservices.jwt.config.AppFactory;
-import org.rootservices.jwt.config.exception.DependencyException;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
@@ -12,11 +10,10 @@ import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.exception.JsonToJwtException;
 import org.rootservices.jwt.serializer.exception.JwtToJsonException;
-import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.signature.verifier.VerifySignature;
-import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactory;
 
-import java.security.SignatureException;
 import java.util.Optional;
 
 /**
@@ -24,7 +21,7 @@ import java.util.Optional;
  */
 public class SymmetricSignedJsonWebToken {
 
-    public String toJson() throws DependencyException, JwtToJsonException {
+    public String toJson() throws JwtToJsonException, InvalidJsonWebKeyException, InvalidAlgorithmException {
 
         AppFactory appFactory = new AppFactory();
 
@@ -37,8 +34,9 @@ public class SymmetricSignedJsonWebToken {
         SecureJwtBuilder secureJwtBuilder = null;
         try {
             secureJwtBuilder = appFactory.secureJwtBuilder(Algorithm.HS256, key);
-        } catch (DependencyException e) {
-            // could not construct a SecureJwtBuilder, e.cause will provide details
+        } catch (InvalidJsonWebKeyException e) {
+            throw e;
+        } catch (InvalidAlgorithmException e) {
             throw e;
         }
 
@@ -66,7 +64,7 @@ public class SymmetricSignedJsonWebToken {
         return jwt;
     }
 
-    public Boolean verifySignature() throws DependencyException, JsonToJwtException {
+    public Boolean verifySignature() throws JsonToJwtException, InvalidJsonWebKeyException, InvalidAlgorithmException {
 
         AppFactory appFactory = new AppFactory();
 
@@ -91,8 +89,9 @@ public class SymmetricSignedJsonWebToken {
         VerifySignature verifySignature = null;
         try {
             verifySignature = appFactory.verifySignature(Algorithm.HS256, key);
-        } catch (DependencyException e) {
-            // could not construct VerifySignature, e.cause will provide reason
+        } catch (InvalidJsonWebKeyException e) {
+            throw e;
+        } catch (InvalidAlgorithmException e) {
             throw e;
         }
 

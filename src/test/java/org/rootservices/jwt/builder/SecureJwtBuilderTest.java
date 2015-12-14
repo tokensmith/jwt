@@ -5,14 +5,14 @@ import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
-import org.rootservices.jwt.config.exception.DependencyException;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
-import org.rootservices.jwt.serializer.exception.JsonToJwtException;
 import org.rootservices.jwt.serializer.exception.JwtToJsonException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
 
 import java.util.Optional;
 
@@ -136,7 +136,7 @@ public class SecureJwtBuilderTest {
     }
 
     @Test
-    public void makeSecureJwtWithKeyId() throws DependencyException, JwtToJsonException {
+    public void makeSecureJwtWithKeyId() throws JwtToJsonException, InvalidAlgorithmException, InvalidJsonWebKeyException {
         Optional<String> keyId = Optional.of("test-key-id");
 
         // prepare subject of the test.
