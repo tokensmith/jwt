@@ -15,6 +15,8 @@ import org.rootservices.jwt.signature.signer.factory.exception.SecurityKeyExcept
 import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
 import org.rootservices.jwt.signature.signer.factory.hmac.MacFactory;
 import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
+import org.rootservices.jwt.signature.signer.factory.rsa.exception.PrivateKeyException;
+import org.rootservices.jwt.signature.signer.factory.rsa.exception.RSAPrivateKeyException;
 
 
 import javax.crypto.Mac;
@@ -72,7 +74,11 @@ public class SignerFactoryImpl implements SignerFactory {
         Signature signature = null;
         try {
             signature = privateKeySignatureFactory.makeSignature(algorithm, keyPair);
-        } catch (SignatureException e) {
+        } catch (PrivateKeyException e) {
+            throw new SignerException("Couldn't create signer", e);
+        } catch (InvalidAlgorithmException e) {
+            throw new SignerException("Couldn't create signer", e);
+        } catch (RSAPrivateKeyException e) {
             throw new SignerException("Couldn't create signer", e);
         }
         return new RSASigner(signature, jwtSerializer, encoder);

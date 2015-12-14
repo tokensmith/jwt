@@ -83,7 +83,7 @@ public class AppFactory {
     }
 
     public PrivateKeySignatureFactory privateKeySignatureFactory() {
-        return new PrivateKeySignatureFactoryImpl();
+        return new PrivateKeySignatureFactoryImpl(rsaKeyFactory());
     }
 
     public SignerFactory signerFactory() {
@@ -131,7 +131,7 @@ public class AppFactory {
         return new JcaPEMKeyConverter().setProvider("BC");
     }
 
-    public PemToRSAKeyPair pemToRSAKeyPair() {
+    protected KeyFactory rsaKeyFactory() {
         KeyFactory RSAKeyFactory = null;
         try {
             RSAKeyFactory = KeyFactory.getInstance("RSA");
@@ -139,7 +139,11 @@ public class AppFactory {
             // will never reach here.
             e.printStackTrace();
         }
-        return new PemToRSAKeyPair(jcaPEMKeyConverter(), RSAKeyFactory);
+        return RSAKeyFactory;
+    }
+
+    public PemToRSAKeyPair pemToRSAKeyPair() {
+        return new PemToRSAKeyPair(jcaPEMKeyConverter(), rsaKeyFactory());
     }
 
     public CSRToRSAPublicKey csrToRSAPublicKey() {
