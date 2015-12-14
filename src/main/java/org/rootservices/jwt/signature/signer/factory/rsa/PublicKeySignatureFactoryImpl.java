@@ -38,12 +38,12 @@ public class PublicKeySignatureFactoryImpl implements PublicKeySignatureFactory 
     }
 
     @Override
-    public Signature makeSignature(Algorithm alg, RSAPublicKey jwk) throws PublicKeyException, InvalidAlgorithmException, RSAPublicKeyException {
+    public Signature makeSignature(SignAlgorithm alg, RSAPublicKey jwk) throws PublicKeyException, InvalidAlgorithmException, RSAPublicKeyException {
         java.security.interfaces.RSAPublicKey securityPublicKey = makePublicKey(jwk);
 
         Signature signature = null;
         try {
-            signature = Signature.getInstance(SignAlgorithm.RS256.getValue());
+            signature = Signature.getInstance(alg.getValue());
         } catch (NoSuchAlgorithmException e) {
             // should never reach here - tests prove it.
             throw new InvalidAlgorithmException("Could not create Signature", e);

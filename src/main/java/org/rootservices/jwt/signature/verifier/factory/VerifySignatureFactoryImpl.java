@@ -5,6 +5,7 @@ import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.Signer;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
@@ -45,7 +46,7 @@ public class VerifySignatureFactoryImpl implements VerifySignatureFactory {
 
             Signature signature = null;
             try {
-                signature = publicKeySignatureFactory.makeSignature(Algorithm.RS256, (RSAPublicKey)key);
+                signature = publicKeySignatureFactory.makeSignature(SignAlgorithm.RS256, (RSAPublicKey)key);
             } catch (PublicKeyException e) {
                 throw new SignatureException("fix me", e);
             } catch (InvalidAlgorithmException e) {

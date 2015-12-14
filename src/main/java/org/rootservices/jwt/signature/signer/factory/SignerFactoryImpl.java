@@ -8,6 +8,7 @@ import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.signature.signer.MacSigner;
 import org.rootservices.jwt.signature.signer.RSASigner;
+import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.Signer;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.signature.signer.factory.exception.SecurityKeyException;
@@ -56,7 +57,7 @@ public class SignerFactoryImpl implements SignerFactory {
         Mac mac;
 
         try {
-            mac = macFactory.makeMac(algorithm, (SymmetricKey) key);
+            mac = macFactory.makeMac(SignAlgorithm.HS256, (SymmetricKey) key);
         } catch (SecurityKeyException e) {
             throw new SignerException("Couldn't create signer", e);
         } catch (InvalidAlgorithmException e) {
@@ -69,7 +70,7 @@ public class SignerFactoryImpl implements SignerFactory {
     private Signer makeRSASigner(Algorithm algorithm, RSAKeyPair keyPair) throws SignerException {
         Signature signature = null;
         try {
-            signature = privateKeySignatureFactory.makeSignature(algorithm, keyPair);
+            signature = privateKeySignatureFactory.makeSignature(SignAlgorithm.RS256, keyPair);
         } catch (PrivateKeyException e) {
             throw new SignerException("Couldn't create signer", e);
         } catch (InvalidAlgorithmException e) {

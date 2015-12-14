@@ -1,20 +1,17 @@
 package org.rootservices.jwt.signature.signer.factory.rsa;
 
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
-import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.signature.signer.factory.rsa.exception.PrivateKeyException;
 import org.rootservices.jwt.signature.signer.factory.rsa.exception.RSAPrivateKeyException;
 
-import java.math.BigInteger;
 import java.security.*;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.RSAPrivateKeySpec;
-import java.util.Base64;
 
 /**
  * Created by tommackenzie on 11/4/15.
@@ -59,7 +56,7 @@ public class PrivateKeySignatureFactoryImpl implements PrivateKeySignatureFactor
     }
 
     @Override
-    public Signature makeSignature(Algorithm alg, RSAKeyPair jwk) throws PrivateKeyException, InvalidAlgorithmException, RSAPrivateKeyException {
+    public Signature makeSignature(SignAlgorithm alg, RSAKeyPair jwk) throws PrivateKeyException, InvalidAlgorithmException, RSAPrivateKeyException {
         RSAPrivateKey privateKey = makePrivateKey(jwk);
 
         Signature signature;

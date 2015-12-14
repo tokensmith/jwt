@@ -2,6 +2,7 @@ package org.rootservices.jwt.signature.signer.factory.rsa;
 
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.signature.signer.factory.rsa.exception.PrivateKeyException;
 import org.rootservices.jwt.signature.signer.factory.rsa.exception.RSAPrivateKeyException;
@@ -19,5 +20,5 @@ import java.security.interfaces.RSAPrivateKey;
  */
 public interface PrivateKeySignatureFactory {
     RSAPrivateCrtKey makePrivateKey(RSAKeyPair jwk) throws PrivateKeyException, InvalidAlgorithmException;
-    Signature makeSignature(Algorithm alg, RSAKeyPair jwk) throws PrivateKeyException, InvalidAlgorithmException, RSAPrivateKeyException;
+    Signature makeSignature(SignAlgorithm alg, RSAKeyPair jwk) throws PrivateKeyException, InvalidAlgorithmException, RSAPrivateKeyException;
 }

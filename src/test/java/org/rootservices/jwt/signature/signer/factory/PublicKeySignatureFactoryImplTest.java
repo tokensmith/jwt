@@ -61,7 +61,7 @@ public class PublicKeySignatureFactoryImplTest {
         @Test
     public void testMakeSignatureShouldBeRS256() throws InvalidAlgorithmException, PublicKeyException, RSAPublicKeyException {
         RSAPublicKey publicKey = Factory.makeRSAPublicKey();
-        Signature signature = subject.makeSignature(Algorithm.RS256, publicKey);
+        Signature signature = subject.makeSignature(SignAlgorithm.RS256, publicKey);
 
         assertThat(signature.getAlgorithm(), is(SignAlgorithm.RS256.getValue()));
     }

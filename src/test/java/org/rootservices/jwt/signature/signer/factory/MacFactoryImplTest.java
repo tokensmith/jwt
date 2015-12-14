@@ -34,7 +34,7 @@ public class MacFactoryImplTest {
     public void makeKeyShouldBeHS256WithSecretKey() {
         SymmetricKey key = Factory.makeSymmetricKey();
 
-        java.security.Key actual = subject.makeKey(Algorithm.HS256, key);
+        java.security.Key actual = subject.makeKey(SignAlgorithm.HS256, key);
         assertNotNull(actual);
         assertEquals(actual.getAlgorithm(), SignAlgorithm.HS256.getValue());
 
@@ -46,7 +46,7 @@ public class MacFactoryImplTest {
     public void makeMacShouldBeHS256Alg() throws InvalidAlgorithmException, SecurityKeyException {
         SymmetricKey key = Factory.makeSymmetricKey();
 
-        Mac actual = subject.makeMac(Algorithm.HS256, key);
+        Mac actual = subject.makeMac(SignAlgorithm.HS256, key);
         assertNotNull(actual);
         assertEquals(actual.getAlgorithm(), SignAlgorithm.HS256.getValue());
     }
