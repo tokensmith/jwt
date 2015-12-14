@@ -65,9 +65,8 @@ public class PrivateKeySignatureFactoryImpl implements PrivateKeySignatureFactor
         Signature signature;
 
         try {
-            signature = Signature.getInstance(SignAlgorithm.RS256.getValue());
+            signature = Signature.getInstance(alg.getValue());
         } catch (NoSuchAlgorithmException e) {
-            // should never reach here - tests prove it.
             throw new InvalidAlgorithmException("Algorithm is not supported.", e);
         }
 

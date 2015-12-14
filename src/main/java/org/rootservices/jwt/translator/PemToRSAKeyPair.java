@@ -7,7 +7,7 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.Use;
-import org.rootservices.jwt.exception.InvalidKeyException;
+import org.rootservices.jwt.translator.exception.InvalidKeyException;
 import org.rootservices.jwt.translator.exception.InvalidPemException;
 
 import java.io.FileReader;

@@ -1,9 +1,7 @@
 package org.rootservices.jwt.signature.signer.factory.hmac;
 
-import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.exception.InvalidKeyException;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.signature.signer.factory.exception.SecurityKeyException;
@@ -25,27 +23,19 @@ public class MacFactoryImpl implements MacFactory {
     }
 
     @Override
-    public Key makeKey(Algorithm alg, SymmetricKey jwk) throws InvalidKeyException {
-        Key key = null;
-
-        if (alg == Algorithm.HS256 && jwk.getKeyType() == KeyType.OCT) {
-            byte[] secretKey = decoder.decode(jwk.getKey());
-            key = new SecretKeySpec(secretKey, SignAlgorithm.HS256.getValue());
-        } else {
-            throw new InvalidKeyException("Unexpected key and algorithm");
-        }
-        return key;
+    public Key makeKey(Algorithm alg, SymmetricKey jwk) {
+        byte[] secretKey = decoder.decode(jwk.getKey());
+        return new SecretKeySpec(secretKey, SignAlgorithm.HS256.getValue());
     }
 
     @Override
-    public Mac makeMac(Algorithm alg, SymmetricKey jwk) throws InvalidAlgorithmException, SecurityKeyException, InvalidKeyException {
+    public Mac makeMac(Algorithm alg, SymmetricKey jwk) throws InvalidAlgorithmException, SecurityKeyException {
         java.security.Key securityKey = makeKey(alg, jwk);
         Mac mac;
 
         try {
-            mac = Mac.getInstance(securityKey.getAlgorithm());
+            mac = Mac.getInstance(SignAlgorithm.HS256.getValue());
         } catch (NoSuchAlgorithmException e) {
-            // should never reach here - tests prove it.
             throw new InvalidAlgorithmException("Algorithm is not supported.", e);
         }
 

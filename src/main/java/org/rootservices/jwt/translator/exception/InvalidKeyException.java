@@ -1,4 +1,4 @@
-package org.rootservices.jwt.exception;
+package org.rootservices.jwt.translator.exception;
 
 /**
  * Created by tommackenzie on 12/8/15.

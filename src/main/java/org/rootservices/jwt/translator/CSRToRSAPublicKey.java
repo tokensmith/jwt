@@ -6,7 +6,7 @@ import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequest;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.Use;
-import org.rootservices.jwt.exception.InvalidKeyException;
+import org.rootservices.jwt.translator.exception.InvalidKeyException;
 import org.rootservices.jwt.translator.exception.InvalidCsrException;
 
 import java.io.FileReader;
