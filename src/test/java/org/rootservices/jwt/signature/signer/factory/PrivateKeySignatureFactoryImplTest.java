@@ -7,8 +7,10 @@ import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
 import org.rootservices.jwt.signature.signer.factory.rsa.exception.PrivateKeyException;
+import org.rootservices.jwt.signature.signer.factory.rsa.exception.RSAPrivateKeyException;
 
 import java.math.BigInteger;
 import java.security.*;
@@ -32,7 +34,7 @@ public class PrivateKeySignatureFactoryImplTest {
     }
 
     @Test
-    public void testMakePrivateKeyShouldMakeRSAPrivateCrtKey() throws Exception {
+    public void makePrivateKeyShouldMakeRSAPrivateCrtKey() throws Exception {
         RSAKeyPair jwk = Factory.makeRSAKeyPair();
         RSAPrivateCrtKey privateKey = subject.makePrivateKey(jwk);
 
@@ -58,10 +60,18 @@ public class PrivateKeySignatureFactoryImplTest {
         assertThat(privateKey.getCrtCoefficient(), is(crtCoefficient));
     }
 
+    @Test(expected = PrivateKeyException.class)
+    public void makePrivateKeyWhenKeyIsNot512ShouldThrowPrivateKeyException() throws Exception {
+        RSAKeyPair rsaKeyPair = Factory.makeRSAKeyPair();
+        rsaKeyPair.setN(new BigInteger("12"));
+
+        subject.makePrivateKey(rsaKeyPair);
+    }
+
     @Test
-    public void testMakeSignatureShouldBeRS256() throws SignatureException {
+    public void testMakeSignatureShouldBeRS256() throws InvalidAlgorithmException, PrivateKeyException, RSAPrivateKeyException {
         RSAKeyPair jwk = Factory.makeRSAKeyPair();
-        Signature signature = subject.makeSignature(Algorithm.RS256, jwk);
+        Signature signature = subject.makeSignature(SignAlgorithm.RS256, jwk);
 
         assertThat(signature.getAlgorithm(), is(SignAlgorithm.RS256.getValue()));
     }

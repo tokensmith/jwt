@@ -6,14 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.rootservices.jwt.config.exception.DependencyException;
-import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.translator.CSRToRSAPublicKey;
 import org.rootservices.jwt.translator.PemToRSAKeyPair;
 import org.rootservices.jwt.builder.SecureJwtBuilder;
 import org.rootservices.jwt.builder.UnsecureJwtBuilder;
 import org.rootservices.jwt.entity.jwk.Key;
-import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.JWTSerializerImpl;
@@ -31,7 +30,10 @@ import org.rootservices.jwt.signature.signer.factory.*;
 import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactory;
 import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactoryImpl;
 
-import java.security.*;
+
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.Security;
 import java.util.Base64;
 
 /**
@@ -75,7 +77,7 @@ public class AppFactory {
     }
 
     public PublicKeySignatureFactory publicKeySignatureFactory() {
-        return new PublicKeySignatureFactoryImpl();
+        return new PublicKeySignatureFactoryImpl(rsaKeyFactory());
     }
 
     public MacFactory macFactory() {
@@ -83,7 +85,7 @@ public class AppFactory {
     }
 
     public PrivateKeySignatureFactory privateKeySignatureFactory() {
-        return new PrivateKeySignatureFactoryImpl();
+        return new PrivateKeySignatureFactoryImpl(rsaKeyFactory());
     }
 
     public SignerFactory signerFactory() {
@@ -99,30 +101,16 @@ public class AppFactory {
         return new VerifySignatureFactoryImpl(signerFactory(), publicKeySignatureFactory(), urlDecoder());
     }
 
-    public VerifySignature verifySignature(Algorithm algorithm, Key key) throws DependencyException {
-        VerifySignature verifySignature = null;
-        try {
-            verifySignature = verifySignatureFactory().makeVerifySignature(algorithm, key);
-        } catch (SignerException e) {
-            throw new DependencyException("Could not create dependency, Signer", e);
-        } catch (SignatureException e) {
-            throw new DependencyException("Could not create dependency, Signature", e);
-        }
-
-        return verifySignature;
+    public VerifySignature verifySignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+        return verifySignatureFactory().makeVerifySignature(algorithm, key);
     }
 
     public UnsecureJwtBuilder unsecureJwtBuilder(){
         return new UnsecureJwtBuilder();
     }
 
-    public SecureJwtBuilder secureJwtBuilder(Algorithm alg, Key jwk) throws DependencyException {
-        Signer signer = null;
-        try {
-            signer = signerFactory().makeSigner(alg, jwk);
-        } catch (SignerException e) {
-            throw new DependencyException("Could not create dependency, Signer", e);
-        }
+    public SecureJwtBuilder secureJwtBuilder(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+        Signer signer = signerFactory().makeSigner(alg, jwk);
         return new SecureJwtBuilder(signer);
     }
 
@@ -131,7 +119,7 @@ public class AppFactory {
         return new JcaPEMKeyConverter().setProvider("BC");
     }
 
-    public PemToRSAKeyPair pemToRSAKeyPair() {
+    protected KeyFactory rsaKeyFactory() {
         KeyFactory RSAKeyFactory = null;
         try {
             RSAKeyFactory = KeyFactory.getInstance("RSA");
@@ -139,7 +127,11 @@ public class AppFactory {
             // will never reach here.
             e.printStackTrace();
         }
-        return new PemToRSAKeyPair(jcaPEMKeyConverter(), RSAKeyFactory);
+        return RSAKeyFactory;
+    }
+
+    public PemToRSAKeyPair pemToRSAKeyPair() {
+        return new PemToRSAKeyPair(jcaPEMKeyConverter(), rsaKeyFactory());
     }
 
     public CSRToRSAPublicKey csrToRSAPublicKey() {
