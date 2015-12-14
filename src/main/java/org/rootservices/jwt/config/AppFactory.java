@@ -8,12 +8,12 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.rootservices.jwt.config.exception.DependencyException;
 import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
+import org.rootservices.jwt.signature.signer.factory.rsa.exception.SignatureException;
 import org.rootservices.jwt.translator.CSRToRSAPublicKey;
 import org.rootservices.jwt.translator.PemToRSAKeyPair;
 import org.rootservices.jwt.builder.SecureJwtBuilder;
 import org.rootservices.jwt.builder.UnsecureJwtBuilder;
 import org.rootservices.jwt.entity.jwk.Key;
-import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.JWTSerializerImpl;
@@ -31,7 +31,10 @@ import org.rootservices.jwt.signature.signer.factory.*;
 import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactory;
 import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactoryImpl;
 
-import java.security.*;
+
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.Security;
 import java.util.Base64;
 
 /**
@@ -75,7 +78,7 @@ public class AppFactory {
     }
 
     public PublicKeySignatureFactory publicKeySignatureFactory() {
-        return new PublicKeySignatureFactoryImpl();
+        return new PublicKeySignatureFactoryImpl(rsaKeyFactory());
     }
 
     public MacFactory macFactory() {
