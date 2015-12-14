@@ -11,6 +11,8 @@ import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.MacSigner;
 import org.rootservices.jwt.signature.signer.RSASigner;
 import org.rootservices.jwt.signature.signer.Signer;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebTokenException;
 import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
 
 import java.util.Optional;
@@ -31,7 +33,7 @@ public class SignerFactoryImplTest {
     }
 
     @Test
-    public void shouldCreateMacSigner() throws SignerException {
+    public void shouldCreateMacSigner() throws InvalidAlgorithmException, InvalidJsonWebTokenException {
         SymmetricKey key = Factory.makeSymmetricKey();
 
         Signer actual = subject.makeSigner(Algorithm.HS256, key);
@@ -39,7 +41,7 @@ public class SignerFactoryImplTest {
     }
 
     @Test
-    public void shouldCreateRSASigner() throws SignerException {
+    public void shouldCreateRSASigner() throws InvalidAlgorithmException, InvalidJsonWebTokenException {
         RSAKeyPair key = Factory.makeRSAKeyPair();
         Signer actual = subject.makeSigner(Algorithm.RS256, key);
 

@@ -3,7 +3,7 @@ package org.rootservices.jwt.signature.signer.factory.hmac;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.signature.signer.factory.exception.SecurityKeyException;
+import org.rootservices.jwt.signature.signer.factory.hmac.exception.SecurityKeyException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -41,7 +41,6 @@ public class MacFactoryImpl implements MacFactory {
         try {
             mac.init(securityKey);
         } catch (java.security.InvalidKeyException e) {
-            // should never reach here - it will fail creating the key first
             throw new SecurityKeyException("Inappropriate key for initializing MAC", e);
         }
 

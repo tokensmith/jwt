@@ -1,4 +1,4 @@
-package org.rootservices.jwt.signature.signer.factory.exception;
+package org.rootservices.jwt.signature.signer.factory.hmac.exception;
 
 /**
  * Created by tommackenzie on 12/13/15.

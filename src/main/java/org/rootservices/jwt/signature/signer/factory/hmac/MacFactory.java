@@ -1,10 +1,9 @@
 package org.rootservices.jwt.signature.signer.factory.hmac;
 
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
-import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.signature.signer.factory.exception.SecurityKeyException;
+import org.rootservices.jwt.signature.signer.factory.hmac.exception.SecurityKeyException;
 
 import javax.crypto.Mac;
 import java.security.Key;

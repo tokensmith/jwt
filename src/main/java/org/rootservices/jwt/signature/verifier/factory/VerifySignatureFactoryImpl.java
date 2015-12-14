@@ -8,6 +8,7 @@ import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.Signer;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebTokenException;
 import org.rootservices.jwt.signature.signer.factory.exception.SignerException;
 import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
 import org.rootservices.jwt.signature.signer.factory.SignerFactory;
@@ -36,11 +37,11 @@ public class VerifySignatureFactoryImpl implements VerifySignatureFactory {
         this.decoder = decoder;
     }
 
-    public VerifySignature makeVerifySignature(Algorithm algorithm, Key key) throws SignerException, SignatureException {
+    public VerifySignature makeVerifySignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebTokenException {
         VerifySignature verifySignature = null;
 
         if (key.getKeyType() == KeyType.OCT) {
-            Signer macSigner = signerFactory.makeMacSigner(algorithm, (SymmetricKey)key);
+            Signer macSigner = signerFactory.makeMacSigner(algorithm, key);
             verifySignature = new VerifyMacSignature(macSigner);
         } else if (key.getKeyType() == KeyType.RSA){
 
@@ -48,12 +49,13 @@ public class VerifySignatureFactoryImpl implements VerifySignatureFactory {
             try {
                 signature = publicKeySignatureFactory.makeSignature(SignAlgorithm.RS256, (RSAPublicKey)key);
             } catch (PublicKeyException e) {
-                throw new SignatureException("fix me", e);
-            } catch (InvalidAlgorithmException e) {
-                throw new SignatureException("fix me", e);
+                throw new InvalidJsonWebTokenException("", e);
             } catch (RSAPublicKeyException e) {
-                throw new SignatureException("fix me", e);
+                throw new InvalidJsonWebTokenException("", e);
+            } catch (InvalidAlgorithmException e) {
+                throw e;
             }
+
             verifySignature =  new VerifyRsaSignature(signature, decoder);
         }
         return verifySignature;
