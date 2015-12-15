@@ -35,6 +35,18 @@ public class SecureJwtBuilderTest {
         appFactory = new AppFactory();
     }
 
+
+    @Test
+    public void constructShouldAssignIVars() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+        SymmetricKey key = Factory.makeSymmetricKey();
+        key.setKeyId(Optional.of("test-key-id"));
+        SecureJwtBuilder subject = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+
+        assertThat(subject.getAlgorithm(), is(Algorithm.HS256));
+        assertThat(subject.getKeyId().isPresent(), is(true));
+        assertThat(subject.getKeyId(), is(key.getKeyId()));
+
+    }
     /**
      * Test scenario taken from,
      * https://tools.ietf.org/html/rfc7515#appendix-A.1
@@ -54,7 +66,7 @@ public class SecureJwtBuilderTest {
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken actual = subject.build(Algorithm.HS256, claim);
+        JsonWebToken actual = subject.build(claim);
 
         assertThat(actual, is(notNullValue()));
 
@@ -105,7 +117,7 @@ public class SecureJwtBuilderTest {
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken actual = subject.build(Algorithm.RS256, claim);
+        JsonWebToken actual = subject.build(claim);
 
         assertThat(actual, is(notNullValue()));
 
@@ -142,14 +154,16 @@ public class SecureJwtBuilderTest {
         // prepare subject of the test.
         RSAKeyPair key = Factory.makeRSAKeyPair();
         key.setKeyId(keyId);
+
         SecureJwtBuilder subject = appFactory.secureJwtBuilder(Algorithm.RS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken actual = subject.build(Algorithm.RS256, claim, keyId);
+        JsonWebToken actual = subject.build(claim);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getHeader().getKeyId(), is(keyId));
+        assertThat(actual.getHeader().getAlgorithm(), is(Algorithm.RS256));
     }
 }
