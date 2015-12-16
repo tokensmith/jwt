@@ -56,7 +56,7 @@ public class AsymmetricSignedJsonWebToken {
 
         JsonWebToken jsonWebToken = null;
         try {
-            jsonWebToken = secureTokenBuilder.build(Algorithm.RS256, claim);
+            jsonWebToken = secureTokenBuilder.build(claim);
         } catch (JwtToJsonException e) {
             // could not create a JsonWebToken, e.cause will provide reason
             throw e;

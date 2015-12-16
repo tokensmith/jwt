@@ -16,18 +16,18 @@ import java.util.Optional;
  */
 public class SecureJwtBuilder {
     private Signer signer;
+    private Algorithm algorithm;
+    private Optional<String> keyId;
 
-    public SecureJwtBuilder(Signer signer) {
+    public SecureJwtBuilder(Signer signer, Algorithm algorithm, Optional<String> keyId) {
         this.signer = signer;
+        this.algorithm = algorithm;
+        this.keyId = keyId;
     }
 
-    public JsonWebToken build(Algorithm alg, Claims claimNames) throws JwtToJsonException {
-        return build(alg, claimNames, Optional.<String>empty());
-    }
-
-    public JsonWebToken build(Algorithm alg, Claims claimNames, Optional<String> keyId) throws JwtToJsonException {
+    public JsonWebToken build(Claims claimNames) throws JwtToJsonException {
         Header header = new Header();
-        header.setAlgorithm(alg);
+        header.setAlgorithm(algorithm);
         header.setType(Optional.of(TokenType.JWT));
         header.setKeyId(keyId);
 
@@ -41,4 +41,11 @@ public class SecureJwtBuilder {
         return jwt;
     }
 
+    public Algorithm getAlgorithm() {
+        return algorithm;
+    }
+
+    public Optional<String> getKeyId() {
+        return keyId;
+    }
 }

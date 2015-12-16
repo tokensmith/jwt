@@ -111,7 +111,7 @@ public class AppFactory {
 
     public SecureJwtBuilder secureJwtBuilder(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         Signer signer = signerFactory().makeSigner(alg, jwk);
-        return new SecureJwtBuilder(signer);
+        return new SecureJwtBuilder(signer, alg, jwk.getKeyId());
     }
 
     public JcaPEMKeyConverter jcaPEMKeyConverter() {

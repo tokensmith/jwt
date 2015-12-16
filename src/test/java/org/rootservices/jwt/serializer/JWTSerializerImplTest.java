@@ -30,22 +30,23 @@ import static org.junit.Assert.assertThat;
  */
 public class JWTSerializerImplTest {
 
-    private UnsecureJwtBuilder unsecureTokenBuilder;
-    private SecureJwtBuilder secureJwtBuilder;
-    private JWTSerializer subject;
+    private AppFactory appFactory;
 
     @Before
     public void setUp() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
-        SymmetricKey key = Factory.makeSymmetricKey();
+        appFactory = new AppFactory();
 
-        AppFactory appFactory = new AppFactory();
-        unsecureTokenBuilder = appFactory.unsecureJwtBuilder();
-        secureJwtBuilder = appFactory.secureJwtBuilder(Algorithm.HS256, key);
-        subject = appFactory.jwtSerializer();
+        SymmetricKey key = Factory.makeSymmetricKey();
+        UnsecureJwtBuilder unsecureTokenBuilder = appFactory.unsecureJwtBuilder();
+        SecureJwtBuilder secureJwtBuilder = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+        JWTSerializer subject = appFactory.jwtSerializer();
     }
 
     @Test
     public void UnsecuredJwtToStringShouldBeValidJWT() throws JwtToJsonException {
+
+        UnsecureJwtBuilder unsecureTokenBuilder = appFactory.unsecureJwtBuilder();
+        JWTSerializer subject = appFactory.jwtSerializer();
 
         String expectedJwt = "eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";
 
@@ -62,7 +63,12 @@ public class JWTSerializerImplTest {
     }
 
     @Test
-    public void SecuredJwtToStringShouldBeValid() throws JwtToJsonException {
+    public void SecuredJwtToStringShouldBeValid() throws JwtToJsonException, InvalidAlgorithmException, InvalidJsonWebKeyException {
+
+        SymmetricKey key = Factory.makeSymmetricKey();
+        SecureJwtBuilder secureJwtBuilder = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+        JWTSerializer subject = appFactory.jwtSerializer();
+
         String signature = "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
 
         String expectedJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
@@ -76,14 +82,20 @@ public class JWTSerializerImplTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        JsonWebToken tokenToMarshal = secureJwtBuilder.build(Algorithm.HS256, claim);
+        JsonWebToken tokenToMarshal = secureJwtBuilder.build(claim);
         String actual = subject.jwtToString(tokenToMarshal);
 
         assertThat(actual, is(expectedJwt));
     }
 
     @Test
-    public void SecuredJwtWithKeyIdToStringShouldBeValid() throws JwtToJsonException {
+    public void SecuredJwtWithKeyIdToStringShouldBeValid() throws JwtToJsonException, InvalidAlgorithmException, InvalidJsonWebKeyException {
+        SymmetricKey key = Factory.makeSymmetricKey();
+        key.setKeyId(Optional.of("test-key-id"));
+
+        SecureJwtBuilder secureJwtBuilder = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+        JWTSerializer subject = appFactory.jwtSerializer();
+
         String signature = "YiFm03WWrDAbFn7omROmU2GHACkaGI30xdbWFzyoCNQ";
 
         String expectedJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6InRlc3Qta2V5LWlkIn0." +
@@ -97,7 +109,7 @@ public class JWTSerializerImplTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        JsonWebToken tokenToMarshal = secureJwtBuilder.build(Algorithm.HS256, claim, Optional.of("test-key-id"));
+        JsonWebToken tokenToMarshal = secureJwtBuilder.build(claim);
         String actual = subject.jwtToString(tokenToMarshal);
 
         assertThat(actual, is(expectedJwt));
@@ -105,6 +117,8 @@ public class JWTSerializerImplTest {
 
     @Test
     public void stringToJwtShouldBeUnsecuredJwt() throws JsonToJwtException {
+
+        JWTSerializer subject = appFactory.jwtSerializer();
 
         String jwtAsText = "eyJhbGciOiJub25lIn0=." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ==.";
@@ -136,6 +150,8 @@ public class JWTSerializerImplTest {
 
     @Test
     public void stringToJwtShouldBeSecuredJwt() throws JsonToJwtException {
+
+        JWTSerializer subject = appFactory.jwtSerializer();
 
         String signature = "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
 
@@ -176,6 +192,8 @@ public class JWTSerializerImplTest {
 
     @Test
     public void stringToJwtShouldBeSecuredJwtWithKeyId() throws JsonToJwtException {
+
+        JWTSerializer subject = appFactory.jwtSerializer();
 
         String signature = "YiFm03WWrDAbFn7omROmU2GHACkaGI30xdbWFzyoCNQ";
 

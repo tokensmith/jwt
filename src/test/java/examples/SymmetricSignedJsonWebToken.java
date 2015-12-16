@@ -45,7 +45,7 @@ public class SymmetricSignedJsonWebToken {
 
         JsonWebToken jsonWebToken = null;
         try {
-            jsonWebToken = secureJwtBuilder.build(Algorithm.HS256, claim);
+            jsonWebToken = secureJwtBuilder.build(claim);
         } catch (JwtToJsonException e) {
             // could not create JsonWebToken, e.cause will provide details
             throw e;
