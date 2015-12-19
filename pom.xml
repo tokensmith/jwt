@@ -12,28 +12,9 @@
 
     <name>JWT</name>
     <description>Java implementation of JWT</description>
-    <url>http://rootservices.github.io/jwt/</url>
-    <scm>
-        <url>https://github.com/RootServices/jwt</url>
-        <connection>scm:git:ssh://github.com/RootServices/jwt.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/RootServices/jwt.git</developerConnection>
-    </scm>
-    <licenses>
-        <license>
-            <url>https://github.com/RootServices/jwt/blob/development/LICENSE</url>
-            <name>MIT</name>
-        </license>
-    </licenses>
-    <developers>
-        <developer>
-            <name>Tom Mackenzie</name>
-            <url>https://github.com/tmackenzie</url>
-        </developer>
-    </developers>
-
     <groupId>org.rootservices</groupId>
     <artifactId>jwt</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -61,6 +42,12 @@
             <version>2.5.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>1.53</version>
+        </dependency>
+
         <!-- Test Dependencies -->
         <dependency>
             <groupId>junit</groupId>
@@ -84,16 +71,19 @@
         </dependency>
         <!-- End Test Dependencies -->
 
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.5</version>
-        </dependency>
-
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <parallel>methods</parallel>
+                    <threadCount>5</threadCount>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -101,6 +91,9 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                    <compilerArgument>-Xlint:unchecked</compilerArgument>
                 </configuration>
             </plugin>
             <plugin>
@@ -127,14 +120,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.1</version>
-                <configuration>
-                    <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
-                </configuration>
             </plugin>
         </plugins>
     </build>

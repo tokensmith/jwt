@@ -1,13 +1,17 @@
 package org.rootservices.jwt.signature.signer.factory;
 
+import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
-import org.rootservices.jwt.entity.jwk.Key;
-import org.rootservices.jwt.entity.jwk.KeyType;
+import org.rootservices.jwt.entity.jwk.RSAKeyPair;
+import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.signature.signer.MacSignerImpl;
+import org.rootservices.jwt.signature.signer.MacSigner;
+import org.rootservices.jwt.signature.signer.RSASigner;
 import org.rootservices.jwt.signature.signer.Signer;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.*;
@@ -25,12 +29,18 @@ public class SignerFactoryImplTest {
     }
 
     @Test
-    public void shouldCreateMacSignerImpl() {
-        Key key = new Key();
-        key.setKeyType(KeyType.OCT);
-        key.setKey("AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
+    public void shouldCreateMacSigner() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+        SymmetricKey key = Factory.makeSymmetricKey();
 
         Signer actual = subject.makeSigner(Algorithm.HS256, key);
-        assertThat(actual, instanceOf(MacSignerImpl.class));
+        assertThat(actual, instanceOf(MacSigner.class));
+    }
+
+    @Test
+    public void shouldCreateRSASigner() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+        RSAKeyPair key = Factory.makeRSAKeyPair();
+        Signer actual = subject.makeSigner(Algorithm.RS256, key);
+
+        assertThat(actual, instanceOf(RSASigner.class));
     }
 }

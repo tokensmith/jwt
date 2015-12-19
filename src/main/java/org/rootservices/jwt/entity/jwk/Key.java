@@ -1,6 +1,6 @@
 package org.rootservices.jwt.entity.jwk;
 
-import java.util.Base64;
+import java.util.Optional;
 
 /**
  * Created by tommackenzie on 8/19/15.
@@ -8,8 +8,17 @@ import java.util.Base64;
  * JSON Web Key, https://tools.ietf.org/html/rfc7517
  */
 public class Key {
-    private KeyType keyType;
-    private String key;
+    protected Optional<String> keyId;
+    protected KeyType keyType;
+    private Use use;
+
+    public Key() {}
+
+    public Key(Optional<String> keyId, KeyType keyType, Use use) {
+        this.keyId = keyId;
+        this.keyType = keyType;
+        this.use = use;
+    }
 
     public KeyType getKeyType() {
         return keyType;
@@ -19,11 +28,19 @@ public class Key {
         this.keyType = keyType;
     }
 
-    public String getKey() {
-        return key;
+    public Optional<String> getKeyId() {
+        return keyId;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setKeyId(Optional<String> keyId) {
+        this.keyId = keyId;
+    }
+
+    public Use getUse() {
+        return use;
+    }
+
+    public void setUse(Use use) {
+        this.use = use;
     }
 }
