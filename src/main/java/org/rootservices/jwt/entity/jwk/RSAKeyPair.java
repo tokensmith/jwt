@@ -13,7 +13,7 @@ import java.util.Optional;
  * per, https://tools.ietf.org/html/rfc7517#appendix-A.1
  *
  * for explanation of variables see,
- * https://www.ietf.org/rfc/rfc2437.txt sections 3.1 & 3.2
+ * https://www.ietf.org/rfc/rfc2437.txt sections 3.1 and 3.2
  *
  */
 public class RSAKeyPair extends Key {
