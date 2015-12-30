@@ -1,7 +1,7 @@
 ---
 layout: default
 title: About JWT
-date: 2015-09-02 11:59:59
+categories: [1.1]
 ---
 
 ### {{ page.title }} ###
@@ -10,5 +10,4 @@ A [JSON Web Token](https://tools.ietf.org/html/rfc7519) (JWT) is a strategy to t
 a sender and a recipient. The sender may sign the message which the recipient should verify. This may give the recipient 
  confidence that the message originated from the expected sender.
  
- The features that are implemented are listed on the [releases post]({{ site.baseurl }}{% post_url 2015-09-02-Releases %}).
- 
+ The features that are implemented are listed on the [releases post]({{ site.baseurl }}/docs/project/releases).
