@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Getting started
-date: 2015-09-02 11:59:58
+categories: [1.0]
 ---
 
 ### {{ page.title }} ###
