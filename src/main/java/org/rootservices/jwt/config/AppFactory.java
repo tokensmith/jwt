@@ -86,7 +86,7 @@ public class AppFactory {
     }
 
     public SignerFactory signerFactory() {
-        return new SignerFactoryImpl(
+        return new SignerFactory(
                 macFactory(),
                 privateKeySignatureFactory(),
                 jwtSerializer(),
