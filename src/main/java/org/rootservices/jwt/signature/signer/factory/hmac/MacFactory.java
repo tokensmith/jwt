@@ -6,12 +6,42 @@ import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmE
 import org.rootservices.jwt.signature.signer.factory.hmac.exception.SecurityKeyException;
 
 import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 /**
  * Created by tommackenzie on 8/22/15.
  */
-public interface MacFactory {
-    Key makeKey(SignAlgorithm alg, SymmetricKey jwk);
-    Mac makeMac(SignAlgorithm alg, SymmetricKey jwk) throws InvalidAlgorithmException, SecurityKeyException;
+public class MacFactory {
+    private Base64.Decoder decoder;
+
+    public MacFactory(Base64.Decoder decoder) {
+        this.decoder = decoder;
+    }
+
+    public Key makeKey(SignAlgorithm alg, SymmetricKey jwk) {
+        byte[] secretKey = decoder.decode(jwk.getKey());
+        return new SecretKeySpec(secretKey, alg.getValue());
+    }
+
+    public Mac makeMac(SignAlgorithm alg, SymmetricKey jwk) throws InvalidAlgorithmException, SecurityKeyException {
+        java.security.Key securityKey = makeKey(alg, jwk);
+        Mac mac;
+
+        try {
+            mac = Mac.getInstance(alg.getValue());
+        } catch (NoSuchAlgorithmException e) {
+            throw new InvalidAlgorithmException("Algorithm is not supported.", e);
+        }
+
+        try {
+            mac.init(securityKey);
+        } catch (java.security.InvalidKeyException e) {
+            throw new SecurityKeyException("Inappropriate key for initializing MAC", e);
+        }
+
+        return mac;
+    }
 }

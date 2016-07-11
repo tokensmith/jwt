@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
-import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
@@ -22,7 +21,7 @@ import static org.junit.Assert.*;
 /**
  * Created by tommackenzie on 11/14/15.
  */
-public class PublicKeySignatureFactoryImplTest {
+public class PublicKeySignatureFactoryTest {
     private AppFactory appFactory;
     private PublicKeySignatureFactory subject;
 

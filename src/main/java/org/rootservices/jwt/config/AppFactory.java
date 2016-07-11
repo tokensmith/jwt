@@ -19,16 +19,12 @@ import org.rootservices.jwt.serializer.JWTSerializerImpl;
 import org.rootservices.jwt.serializer.Serializer;
 import org.rootservices.jwt.serializer.SerializerImpl;
 import org.rootservices.jwt.signature.signer.factory.hmac.MacFactory;
-import org.rootservices.jwt.signature.signer.factory.hmac.MacFactoryImpl;
 import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
-import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactoryImpl;
 import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
-import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactoryImpl;
 import org.rootservices.jwt.signature.verifier.VerifySignature;
 import org.rootservices.jwt.signature.signer.Signer;
 import org.rootservices.jwt.signature.signer.factory.*;
 import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactory;
-import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactoryImpl;
 
 
 import java.security.KeyFactory;
@@ -77,19 +73,19 @@ public class AppFactory {
     }
 
     public PublicKeySignatureFactory publicKeySignatureFactory() {
-        return new PublicKeySignatureFactoryImpl(rsaKeyFactory());
+        return new PublicKeySignatureFactory(rsaKeyFactory());
     }
 
     public MacFactory macFactory() {
-        return new MacFactoryImpl(urlDecoder());
+        return new MacFactory(urlDecoder());
     }
 
     public PrivateKeySignatureFactory privateKeySignatureFactory() {
-        return new PrivateKeySignatureFactoryImpl(rsaKeyFactory());
+        return new PrivateKeySignatureFactory(rsaKeyFactory());
     }
 
     public SignerFactory signerFactory() {
-        return new SignerFactoryImpl(
+        return new SignerFactory(
                 macFactory(),
                 privateKeySignatureFactory(),
                 jwtSerializer(),
@@ -98,7 +94,7 @@ public class AppFactory {
     }
 
     public VerifySignatureFactory verifySignatureFactory() {
-        return new VerifySignatureFactoryImpl(signerFactory(), publicKeySignatureFactory(), urlDecoder());
+        return new VerifySignatureFactory(signerFactory(), publicKeySignatureFactory(), urlDecoder());
     }
 
     public VerifySignature verifySignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
