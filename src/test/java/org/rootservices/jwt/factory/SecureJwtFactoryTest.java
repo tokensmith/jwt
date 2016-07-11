@@ -1,4 +1,4 @@
-package org.rootservices.jwt.builder;
+package org.rootservices.jwt.factory;
 
 import helper.entity.Claim;
 import helper.entity.Factory;
@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by tommackenzie on 9/15/15.
  */
-public class SecureJwtBuilderTest {
+public class SecureJwtFactoryTest {
 
     private AppFactory appFactory;
 
@@ -40,7 +40,7 @@ public class SecureJwtBuilderTest {
     public void constructShouldAssignIVars() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         SymmetricKey key = Factory.makeSymmetricKey();
         key.setKeyId(Optional.of("test-key-id"));
-        SecureJwtBuilder subject = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+        SecureJwtFactory subject = appFactory.secureJwtBuilder(Algorithm.HS256, key);
 
         assertThat(subject.getAlgorithm(), is(Algorithm.HS256));
         assertThat(subject.getKeyId().isPresent(), is(true));
@@ -61,12 +61,12 @@ public class SecureJwtBuilderTest {
 
         // prepare subject of the test.
         SymmetricKey key = Factory.makeSymmetricKey();
-        SecureJwtBuilder subject = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+        SecureJwtFactory subject = appFactory.secureJwtBuilder(Algorithm.HS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken actual = subject.build(claim);
+        JsonWebToken actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
 
@@ -112,12 +112,12 @@ public class SecureJwtBuilderTest {
 
         // prepare subject of the test.
         RSAKeyPair key = Factory.makeRSAKeyPair();
-        SecureJwtBuilder subject = appFactory.secureJwtBuilder(Algorithm.RS256, key);
+        SecureJwtFactory subject = appFactory.secureJwtBuilder(Algorithm.RS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken actual = subject.build(claim);
+        JsonWebToken actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
 
@@ -155,12 +155,12 @@ public class SecureJwtBuilderTest {
         RSAKeyPair key = Factory.makeRSAKeyPair();
         key.setKeyId(keyId);
 
-        SecureJwtBuilder subject = appFactory.secureJwtBuilder(Algorithm.RS256, key);
+        SecureJwtFactory subject = appFactory.secureJwtBuilder(Algorithm.RS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken actual = subject.build(claim);
+        JsonWebToken actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getHeader().getKeyId(), is(keyId));
@@ -172,20 +172,20 @@ public class SecureJwtBuilderTest {
 
         // prepare subject of the test.
         RSAKeyPair key = Factory.makeRSAKeyPair();
-        SecureJwtBuilder subject = appFactory.secureJwtBuilder(Algorithm.RS256, key);
+        SecureJwtFactory subject = appFactory.secureJwtBuilder(Algorithm.RS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
         // first JsonWebToken.
-        JsonWebToken actual = subject.build(claim);
+        JsonWebToken actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getSignature().isPresent(), is(true));
         assertThat(actual.getSignature().get(), is("IDcgYnWIJ0my4FurSqfiAAbYBz2BfImT-uSqKKnk-JfncL_Nreo8Phol1KNn9fK0ZmVfcvHL-pUvVUBzI5NrJNCFMiyZWxS7msB2VKl6-jAXr9NqtVjIDyUSr_gpk51xSzHiBPVAnQn8m1Dg3dR0YkP9b5uJ70qpZ37PWOCKYAIfAhinDA77RIP9q4ImwpnJuY3IDuilDKOq9bsb6zWB8USz0PAYReqWierdS4TYAbUFrhuGZ9mPgSLRSQVtibyNTSTQYtfghYkmV9gWyCJUVwMGCM5l1xlylHYiioasBJA1Wr_NAf_sr4G8OVrW1eO01MKhijpaE8pR6DvPYNrTMQ"));
 
         // second JsonWebToken
-        actual = subject.build(claim);
+        actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getSignature().isPresent(), is(true));
@@ -198,20 +198,20 @@ public class SecureJwtBuilderTest {
 
         // prepare subject of the test.
         SymmetricKey key = Factory.makeSymmetricKey();
-        SecureJwtBuilder subject = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+        SecureJwtFactory subject = appFactory.secureJwtBuilder(Algorithm.HS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
         // first JsonWebToken.
-        JsonWebToken actual = subject.build(claim);
+        JsonWebToken actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getSignature().isPresent(), is(true));
         assertThat(actual.getSignature().get(), is("lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY"));
 
         // second JsonWebToken
-        actual = subject.build(claim);
+        actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getSignature().isPresent(), is(true));
