@@ -19,7 +19,6 @@ import org.rootservices.jwt.serializer.JWTSerializerImpl;
 import org.rootservices.jwt.serializer.Serializer;
 import org.rootservices.jwt.serializer.SerializerImpl;
 import org.rootservices.jwt.signature.signer.factory.hmac.MacFactory;
-import org.rootservices.jwt.signature.signer.factory.hmac.MacFactoryImpl;
 import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
 import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactoryImpl;
 import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
@@ -81,7 +80,7 @@ public class AppFactory {
     }
 
     public MacFactory macFactory() {
-        return new MacFactoryImpl(urlDecoder());
+        return new MacFactory(urlDecoder());
     }
 
     public PrivateKeySignatureFactory privateKeySignatureFactory() {

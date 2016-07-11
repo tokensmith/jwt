@@ -8,8 +8,8 @@ import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.signature.signer.factory.hmac.exception.SecurityKeyException;
 import org.rootservices.jwt.signature.signer.factory.hmac.MacFactory;
+import org.rootservices.jwt.signature.signer.factory.hmac.exception.SecurityKeyException;
 
 import javax.crypto.Mac;
 import java.util.Base64;
@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 /**
  * Created by tommackenzie on 8/22/15.
  */
-public class MacFactoryImplTest {
+public class MacFactoryTest {
     private MacFactory subject;
 
     @Before
