@@ -25,7 +25,6 @@ import org.rootservices.jwt.signature.verifier.VerifySignature;
 import org.rootservices.jwt.signature.signer.Signer;
 import org.rootservices.jwt.signature.signer.factory.*;
 import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactory;
-import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactoryImpl;
 
 
 import java.security.KeyFactory;
@@ -95,7 +94,7 @@ public class AppFactory {
     }
 
     public VerifySignatureFactory verifySignatureFactory() {
-        return new VerifySignatureFactoryImpl(signerFactory(), publicKeySignatureFactory(), urlDecoder());
+        return new VerifySignatureFactory(signerFactory(), publicKeySignatureFactory(), urlDecoder());
     }
 
     public VerifySignature verifySignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
