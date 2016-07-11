@@ -1,11 +1,10 @@
-package org.rootservices.jwt.builder;
+package org.rootservices.jwt.factory;
 
 import org.rootservices.jwt.entity.jwt.Claims;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
-import org.rootservices.jwt.serializer.exception.JsonToJwtException;
 import org.rootservices.jwt.serializer.exception.JwtToJsonException;
 import org.rootservices.jwt.signature.signer.Signer;
 
@@ -14,18 +13,18 @@ import java.util.Optional;
 /**
  * Created by tommackenzie on 9/15/15.
  */
-public class SecureJwtBuilder {
+public class SecureJwtFactory {
     private Signer signer;
     private Algorithm algorithm;
     private Optional<String> keyId;
 
-    public SecureJwtBuilder(Signer signer, Algorithm algorithm, Optional<String> keyId) {
+    public SecureJwtFactory(Signer signer, Algorithm algorithm, Optional<String> keyId) {
         this.signer = signer;
         this.algorithm = algorithm;
         this.keyId = keyId;
     }
 
-    public JsonWebToken build(Claims claimNames) throws JwtToJsonException {
+    public JsonWebToken makeJwt(Claims claimNames) throws JwtToJsonException {
         Header header = new Header();
         header.setAlgorithm(algorithm);
         header.setType(Optional.of(TokenType.JWT));

@@ -1,7 +1,7 @@
 package examples;
 
 import helper.entity.Claim;
-import org.rootservices.jwt.builder.SecureJwtBuilder;
+import org.rootservices.jwt.factory.SecureJwtFactory;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwk.Use;
@@ -31,9 +31,9 @@ public class SymmetricSignedJsonWebToken {
                 Use.SIGNATURE
         );
 
-        SecureJwtBuilder secureJwtBuilder = null;
+        SecureJwtFactory secureJwtFactory = null;
         try {
-            secureJwtBuilder = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+            secureJwtFactory = appFactory.secureJwtBuilder(Algorithm.HS256, key);
         } catch (InvalidJsonWebKeyException e) {
             throw e;
         } catch (InvalidAlgorithmException e) {
@@ -45,7 +45,7 @@ public class SymmetricSignedJsonWebToken {
 
         JsonWebToken jsonWebToken = null;
         try {
-            jsonWebToken = secureJwtBuilder.build(claim);
+            jsonWebToken = secureJwtFactory.makeJwt(claim);
         } catch (JwtToJsonException e) {
             // could not create JsonWebToken, e.cause will provide details
             throw e;

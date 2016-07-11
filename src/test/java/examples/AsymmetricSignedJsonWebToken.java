@@ -1,7 +1,7 @@
 package examples;
 
 import helper.entity.Claim;
-import org.rootservices.jwt.builder.SecureJwtBuilder;
+import org.rootservices.jwt.factory.SecureJwtFactory;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
@@ -42,7 +42,7 @@ public class AsymmetricSignedJsonWebToken {
 
         AppFactory appFactory = new AppFactory();
 
-        SecureJwtBuilder secureTokenBuilder = null;
+        SecureJwtFactory secureTokenBuilder = null;
         try {
             secureTokenBuilder = appFactory.secureJwtBuilder(Algorithm.RS256, keyPair);
         } catch (InvalidJsonWebKeyException e) {
@@ -56,7 +56,7 @@ public class AsymmetricSignedJsonWebToken {
 
         JsonWebToken jsonWebToken = null;
         try {
-            jsonWebToken = secureTokenBuilder.build(claim);
+            jsonWebToken = secureTokenBuilder.makeJwt(claim);
         } catch (JwtToJsonException e) {
             // could not create a JsonWebToken, e.cause will provide reason
             throw e;
