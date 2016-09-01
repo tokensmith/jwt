@@ -44,7 +44,7 @@ public class AsymmetricSignedJsonWebToken {
 
         SecureJwtFactory secureTokenBuilder = null;
         try {
-            secureTokenBuilder = appFactory.secureJwtBuilder(Algorithm.RS256, keyPair);
+            secureTokenBuilder = appFactory.secureJwtFactory(Algorithm.RS256, keyPair);
         } catch (InvalidJsonWebKeyException e) {
             throw e;
         } catch (InvalidAlgorithmException e) {

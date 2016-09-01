@@ -18,14 +18,14 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by tommackenzie on 8/11/15.
  */
-public class UnsecureJwtFactoryTest {
+public class UnSecureJwtFactoryTest {
 
-    private UnsecureJwtFactory subject;
+    private UnSecureJwtFactory subject;
 
     @Before
     public void setUp(){
         AppFactory appFactory = new AppFactory();
-        subject = appFactory.unsecureJwtBuilder();
+        subject = appFactory.unsecureJwtFactory();
     }
 
     @Test

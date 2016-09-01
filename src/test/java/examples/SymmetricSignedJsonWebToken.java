@@ -33,7 +33,7 @@ public class SymmetricSignedJsonWebToken {
 
         SecureJwtFactory secureJwtFactory = null;
         try {
-            secureJwtFactory = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+            secureJwtFactory = appFactory.secureJwtFactory(Algorithm.HS256, key);
         } catch (InvalidJsonWebKeyException e) {
             throw e;
         } catch (InvalidAlgorithmException e) {

@@ -1,7 +1,7 @@
 package examples;
 
 import helper.entity.Claim;
-import org.rootservices.jwt.factory.UnsecureJwtFactory;
+import org.rootservices.jwt.factory.UnSecureJwtFactory;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.serializer.JWTSerializer;
@@ -14,7 +14,7 @@ public class UnsecuredJsonWebToken {
 
     public String toJson() throws JwtToJsonException {
         AppFactory appFactory = new AppFactory();
-        UnsecureJwtFactory unsecureTokenBuilder = appFactory.unsecureJwtBuilder();
+        UnSecureJwtFactory unsecureTokenBuilder = appFactory.unsecureJwtFactory();
 
         Claim claim = new Claim();
         claim.setUriIsRoot(true);

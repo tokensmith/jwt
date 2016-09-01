@@ -11,7 +11,7 @@ import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKey
 import org.rootservices.jwt.translator.CSRToRSAPublicKey;
 import org.rootservices.jwt.translator.PemToRSAKeyPair;
 import org.rootservices.jwt.factory.SecureJwtFactory;
-import org.rootservices.jwt.factory.UnsecureJwtFactory;
+import org.rootservices.jwt.factory.UnSecureJwtFactory;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
@@ -101,11 +101,11 @@ public class AppFactory {
         return verifySignatureFactory().makeVerifySignature(algorithm, key);
     }
 
-    public UnsecureJwtFactory unsecureJwtBuilder(){
-        return new UnsecureJwtFactory();
+    public UnSecureJwtFactory unsecureJwtFactory(){
+        return new UnSecureJwtFactory();
     }
 
-    public SecureJwtFactory secureJwtBuilder(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public SecureJwtFactory secureJwtFactory(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         Signer signer = signerFactory().makeSigner(alg, jwk);
         return new SecureJwtFactory(signer, alg, jwk.getKeyId());
     }
