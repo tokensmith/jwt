@@ -9,7 +9,7 @@ import org.rootservices.jwt.serializer.exception.JwtToJsonException;
 /**
  * Created by tommackenzie on 7/12/16.
  */
-public class UnSecureJwtEncoder implements JwtEncoder {
+public class UnSecureJwtEncoder {
     private UnSecureJwtFactory unSecureJwtFactory;
     private JWTSerializer jwtSerializer;
 
