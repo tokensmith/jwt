@@ -6,29 +6,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.rootservices.jwt.SecureJwtEncoder;
+import org.rootservices.jwt.UnSecureJwtEncoder;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.translator.CSRToRSAPublicKey;
 import org.rootservices.jwt.translator.PemToRSAKeyPair;
-import org.rootservices.jwt.builder.SecureJwtBuilder;
-import org.rootservices.jwt.builder.UnsecureJwtBuilder;
+import org.rootservices.jwt.factory.SecureJwtFactory;
+import org.rootservices.jwt.factory.UnSecureJwtFactory;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
-import org.rootservices.jwt.serializer.JWTSerializerImpl;
 import org.rootservices.jwt.serializer.Serializer;
-import org.rootservices.jwt.serializer.SerializerImpl;
 import org.rootservices.jwt.signature.signer.factory.hmac.MacFactory;
-import org.rootservices.jwt.signature.signer.factory.hmac.MacFactoryImpl;
 import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
-import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactoryImpl;
 import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
-import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactoryImpl;
 import org.rootservices.jwt.signature.verifier.VerifySignature;
 import org.rootservices.jwt.signature.signer.Signer;
 import org.rootservices.jwt.signature.signer.factory.*;
 import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactory;
-import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactoryImpl;
 
 
 import java.security.KeyFactory;
@@ -53,7 +49,7 @@ public class AppFactory {
     }
 
     public Serializer serializer() {
-        return new SerializerImpl(objectMapper());
+        return new Serializer(objectMapper());
     }
 
     public Base64.Decoder decoder() {
@@ -69,7 +65,7 @@ public class AppFactory {
     }
 
     public JWTSerializer jwtSerializer() {
-        return new JWTSerializerImpl(
+        return new JWTSerializer(
                 serializer(),
                 encoder(),
                 decoder()
@@ -77,19 +73,19 @@ public class AppFactory {
     }
 
     public PublicKeySignatureFactory publicKeySignatureFactory() {
-        return new PublicKeySignatureFactoryImpl(rsaKeyFactory());
+        return new PublicKeySignatureFactory(rsaKeyFactory());
     }
 
     public MacFactory macFactory() {
-        return new MacFactoryImpl(urlDecoder());
+        return new MacFactory(urlDecoder());
     }
 
     public PrivateKeySignatureFactory privateKeySignatureFactory() {
-        return new PrivateKeySignatureFactoryImpl(rsaKeyFactory());
+        return new PrivateKeySignatureFactory(rsaKeyFactory());
     }
 
     public SignerFactory signerFactory() {
-        return new SignerFactoryImpl(
+        return new SignerFactory(
                 macFactory(),
                 privateKeySignatureFactory(),
                 jwtSerializer(),
@@ -98,20 +94,39 @@ public class AppFactory {
     }
 
     public VerifySignatureFactory verifySignatureFactory() {
-        return new VerifySignatureFactoryImpl(signerFactory(), publicKeySignatureFactory(), urlDecoder());
+        return new VerifySignatureFactory(signerFactory(), publicKeySignatureFactory(), urlDecoder());
     }
 
     public VerifySignature verifySignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         return verifySignatureFactory().makeVerifySignature(algorithm, key);
     }
 
-    public UnsecureJwtBuilder unsecureJwtBuilder(){
-        return new UnsecureJwtBuilder();
+    public UnSecureJwtFactory unsecureJwtFactory(){
+        return new UnSecureJwtFactory();
     }
 
-    public SecureJwtBuilder secureJwtBuilder(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public SecureJwtFactory secureJwtFactory(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         Signer signer = signerFactory().makeSigner(alg, jwk);
-        return new SecureJwtBuilder(signer, alg, jwk.getKeyId());
+        return new SecureJwtFactory(signer, alg, jwk.getKeyId());
+    }
+
+    public SecureJwtEncoder secureJwtEncoder(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+        SecureJwtFactory secureJwtFactory = null;
+        try {
+            secureJwtFactory = secureJwtFactory(alg, jwk);
+        } catch (InvalidAlgorithmException e) {
+            throw e;
+        } catch (InvalidJsonWebKeyException e) {
+            throw e;
+        }
+
+        JWTSerializer jwtSerializer = jwtSerializer();
+
+        return new SecureJwtEncoder(secureJwtFactory, jwtSerializer);
+    }
+
+    public UnSecureJwtEncoder unSecureJwtEncoder() {
+        return new UnSecureJwtEncoder(unsecureJwtFactory(), jwtSerializer());
     }
 
     public JcaPEMKeyConverter jcaPEMKeyConverter() {

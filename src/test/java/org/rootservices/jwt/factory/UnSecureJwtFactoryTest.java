@@ -1,10 +1,8 @@
-package org.rootservices.jwt.builder;
+package org.rootservices.jwt.factory;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
-import org.rootservices.jwt.entity.jwk.KeyType;
-import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 
 import helper.entity.Claim;
@@ -20,14 +18,14 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by tommackenzie on 8/11/15.
  */
-public class UnsecureJwtBuilderTest {
+public class UnSecureJwtFactoryTest {
 
-    private UnsecureJwtBuilder subject;
+    private UnSecureJwtFactory subject;
 
     @Before
     public void setUp(){
         AppFactory appFactory = new AppFactory();
-        subject = appFactory.unsecureJwtBuilder();
+        subject = appFactory.unsecureJwtFactory();
     }
 
     @Test
@@ -41,7 +39,7 @@ public class UnsecureJwtBuilderTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        JsonWebToken actual = subject.build(claim);
+        JsonWebToken actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
 

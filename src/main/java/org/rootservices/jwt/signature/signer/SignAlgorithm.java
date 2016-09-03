@@ -1,26 +1,35 @@
 package org.rootservices.jwt.signature.signer;
 
+import org.rootservices.jwt.entity.jwt.header.Algorithm;
+
 /**
  * Created by tommackenzie on 8/22/15.
- *
- * Algorithms used for JSON Web Signature
  */
 public enum SignAlgorithm {
-    HS256 ("HmacSHA256"),
-    RS256 ("SHA256withRSA");
+    HS256 (Algorithm.HS256, "HmacSHA256"),
+    RS256 (Algorithm.RS256, "SHA256withRSA");
 
-    private String value;
+    private Algorithm jwtAglgorithm;
+    private String jdkAlgorithm;
 
-    SignAlgorithm(String value) {
-        this.value = value;
+    SignAlgorithm(Algorithm jwtAglgorithm, String jdkAlgorithm) {
+        this.jwtAglgorithm = jwtAglgorithm;
+        this.jdkAlgorithm = jdkAlgorithm;
     }
 
-
-    public String getValue() {
-        return value;
+    public Algorithm getJwtAglgorithm() {
+        return jwtAglgorithm;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setJwtAglgorithm(Algorithm jwtAglgorithm) {
+        this.jwtAglgorithm = jwtAglgorithm;
+    }
+
+    public String getJdkAlgorithm() {
+        return jdkAlgorithm;
+    }
+
+    public void setJdkAlgorithm(String jdkAlgorithm) {
+        this.jdkAlgorithm = jdkAlgorithm;
     }
 }

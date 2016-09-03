@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
-import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
@@ -23,7 +22,7 @@ import static org.junit.Assert.*;
 /**
  * Created by tommackenzie on 11/6/15.
  */
-public class PrivateKeySignatureFactoryImplTest {
+public class PrivateKeySignatureFactoryTest {
 
     private PrivateKeySignatureFactory subject;
 
@@ -73,6 +72,6 @@ public class PrivateKeySignatureFactoryImplTest {
         RSAKeyPair jwk = Factory.makeRSAKeyPair();
         Signature signature = subject.makeSignature(SignAlgorithm.RS256, jwk);
 
-        assertThat(signature.getAlgorithm(), is(SignAlgorithm.RS256.getValue()));
+        assertThat(signature.getAlgorithm(), is(SignAlgorithm.RS256.getJdkAlgorithm()));
     }
 }
