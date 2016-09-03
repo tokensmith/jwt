@@ -53,8 +53,10 @@ public class VerifySignatureFactory {
     private VerifySignature makeVerifyRsaSignature(Algorithm algorithm, RSAPublicKey key) throws InvalidJsonWebKeyException, InvalidAlgorithmException {
         Signature signature;
 
+        SignAlgorithm signAlgorithm = SignAlgorithm.valueOf(algorithm.getValue());
+
         try {
-            signature = publicKeySignatureFactory.makeSignature(SignAlgorithm.RS256, key);
+            signature = publicKeySignatureFactory.makeSignature(signAlgorithm, key);
         } catch (PublicKeyException e) {
             throw new InvalidJsonWebKeyException("", e);
         } catch (RSAPublicKeyException e) {

@@ -43,6 +43,7 @@ public class SignerFactory {
 
     public Signer makeSigner(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         Signer signer = null;
+
         if (jwk.getKeyType() == KeyType.OCT) {
             signer = makeMacSigner(alg, jwk);
         } else if ( jwk.getKeyType() == KeyType.RSA) {
@@ -51,11 +52,12 @@ public class SignerFactory {
         return signer;
     }
 
-    public Signer makeMacSigner(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public Signer makeMacSigner(Algorithm alg, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         Mac mac;
+        SignAlgorithm signAlgorithm = SignAlgorithm.valueOf(alg.getValue());
 
         try {
-            mac = macFactory.makeMac(SignAlgorithm.HS256, (SymmetricKey) key);
+            mac = macFactory.makeMac(signAlgorithm, (SymmetricKey) key);
         } catch (SecurityKeyException e) {
             throw new InvalidJsonWebKeyException("", e);
         } catch (InvalidAlgorithmException e) {
@@ -65,10 +67,13 @@ public class SignerFactory {
         return new MacSigner(jwtSerializer, mac, encoder);
     }
 
-    private Signer makeRSASigner(Algorithm algorithm, RSAKeyPair keyPair) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+    private Signer makeRSASigner(Algorithm alg, RSAKeyPair keyPair) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         Signature signature = null;
+
+        SignAlgorithm signAlgorithm = SignAlgorithm.valueOf(alg.getValue());
+
         try {
-            signature = privateKeySignatureFactory.makeSignature(SignAlgorithm.RS256, keyPair);
+            signature = privateKeySignatureFactory.makeSignature(signAlgorithm, keyPair);
         } catch (PrivateKeyException e) {
             throw new InvalidJsonWebKeyException("", e);
         } catch (RSAPrivateKeyException e) {

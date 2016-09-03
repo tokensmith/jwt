@@ -61,7 +61,7 @@ public class PrivateKeySignatureFactory {
         Signature signature;
 
         try {
-            signature = Signature.getInstance(alg.getValue());
+            signature = Signature.getInstance(alg.getJdkAlgorithm());
         } catch (NoSuchAlgorithmException e) {
             throw new InvalidAlgorithmException("Algorithm is not supported.", e);
         }

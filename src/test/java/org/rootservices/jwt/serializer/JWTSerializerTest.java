@@ -5,7 +5,7 @@ import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.factory.SecureJwtFactory;
-import org.rootservices.jwt.factory.UnsecureJwtFactory;
+import org.rootservices.jwt.factory.UnSecureJwtFactory;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
@@ -28,34 +28,24 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by tommackenzie on 8/13/15.
  */
-public class JWTSerializerImplTest {
+public class JWTSerializerTest {
 
     private AppFactory appFactory;
 
     @Before
     public void setUp() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         appFactory = new AppFactory();
-
-        SymmetricKey key = Factory.makeSymmetricKey();
-        UnsecureJwtFactory unsecureTokenBuilder = appFactory.unsecureJwtBuilder();
-        SecureJwtFactory secureJwtFactory = appFactory.secureJwtBuilder(Algorithm.HS256, key);
-        JWTSerializer subject = appFactory.jwtSerializer();
     }
 
     @Test
     public void UnsecuredJwtToStringShouldBeValidJWT() throws JwtToJsonException {
 
-        UnsecureJwtFactory unsecureTokenBuilder = appFactory.unsecureJwtBuilder();
+        UnSecureJwtFactory unsecureTokenBuilder = appFactory.unsecureJwtFactory();
         JWTSerializer subject = appFactory.jwtSerializer();
 
         String expectedJwt = "eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";
 
-        Claim claim = new Claim();
-        Optional<String> issuer = Optional.of("joe");
-        Optional<Long> expirationTime = Optional.of(1300819380L);
-        claim.setUriIsRoot(true);
-        claim.setIssuer(issuer);
-        claim.setExpirationTime(expirationTime);
+        Claim claim = Factory.makeClaim();
 
         JsonWebToken tokenToMarshal = unsecureTokenBuilder.makeJwt(claim);
         String actual = subject.jwtToString(tokenToMarshal);
@@ -66,7 +56,7 @@ public class JWTSerializerImplTest {
     public void SecuredJwtToStringShouldBeValid() throws JwtToJsonException, InvalidAlgorithmException, InvalidJsonWebKeyException {
 
         SymmetricKey key = Factory.makeSymmetricKey();
-        SecureJwtFactory secureJwtFactory = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+        SecureJwtFactory secureJwtFactory = appFactory.secureJwtFactory(Algorithm.HS256, key);
         JWTSerializer subject = appFactory.jwtSerializer();
 
         String signature = "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
@@ -75,12 +65,7 @@ public class JWTSerializerImplTest {
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
                 signature;
 
-        Claim claim = new Claim();
-        Optional<String> issuer = Optional.of("joe");
-        Optional<Long> expirationTime = Optional.of(1300819380L);
-        claim.setUriIsRoot(true);
-        claim.setIssuer(issuer);
-        claim.setExpirationTime(expirationTime);
+        Claim claim = Factory.makeClaim();
 
         JsonWebToken tokenToMarshal = secureJwtFactory.makeJwt(claim);
         String actual = subject.jwtToString(tokenToMarshal);
@@ -93,7 +78,7 @@ public class JWTSerializerImplTest {
         SymmetricKey key = Factory.makeSymmetricKey();
         key.setKeyId(Optional.of("test-key-id"));
 
-        SecureJwtFactory secureJwtFactory = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+        SecureJwtFactory secureJwtFactory = appFactory.secureJwtFactory(Algorithm.HS256, key);
         JWTSerializer subject = appFactory.jwtSerializer();
 
         String signature = "YiFm03WWrDAbFn7omROmU2GHACkaGI30xdbWFzyoCNQ";
@@ -102,12 +87,7 @@ public class JWTSerializerImplTest {
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
                 signature;
 
-        Claim claim = new Claim();
-        Optional<String> issuer = Optional.of("joe");
-        Optional<Long> expirationTime = Optional.of(1300819380L);
-        claim.setUriIsRoot(true);
-        claim.setIssuer(issuer);
-        claim.setExpirationTime(expirationTime);
+        Claim claim = Factory.makeClaim();
 
         JsonWebToken tokenToMarshal = secureJwtFactory.makeJwt(claim);
         String actual = subject.jwtToString(tokenToMarshal);

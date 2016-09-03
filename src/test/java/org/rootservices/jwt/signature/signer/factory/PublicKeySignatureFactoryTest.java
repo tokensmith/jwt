@@ -62,6 +62,6 @@ public class PublicKeySignatureFactoryTest {
         RSAPublicKey publicKey = Factory.makeRSAPublicKey();
         Signature signature = subject.makeSignature(SignAlgorithm.RS256, publicKey);
 
-        assertThat(signature.getAlgorithm(), is(SignAlgorithm.RS256.getValue()));
+        assertThat(signature.getAlgorithm(), is(SignAlgorithm.RS256.getJdkAlgorithm()));
     }
 }

@@ -40,7 +40,7 @@ public class SecureJwtFactoryTest {
     public void constructShouldAssignIVars() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         SymmetricKey key = Factory.makeSymmetricKey();
         key.setKeyId(Optional.of("test-key-id"));
-        SecureJwtFactory subject = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+        SecureJwtFactory subject = appFactory.secureJwtFactory(Algorithm.HS256, key);
 
         assertThat(subject.getAlgorithm(), is(Algorithm.HS256));
         assertThat(subject.getKeyId().isPresent(), is(true));
@@ -61,7 +61,7 @@ public class SecureJwtFactoryTest {
 
         // prepare subject of the test.
         SymmetricKey key = Factory.makeSymmetricKey();
-        SecureJwtFactory subject = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+        SecureJwtFactory subject = appFactory.secureJwtFactory(Algorithm.HS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
@@ -112,7 +112,7 @@ public class SecureJwtFactoryTest {
 
         // prepare subject of the test.
         RSAKeyPair key = Factory.makeRSAKeyPair();
-        SecureJwtFactory subject = appFactory.secureJwtBuilder(Algorithm.RS256, key);
+        SecureJwtFactory subject = appFactory.secureJwtFactory(Algorithm.RS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
@@ -155,7 +155,7 @@ public class SecureJwtFactoryTest {
         RSAKeyPair key = Factory.makeRSAKeyPair();
         key.setKeyId(keyId);
 
-        SecureJwtFactory subject = appFactory.secureJwtBuilder(Algorithm.RS256, key);
+        SecureJwtFactory subject = appFactory.secureJwtFactory(Algorithm.RS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
@@ -172,7 +172,7 @@ public class SecureJwtFactoryTest {
 
         // prepare subject of the test.
         RSAKeyPair key = Factory.makeRSAKeyPair();
-        SecureJwtFactory subject = appFactory.secureJwtBuilder(Algorithm.RS256, key);
+        SecureJwtFactory subject = appFactory.secureJwtFactory(Algorithm.RS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
@@ -198,7 +198,7 @@ public class SecureJwtFactoryTest {
 
         // prepare subject of the test.
         SymmetricKey key = Factory.makeSymmetricKey();
-        SecureJwtFactory subject = appFactory.secureJwtBuilder(Algorithm.HS256, key);
+        SecureJwtFactory subject = appFactory.secureJwtFactory(Algorithm.HS256, key);
 
         // claim of the token.
         Claim claim = Factory.makeClaim();
