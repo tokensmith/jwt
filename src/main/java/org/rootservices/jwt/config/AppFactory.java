@@ -123,7 +123,6 @@ public class AppFactory {
         JWTSerializer jwtSerializer = jwtSerializer();
 
         return new SecureJwtEncoder(secureJwtFactory, jwtSerializer);
-
     }
 
     public UnSecureJwtEncoder unSecureJwtEncoder() {

@@ -1,6 +1,7 @@
 package examples;
 
 import helper.entity.Claim;
+import org.rootservices.jwt.SecureJwtEncoder;
 import org.rootservices.jwt.factory.SecureJwtFactory;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
@@ -21,7 +22,7 @@ import java.util.Optional;
  */
 public class SymmetricSignedJsonWebToken {
 
-    public String toJson() throws JwtToJsonException, InvalidJsonWebKeyException, InvalidAlgorithmException {
+    public String toEncodedJwt() {
 
         AppFactory appFactory = new AppFactory();
 
@@ -31,37 +32,26 @@ public class SymmetricSignedJsonWebToken {
                 Use.SIGNATURE
         );
 
-        SecureJwtFactory secureJwtFactory = null;
-        try {
-            secureJwtFactory = appFactory.secureJwtFactory(Algorithm.HS256, key);
-        } catch (InvalidJsonWebKeyException e) {
-            throw e;
-        } catch (InvalidAlgorithmException e) {
-            throw e;
-        }
-
         Claim claim = new Claim();
         claim.setUriIsRoot(true);
 
-        JsonWebToken jsonWebToken = null;
+        SecureJwtEncoder secureJwtEncoder = null;
         try {
-            jsonWebToken = secureJwtFactory.makeJwt(claim);
-        } catch (JwtToJsonException e) {
-            // could not create JsonWebToken, e.cause will provide details
-            throw e;
+            secureJwtEncoder = appFactory.secureJwtEncoder(Algorithm.HS256, key);
+        } catch (InvalidAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidJsonWebKeyException e) {
+            e.printStackTrace();
         }
 
-        JWTSerializer jwtSerializer = appFactory.jwtSerializer();
-
-        String jwt = null;
+        String encodedJwt = null;
         try {
-            jwt = jwtSerializer.jwtToString(jsonWebToken);
+            encodedJwt = secureJwtEncoder.encode(claim);
         } catch (JwtToJsonException e) {
-            // could not serialize JsonWebToken to json
-            throw e;
+            e.printStackTrace();
         }
 
-        return jwt;
+        return encodedJwt;
     }
 
     public Boolean verifySignature() throws JsonToJwtException, InvalidJsonWebKeyException, InvalidAlgorithmException {

@@ -1,6 +1,7 @@
 package examples;
 
 import helper.entity.Claim;
+import org.rootservices.jwt.SecureJwtEncoder;
 import org.rootservices.jwt.factory.SecureJwtFactory;
 import org.rootservices.jwt.config.AppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
@@ -24,7 +25,7 @@ import java.util.Optional;
  */
 public class AsymmetricSignedJsonWebToken {
 
-    public String toJson() throws JwtToJsonException, InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public String toEncodedJwt() {
 
         RSAKeyPair keyPair = new RSAKeyPair(
                 Optional.of("test-key-id"),
@@ -40,38 +41,27 @@ public class AsymmetricSignedJsonWebToken {
                 new BigInteger("23545019917990284444784037831882732213707743418529123971725460465297450415859883707284136179135646366158633580054594447195052813412945775933274620822213099556720089770059982091144435545976515508108465724188242241967967709555336331874325396876783846248039429242763646988988076187339075374375350105207330456437")
         );
 
-        AppFactory appFactory = new AppFactory();
-
-        SecureJwtFactory secureTokenBuilder = null;
-        try {
-            secureTokenBuilder = appFactory.secureJwtFactory(Algorithm.RS256, keyPair);
-        } catch (InvalidJsonWebKeyException e) {
-            throw e;
-        } catch (InvalidAlgorithmException e) {
-            throw e;
-        }
-
         Claim claim = new Claim();
         claim.setUriIsRoot(true);
 
-        JsonWebToken jsonWebToken = null;
+        AppFactory appFactory = new AppFactory();
+        SecureJwtEncoder secureJwtEncoder = null;
         try {
-            jsonWebToken = secureTokenBuilder.makeJwt(claim);
-        } catch (JwtToJsonException e) {
-            // could not create a JsonWebToken, e.cause will provide reason
-            throw e;
+            secureJwtEncoder = appFactory.secureJwtEncoder(Algorithm.RS256, keyPair);
+        } catch (InvalidAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidJsonWebKeyException e) {
+            e.printStackTrace();
         }
 
-        JWTSerializer jwtSerializer = appFactory.jwtSerializer();
-        String jwt = null;
+        String encodedJwt = null;
         try {
-            jwt = jwtSerializer.jwtToString(jsonWebToken);
+            encodedJwt = secureJwtEncoder.encode(claim);
         } catch (JwtToJsonException e) {
-            // could not serialize JsonWebToken to json string
-            throw e;
+            e.printStackTrace();
         }
 
-        return jwt;
+        return encodedJwt;
     }
 
     public Boolean verifySignature() throws JsonToJwtException, InvalidAlgorithmException, InvalidJsonWebKeyException {
