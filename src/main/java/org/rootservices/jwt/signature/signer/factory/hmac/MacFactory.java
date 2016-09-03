@@ -23,7 +23,7 @@ public class MacFactory {
 
     public Key makeKey(SignAlgorithm alg, SymmetricKey jwk) {
         byte[] secretKey = decoder.decode(jwk.getKey());
-        return new SecretKeySpec(secretKey, alg.getValue());
+        return new SecretKeySpec(secretKey, alg.getJdkAlgorithm());
     }
 
     public Mac makeMac(SignAlgorithm alg, SymmetricKey jwk) throws InvalidAlgorithmException, SecurityKeyException {
@@ -31,7 +31,7 @@ public class MacFactory {
         Mac mac;
 
         try {
-            mac = Mac.getInstance(alg.getValue());
+            mac = Mac.getInstance(alg.getJdkAlgorithm());
         } catch (NoSuchAlgorithmException e) {
             throw new InvalidAlgorithmException("Algorithm is not supported.", e);
         }

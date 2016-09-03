@@ -34,7 +34,7 @@ public class MacFactoryTest {
 
         java.security.Key actual = subject.makeKey(SignAlgorithm.HS256, key);
         assertNotNull(actual);
-        assertEquals(actual.getAlgorithm(), SignAlgorithm.HS256.getValue());
+        assertEquals(actual.getAlgorithm(), SignAlgorithm.HS256.getJdkAlgorithm());
 
         Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
         assertEquals(encoder.encodeToString(actual.getEncoded()), key.getKey());
@@ -46,6 +46,6 @@ public class MacFactoryTest {
 
         Mac actual = subject.makeMac(SignAlgorithm.HS256, key);
         assertNotNull(actual);
-        assertEquals(actual.getAlgorithm(), SignAlgorithm.HS256.getValue());
+        assertEquals(actual.getAlgorithm(), SignAlgorithm.HS256.getJdkAlgorithm());
     }
 }

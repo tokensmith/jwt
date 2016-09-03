@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.rootservices.jwt.factory.IdTokenToJwt;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.translator.CSRToRSAPublicKey;
@@ -108,6 +109,22 @@ public class AppFactory {
     public SecureJwtFactory secureJwtFactory(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         Signer signer = signerFactory().makeSigner(alg, jwk);
         return new SecureJwtFactory(signer, alg, jwk.getKeyId());
+    }
+
+    public IdTokenToJwt idTokenToJwt(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+        SecureJwtFactory secureJwtFactory = null;
+        try {
+            secureJwtFactory = secureJwtFactory(alg, jwk);
+        } catch (InvalidAlgorithmException e) {
+            throw e;
+        } catch (InvalidJsonWebKeyException e) {
+            throw e;
+        }
+
+        JWTSerializer jwtSerializer = jwtSerializer();
+
+        return new IdTokenToJwt(secureJwtFactory, jwtSerializer);
+
     }
 
     public JcaPEMKeyConverter jcaPEMKeyConverter() {

@@ -72,6 +72,6 @@ public class PrivateKeySignatureFactoryTest {
         RSAKeyPair jwk = Factory.makeRSAKeyPair();
         Signature signature = subject.makeSignature(SignAlgorithm.RS256, jwk);
 
-        assertThat(signature.getAlgorithm(), is(SignAlgorithm.RS256.getValue()));
+        assertThat(signature.getAlgorithm(), is(SignAlgorithm.RS256.getJdkAlgorithm()));
     }
 }

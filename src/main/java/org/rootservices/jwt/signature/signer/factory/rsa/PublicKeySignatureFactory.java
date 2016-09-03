@@ -41,7 +41,7 @@ public class PublicKeySignatureFactory {
 
         Signature signature = null;
         try {
-            signature = Signature.getInstance(alg.getValue());
+            signature = Signature.getInstance(alg.getJdkAlgorithm());
         } catch (NoSuchAlgorithmException e) {
             // should never reach here - tests prove it.
             throw new InvalidAlgorithmException("Could not create Signature", e);
