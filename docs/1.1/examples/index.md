@@ -5,13 +5,12 @@ categories: [1.1]
 ---
 
 ##### Examples ####
+[Unsecured JWT](https://github.com/RootServices/jwt/blob/1.1/src/test/java/examples/UnsecuredJsonWebToken.java)
 
-[Unsecured JWT](https://github.com/RootServices/jwt/blob/development/src/test/java/examples/UnsecuredJsonWebToken.java)
+[Secured JWT - Symmetric Key](https://github.com/RootServices/jwt/blob/1.1/src/test/java/examples/SymmetricSignedJsonWebToken.java)
 
-[Secured JWT - Symmetric Key](https://github.com/RootServices/jwt/blob/development/src/test/java/examples/SymmetricSignedJsonWebToken.java)
+[Secured JWT - Asymmetric Key](https://github.com/RootServices/jwt/blob/1.1/src/test/java/examples/AsymmetricSignedJsonWebToken.java)
 
-[Secured JWT - Asymmetric Key](https://github.com/RootServices/jwt/blob/development/src/test/java/examples/AsymmetricSignedJsonWebToken.java)
+[Certificate Signing Request file translated to a RSAPublicKey](https://github.com/RootServices/jwt/blob/1.1/src/test/java/examples/CSRFileToRSAPublicKey.java)
 
-[Certificate Signing Request file translated to a RSAPublicKey](https://github.com/RootServices/jwt/blob/development/src/test/java/examples/CSRFileToRSAPublicKey.java)
-
-[Pem file translated to RSAKeyPair](https://github.com/RootServices/jwt/blob/development/src/test/java/examples/PemFileToRSAKeyPair.java)
+[Pem file translated to RSAKeyPair](https://github.com/RootServices/jwt/1.1/development/src/test/java/examples/PemFileToRSAKeyPair.java)
