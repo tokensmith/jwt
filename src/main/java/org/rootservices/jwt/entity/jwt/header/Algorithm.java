@@ -8,9 +8,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Algorithm {
+    // signing
     NONE ("none"),
     HS256 ("HS256"),
-    RS256 ("RS256");
+    RS256 ("RS256"),
+
+    // encrypting
+    RSAES_OAEP  ("RSA-OAEP");
 
     private String value;
 

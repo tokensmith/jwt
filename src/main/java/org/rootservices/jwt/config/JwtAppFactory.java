@@ -8,6 +8,8 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.rootservices.jwt.SecureJwtEncoder;
 import org.rootservices.jwt.UnSecureJwtEncoder;
+import org.rootservices.jwt.key.PrivateKeyFactory;
+import org.rootservices.jwt.key.PublicKeyFactory;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.translator.CSRToRSAPublicKey;
@@ -35,7 +37,7 @@ import java.util.Base64;
 /**
  * Created by tommackenzie on 8/13/15.
  */
-public class AppFactory {
+public class JwtAppFactory {
 
     public ObjectMapper objectMapper() {
         return new ObjectMapper()
@@ -72,12 +74,20 @@ public class AppFactory {
         );
     }
 
+    public PublicKeyFactory publicKeyFactory() {
+        return new PublicKeyFactory(rsaKeyFactory());
+    }
+
     public PublicKeySignatureFactory publicKeySignatureFactory() {
         return new PublicKeySignatureFactory(rsaKeyFactory());
     }
 
     public MacFactory macFactory() {
         return new MacFactory(urlDecoder());
+    }
+
+    public PrivateKeyFactory privateKeyFactory() {
+        return new PrivateKeyFactory(rsaKeyFactory());
     }
 
     public PrivateKeySignatureFactory privateKeySignatureFactory() {

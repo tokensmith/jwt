@@ -3,7 +3,7 @@ package org.rootservices.jwt.signature.verifier.factory;
 import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
@@ -19,11 +19,11 @@ import static org.junit.Assert.*;
  * Created by tommackenzie on 11/15/15.
  */
 public class VerifySignatureFactoryImplTest {
-    private AppFactory appFactory;
+    private JwtAppFactory appFactory;
 
     @Before
     public void setUp() {
-        this.appFactory = new AppFactory();
+        this.appFactory = new JwtAppFactory();
     }
 
     @Test

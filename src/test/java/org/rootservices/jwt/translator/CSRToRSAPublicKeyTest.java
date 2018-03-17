@@ -2,7 +2,7 @@ package org.rootservices.jwt.translator;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.Use;
@@ -24,11 +24,11 @@ import static org.junit.Assert.*;
  * Created by tommackenzie on 12/1/15.
  */
 public class CSRToRSAPublicKeyTest {
-    private AppFactory appFactory;
+    private JwtAppFactory appFactory;
 
     @Before
     public void setUp() {
-        appFactory = new AppFactory();
+        appFactory = new JwtAppFactory();
     }
 
     @Test

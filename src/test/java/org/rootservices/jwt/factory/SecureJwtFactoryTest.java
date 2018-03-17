@@ -4,7 +4,7 @@ import helper.entity.Claim;
 import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
@@ -28,11 +28,11 @@ import static org.junit.Assert.assertThat;
  */
 public class SecureJwtFactoryTest {
 
-    private AppFactory appFactory;
+    private JwtAppFactory appFactory;
 
     @Before
     public void setUp(){
-        appFactory = new AppFactory();
+        appFactory = new JwtAppFactory();
     }
 
 

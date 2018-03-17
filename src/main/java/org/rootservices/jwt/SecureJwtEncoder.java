@@ -29,7 +29,7 @@ public class SecureJwtEncoder {
             throw e;
         }
 
-        String jwt = null;
+        String jwt;
         try {
             jwt = jwtSerializer.jwtToString(jsonWebToken);
         } catch (JwtToJsonException e) {

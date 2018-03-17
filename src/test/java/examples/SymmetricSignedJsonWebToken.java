@@ -2,8 +2,7 @@ package examples;
 
 import helper.entity.Claim;
 import org.rootservices.jwt.SecureJwtEncoder;
-import org.rootservices.jwt.factory.SecureJwtFactory;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
@@ -24,7 +23,7 @@ public class SymmetricSignedJsonWebToken {
 
     public String toEncodedJwt() {
 
-        AppFactory appFactory = new AppFactory();
+        JwtAppFactory appFactory = new JwtAppFactory();
 
         SymmetricKey key = new SymmetricKey(
                 Optional.of("test-key-id"),
@@ -56,7 +55,7 @@ public class SymmetricSignedJsonWebToken {
 
     public Boolean verifySignature() throws JsonToJwtException, InvalidJsonWebKeyException, InvalidAlgorithmException {
 
-        AppFactory appFactory = new AppFactory();
+        JwtAppFactory appFactory = new JwtAppFactory();
 
         String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZX0.TeZ3DKSE-gplbaoA8CK_RMojt8CfA1MTYaM_ZuOeGNw";
         JWTSerializer jwtSerializer = appFactory.jwtSerializer();

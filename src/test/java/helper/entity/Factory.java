@@ -81,4 +81,9 @@ public class Factory {
 
         return new JsonWebToken(header, claim);
     }
+
+    public static byte[] aad() {
+        byte[] aad = "aad".getBytes();
+        return aad;
+    }
 }

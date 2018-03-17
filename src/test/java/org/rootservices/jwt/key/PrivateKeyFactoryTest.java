@@ -1,35 +1,26 @@
-package org.rootservices.jwt.signature.signer.factory;
+package org.rootservices.jwt.key;
 
 import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
-import org.rootservices.jwt.signature.signer.SignAlgorithm;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
 import org.rootservices.jwt.signature.signer.factory.rsa.exception.PrivateKeyException;
-import org.rootservices.jwt.signature.signer.factory.rsa.exception.RSAPrivateKeyException;
 
 import java.math.BigInteger;
-import java.security.*;
 import java.security.interfaces.RSAPrivateCrtKey;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-/**
- * Created by tommackenzie on 11/6/15.
- */
-public class PrivateKeySignatureFactoryTest {
-
-    private PrivateKeySignatureFactory subject;
+public class PrivateKeyFactoryTest {
+    private PrivateKeyFactory subject;
 
     @Before
     public void setUp() {
-        JwtAppFactory appFactory = new JwtAppFactory();
-        this.subject = appFactory.privateKeySignatureFactory();
+        JwtAppFactory jwtAppFactory = new JwtAppFactory();
+        subject = jwtAppFactory.privateKeyFactory();
     }
 
     @Test
@@ -65,13 +56,5 @@ public class PrivateKeySignatureFactoryTest {
         rsaKeyPair.setN(new BigInteger("12"));
 
         subject.makePrivateKey(rsaKeyPair);
-    }
-
-    @Test
-    public void testMakeSignatureShouldBeRS256() throws InvalidAlgorithmException, PrivateKeyException, RSAPrivateKeyException {
-        RSAKeyPair jwk = Factory.makeRSAKeyPair();
-        Signature signature = subject.makeSignature(SignAlgorithm.RS256, jwk);
-
-        assertThat(signature.getAlgorithm(), is(SignAlgorithm.RS256.getJdkAlgorithm()));
     }
 }

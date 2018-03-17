@@ -3,10 +3,11 @@ package org.rootservices.jwt.signature.signer;
 import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.entity.jwt.header.TokenType;
 import org.rootservices.jwt.serializer.exception.JwtToJsonException;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
@@ -22,11 +23,11 @@ import static org.junit.Assert.*;
  * Created by tommackenzie on 11/12/15.
  */
 public class RSASignerTest {
-    private AppFactory appFactory;
+    private JwtAppFactory appFactory;
 
     @Before
     public void setUp() {
-        this.appFactory = new AppFactory();
+        this.appFactory = new JwtAppFactory();
     }
 
     /**
@@ -74,7 +75,7 @@ public class RSASignerTest {
         RSAKeyPair jwk = Factory.makeRSAKeyPair();
         Signer subject =  appFactory.signerFactory().makeSigner(Algorithm.RS256, jwk);
 
-        JsonWebToken jwt = Factory.makeToken(Algorithm.RS256, Optional.empty());
+        JsonWebToken jwt = Factory.makeToken(Algorithm.RS256, Optional.<TokenType>empty());
 
         String actual = subject.run(jwt);
 

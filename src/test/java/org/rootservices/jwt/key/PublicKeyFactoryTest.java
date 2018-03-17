@@ -1,34 +1,26 @@
-package org.rootservices.jwt.signature.signer.factory;
+package org.rootservices.jwt.key;
 
 import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
-import org.rootservices.jwt.signature.signer.SignAlgorithm;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
 import org.rootservices.jwt.signature.signer.factory.rsa.exception.PublicKeyException;
-import org.rootservices.jwt.signature.signer.factory.rsa.exception.RSAPublicKeyException;
 
 import java.math.BigInteger;
-import java.security.Signature;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-/**
- * Created by tommackenzie on 11/14/15.
- */
-public class PublicKeySignatureFactoryTest {
+public class PublicKeyFactoryTest {
     private JwtAppFactory appFactory;
-    private PublicKeySignatureFactory subject;
+    private PublicKeyFactory subject;
 
     @Before
     public void setUp() {
         this.appFactory = new JwtAppFactory();
-        this.subject = appFactory.publicKeySignatureFactory();
+        this.subject = appFactory.publicKeyFactory();
     }
 
     @Test
@@ -57,11 +49,4 @@ public class PublicKeySignatureFactoryTest {
         subject.makePublicKey(publicKey);
     }
 
-        @Test
-    public void testMakeSignatureShouldBeRS256() throws InvalidAlgorithmException, PublicKeyException, RSAPublicKeyException {
-        RSAPublicKey publicKey = Factory.makeRSAPublicKey();
-        Signature signature = subject.makeSignature(SignAlgorithm.RS256, publicKey);
-
-        assertThat(signature.getAlgorithm(), is(SignAlgorithm.RS256.getJdkAlgorithm()));
-    }
 }

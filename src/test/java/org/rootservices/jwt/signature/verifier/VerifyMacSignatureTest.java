@@ -5,7 +5,7 @@ import helper.entity.Claim;
 import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
@@ -21,12 +21,12 @@ import static org.junit.Assert.assertTrue;
  */
 public class VerifyMacSignatureTest {
 
-    private AppFactory appFactory;
+    private JwtAppFactory appFactory;
     private JWTSerializer jwtSerializer;
 
     @Before
     public void setUp() {
-        appFactory = new AppFactory();
+        appFactory = new JwtAppFactory();
         jwtSerializer = appFactory.jwtSerializer();
     }
 

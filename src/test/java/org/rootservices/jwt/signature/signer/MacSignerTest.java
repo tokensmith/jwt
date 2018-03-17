@@ -5,7 +5,7 @@ import helper.entity.Claim;
 import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
@@ -30,7 +30,7 @@ public class MacSignerTest {
     public void setUp() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
         SymmetricKey key = Factory.makeSymmetricKey();
 
-        AppFactory appFactory = new AppFactory();
+        JwtAppFactory appFactory = new JwtAppFactory();
         subject = appFactory.signerFactory().makeSigner(Algorithm.HS256, key);
     }
 

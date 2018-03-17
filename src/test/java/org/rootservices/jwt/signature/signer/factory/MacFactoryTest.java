@@ -4,7 +4,7 @@ package org.rootservices.jwt.signature.signer.factory;
 import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.signature.signer.SignAlgorithm;
 import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
@@ -24,7 +24,7 @@ public class MacFactoryTest {
 
     @Before
     public void setUp() {
-        AppFactory appFactory = new AppFactory();
+        JwtAppFactory appFactory = new JwtAppFactory();
         subject = appFactory.macFactory();
     }
 

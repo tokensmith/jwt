@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.factory.SecureJwtFactory;
 import org.rootservices.jwt.factory.UnSecureJwtFactory;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
@@ -30,11 +30,11 @@ import static org.junit.Assert.assertThat;
  */
 public class JWTSerializerTest {
 
-    private AppFactory appFactory;
+    private JwtAppFactory appFactory;
 
     @Before
     public void setUp() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
-        appFactory = new AppFactory();
+        appFactory = new JwtAppFactory();
     }
 
     @Test

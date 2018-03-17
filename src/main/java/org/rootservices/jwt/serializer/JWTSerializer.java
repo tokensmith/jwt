@@ -68,8 +68,8 @@ public class JWTSerializer {
         byte[] headerJson = decoder.decode(jwtParts[0]);
         byte[] claimsJson = decoder.decode(jwtParts[1]);
 
-        Header header = null;
-        Claims claim = null;
+        Header header;
+        Claims claim;
         try {
             header = (Header) serializer.jsonBytesToObject(headerJson, Header.class);
             claim = (Claims) serializer.jsonBytesToObject(claimsJson, claimClass);

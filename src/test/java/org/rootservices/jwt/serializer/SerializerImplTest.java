@@ -4,7 +4,7 @@ package org.rootservices.jwt.serializer;
 import helper.entity.Claim;
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.exception.JsonException;
@@ -22,11 +22,11 @@ import static org.junit.Assert.fail;
  */
 public class SerializerImplTest {
 
-    private AppFactory appFactory;
+    private JwtAppFactory appFactory;
 
     @Before
     public void setUp() {
-        appFactory = new AppFactory();
+        appFactory = new JwtAppFactory();
     }
 
     @Test
