@@ -11,8 +11,8 @@ import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
 import org.rootservices.jwt.serializer.exception.JwtToJsonException;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
+import org.rootservices.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
 
 import java.util.Optional;
 

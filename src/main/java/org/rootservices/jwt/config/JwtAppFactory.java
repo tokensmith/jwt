@@ -8,10 +8,18 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.rootservices.jwt.SecureJwtEncoder;
 import org.rootservices.jwt.UnSecureJwtEncoder;
-import org.rootservices.jwt.key.PrivateKeyFactory;
-import org.rootservices.jwt.key.PublicKeyFactory;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
+import org.rootservices.jwt.jwe.Transformation;
+import org.rootservices.jwt.jwe.factory.CipherRSAFactory;
+import org.rootservices.jwt.jwe.factory.CipherSymmetricFactory;
+import org.rootservices.jwt.jwe.factory.exception.CipherException;
+import org.rootservices.jwt.entity.jwk.RSAKeyPair;
+import org.rootservices.jwt.jwk.PrivateKeyFactory;
+import org.rootservices.jwt.jwk.PublicKeyFactory;
+import org.rootservices.jwt.serializer.HeaderSerializer;
+import org.rootservices.jwt.serializer.JWESerializer;
+import org.rootservices.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
+import org.rootservices.jwt.jws.signer.factory.rsa.exception.PrivateKeyException;
 import org.rootservices.jwt.translator.CSRToRSAPublicKey;
 import org.rootservices.jwt.translator.PemToRSAKeyPair;
 import org.rootservices.jwt.factory.SecureJwtFactory;
@@ -20,34 +28,40 @@ import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.Serializer;
-import org.rootservices.jwt.signature.signer.factory.hmac.MacFactory;
-import org.rootservices.jwt.signature.signer.factory.rsa.PrivateKeySignatureFactory;
-import org.rootservices.jwt.signature.signer.factory.rsa.PublicKeySignatureFactory;
-import org.rootservices.jwt.signature.verifier.VerifySignature;
-import org.rootservices.jwt.signature.signer.Signer;
-import org.rootservices.jwt.signature.signer.factory.*;
-import org.rootservices.jwt.signature.verifier.factory.VerifySignatureFactory;
+import org.rootservices.jwt.jws.signer.factory.hmac.MacFactory;
+import org.rootservices.jwt.jws.signer.factory.rsa.PrivateKeySignatureFactory;
+import org.rootservices.jwt.jws.signer.factory.rsa.PublicKeySignatureFactory;
+import org.rootservices.jwt.jws.verifier.VerifySignature;
+import org.rootservices.jwt.jws.signer.Signer;
+import org.rootservices.jwt.jws.signer.factory.*;
+import org.rootservices.jwt.jws.verifier.factory.VerifySignatureFactory;
 
 
+import javax.crypto.Cipher;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.Security;
+import java.security.interfaces.RSAPrivateCrtKey;
 import java.util.Base64;
 
 /**
  * Created by tommackenzie on 8/13/15.
  */
 public class JwtAppFactory {
+    private static ObjectMapper objectMapper;
 
     public ObjectMapper objectMapper() {
-        return new ObjectMapper()
-                .setPropertyNamingStrategy(
-                        PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
-                )
-                .configure(JsonParser.Feature.STRICT_DUPLICATE_DETECTION, true)
-                .registerModule(new Jdk8Module())
-                .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-                .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        if (objectMapper == null) {
+            this.objectMapper = new ObjectMapper()
+                    .setPropertyNamingStrategy(
+                            PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+                    )
+                    .configure(JsonParser.Feature.STRICT_DUPLICATE_DETECTION, true)
+                    .registerModule(new Jdk8Module())
+                    .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                    .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        }
+        return objectMapper;
     }
 
     public Serializer serializer() {
@@ -66,11 +80,31 @@ public class JwtAppFactory {
         return Base64.getUrlEncoder().withoutPadding();
     }
 
+    public HeaderSerializer headerSerializer() {
+        return new HeaderSerializer(decoder(), serializer());
+    }
+
     public JWTSerializer jwtSerializer() {
         return new JWTSerializer(
                 serializer(),
                 encoder(),
                 decoder()
+        );
+    }
+
+    public CipherRSAFactory cipherRSAFactory() {
+        return new CipherRSAFactory();
+    }
+
+    public JWESerializer jweSerializer(RSAKeyPair jwk) throws PrivateKeyException, CipherException {
+        RSAPrivateCrtKey key = privateKeyFactory().makePrivateKey(jwk);
+        Cipher rsaDecryptCipher = cipherRSAFactory().forDecrypt(Transformation.RSA_OAEP, key);
+        return new JWESerializer(
+                serializer(),
+                encoder(),
+                urlDecoder(),
+                rsaDecryptCipher,
+                new CipherSymmetricFactory()
         );
     }
 

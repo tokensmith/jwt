@@ -32,7 +32,7 @@ public class Serializer {
     }
 
     public Object jsonBytesToObject(byte[] json, Class<?> c) throws JsonException {
-        Object object = null;
+        Object object;
         try {
             object = objectMapper.readValue(json, c);
         } catch (IOException e) {

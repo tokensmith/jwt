@@ -10,9 +10,9 @@ import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.exception.JsonToJwtException;
 import org.rootservices.jwt.serializer.exception.JwtToJsonException;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
-import org.rootservices.jwt.signature.verifier.VerifySignature;
+import org.rootservices.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
+import org.rootservices.jwt.jws.verifier.VerifySignature;
 
 import java.util.Optional;
 
