@@ -57,7 +57,7 @@ public class JwtAppFactory {
         if (objectMapper == null) {
             this.objectMapper = new ObjectMapper()
                     .setPropertyNamingStrategy(
-                            PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+                            PropertyNamingStrategy.SNAKE_CASE
                     )
                     .configure(JsonParser.Feature.STRICT_DUPLICATE_DETECTION, true)
                     .registerModule(new Jdk8Module())

@@ -14,6 +14,7 @@ import java.security.spec.RSAPrivateKeySpec;
 
 public class PrivateKeyFactory {
     private static final Logger LOGGER = LogManager.getLogger(PrivateKeyFactory.class);
+    public static final String PRIVATE_KEY_ERROR_MSG = "Could not make RSAPrivateCrtKey";
     private KeyFactory RSAKeyFactory;
 
     public PrivateKeyFactory(KeyFactory RSAKeyFactory) {
@@ -46,7 +47,7 @@ public class PrivateKeyFactory {
             privateKey = (RSAPrivateCrtKey) RSAKeyFactory.generatePrivate(keySpec);
         } catch (InvalidKeySpecException e) {
             LOGGER.error(e.getMessage(), e);
-            throw new PrivateKeyException("Could not make RSAPrivateCrtKey", e);
+            throw new PrivateKeyException(PRIVATE_KEY_ERROR_MSG, e);
         }
 
         return privateKey;

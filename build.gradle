@@ -22,7 +22,6 @@ configurations {
 }
 
 ext {
-    jettyVersion = '9.4.8.v20171121'
     jacksonVersion = '2.8.8'
     log4jVersion = '2.11.0'
 }
