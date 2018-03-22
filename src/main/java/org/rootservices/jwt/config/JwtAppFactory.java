@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.rootservices.jwt.SecureJwtEncoder;
 import org.rootservices.jwt.UnSecureJwtEncoder;
@@ -48,6 +50,7 @@ import java.util.Base64;
  * Created by tommackenzie on 8/13/15.
  */
 public class JwtAppFactory {
+    private static final Logger LOGGER = LogManager.getLogger(JwtAppFactory.class);
     private static ObjectMapper objectMapper;
 
     public ObjectMapper objectMapper() {
@@ -184,7 +187,7 @@ public class JwtAppFactory {
             RSAKeyFactory = KeyFactory.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
             // will never reach here.
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         return RSAKeyFactory;
     }

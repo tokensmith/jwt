@@ -1,5 +1,7 @@
 package org.rootservices.jwt.jwk;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.jws.signer.factory.rsa.exception.PrivateKeyException;
 
@@ -9,7 +11,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.RSAPrivateKeySpec;
 
+
 public class PrivateKeyFactory {
+    private static final Logger LOGGER = LogManager.getLogger(PrivateKeyFactory.class);
     private KeyFactory RSAKeyFactory;
 
     public PrivateKeyFactory(KeyFactory RSAKeyFactory) {
@@ -41,6 +45,7 @@ public class PrivateKeyFactory {
         try {
             privateKey = (RSAPrivateCrtKey) RSAKeyFactory.generatePrivate(keySpec);
         } catch (InvalidKeySpecException e) {
+            LOGGER.error(e.getMessage(), e);
             throw new PrivateKeyException("Could not make RSAPrivateCrtKey", e);
         }
 

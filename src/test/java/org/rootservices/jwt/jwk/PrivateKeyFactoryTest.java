@@ -1,6 +1,8 @@
 package org.rootservices.jwt.jwk;
 
 import helper.entity.Factory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.JwtAppFactory;
@@ -15,6 +17,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 public class PrivateKeyFactoryTest {
+    private static final Logger LOGGER = LogManager.getLogger(PrivateKeyFactoryTest.class);
     private PrivateKeyFactory subject;
 
     @Before
@@ -50,11 +53,21 @@ public class PrivateKeyFactoryTest {
         assertThat(privateKey.getCrtCoefficient(), is(crtCoefficient));
     }
 
-    @Test(expected = PrivateKeyException.class)
+    @Test
     public void makePrivateKeyWhenKeyIsNot512ShouldThrowPrivateKeyException() throws Exception {
         RSAKeyPair rsaKeyPair = Factory.makeRSAKeyPair();
         rsaKeyPair.setN(new BigInteger("12"));
 
-        subject.makePrivateKey(rsaKeyPair);
+        PrivateKeyException actual = null;
+        RSAPrivateCrtKey key = null;
+        try {
+            key = subject.makePrivateKey(rsaKeyPair);
+        } catch (PrivateKeyException e) {
+            actual = e;
+        }
+        LOGGER.info("output key is: " + key);
+        LOGGER.info("input key pair modulus is: " + rsaKeyPair.getN());
+        LOGGER.info("exception is: " + actual);
+        assertThat(actual, is(notNullValue()));
     }
 }
