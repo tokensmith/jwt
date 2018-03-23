@@ -46,7 +46,6 @@ public class PrivateKeyFactory {
         try {
             privateKey = (RSAPrivateCrtKey) RSAKeyFactory.generatePrivate(keySpec);
         } catch (InvalidKeySpecException e) {
-            LOGGER.error(e.getMessage(), e);
             throw new PrivateKeyException(PRIVATE_KEY_ERROR_MSG, e);
         }
 

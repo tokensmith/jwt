@@ -41,12 +41,18 @@ public class PublicKeyFactoryTest {
 
     }
 
-    @Test(expected = PublicKeyException.class)
+    @Test
     public void makePublicKeyWhenKeyIsNot512ShouldThrowPublicKeyException() throws PublicKeyException {
         RSAPublicKey publicKey = Factory.makeRSAPublicKey();
         publicKey.setN(new BigInteger("1"));
 
-        subject.makePublicKey(publicKey);
+        PublicKeyException actual = null;
+        try {
+            subject.makePublicKey(publicKey);
+        } catch (PublicKeyException e) {
+            actual = e;
+        }
+        assertThat(actual, is(notNullValue()));
     }
 
 }

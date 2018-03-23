@@ -2,6 +2,7 @@ package org.rootservices.jwt.jws.signer.factory;
 
 import helper.entity.Factory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
@@ -32,7 +33,7 @@ public class PublicKeySignatureFactoryTest {
     }
 
     @Test
-    public void makePublicKeyShouldBeRsaPublicKey() throws PublicKeyException {
+    public void makePublicKeyShouldBeRsaPublicKey() throws Exception {
 
         RSAPublicKey publicKey = Factory.makeRSAPublicKey();
 
@@ -49,16 +50,22 @@ public class PublicKeySignatureFactoryTest {
 
     }
 
-    @Test(expected = PublicKeyException.class)
-    public void makePublicKeyWhenKeyIsNot512ShouldThrowPublicKeyException() throws PublicKeyException {
+    @Test
+    public void makePublicKeyWhenKeyIsNot512ShouldThrowPublicKeyException() throws Exception {
         RSAPublicKey publicKey = Factory.makeRSAPublicKey();
         publicKey.setN(new BigInteger("1"));
 
-        subject.makePublicKey(publicKey);
+        PublicKeyException actual = null;
+        try {
+            subject.makePublicKey(publicKey);
+        } catch (PublicKeyException e) {
+            actual = e;
+        }
+        assertThat(actual, is(notNullValue()));
     }
 
-        @Test
-    public void testMakeSignatureShouldBeRS256() throws InvalidAlgorithmException, PublicKeyException, RSAPublicKeyException {
+    @Test
+    public void testMakeSignatureShouldBeRS256() throws Exception {
         RSAPublicKey publicKey = Factory.makeRSAPublicKey();
         Signature signature = subject.makeSignature(SignAlgorithm.RS256, publicKey);
 

@@ -52,6 +52,7 @@ import java.util.Base64;
 public class JwtAppFactory {
     private static final Logger LOGGER = LogManager.getLogger(JwtAppFactory.class);
     private static ObjectMapper objectMapper;
+    private static KeyFactory RSAKeyFactory;
 
     public ObjectMapper objectMapper() {
         if (objectMapper == null) {
@@ -182,12 +183,13 @@ public class JwtAppFactory {
     }
 
     protected KeyFactory rsaKeyFactory() {
-        KeyFactory RSAKeyFactory = null;
-        try {
-            RSAKeyFactory = KeyFactory.getInstance("RSA");
-        } catch (NoSuchAlgorithmException e) {
-            // will never reach here.
-            LOGGER.error(e.getMessage(), e);
+        if (this.RSAKeyFactory == null) {
+            try {
+                RSAKeyFactory = KeyFactory.getInstance("RSA");
+            } catch (NoSuchAlgorithmException e) {
+                // will never reach here.
+                LOGGER.error(e.getMessage(), e);
+            }
         }
         return RSAKeyFactory;
     }
