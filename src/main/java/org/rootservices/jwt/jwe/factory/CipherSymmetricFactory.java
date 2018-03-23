@@ -19,10 +19,18 @@ import java.security.spec.AlgorithmParameterSpec;
  *  https://stackoverflow.com/questions/32161720/breaking-down-rsa-ecb-oaepwithsha-256andmgf1padding
  *  https://docs.oracle.com/javase/9/docs/api/javax/crypto/spec/OAEPParameterSpec.html
  *  https://docs.oracle.com/cd/E23943_01/security.1111/e10037/crypto.htm#BJFCICAE
+ *
+ *  https://docs.oracle.com/javase/9/docs/api/javax/crypto/spec/OAEPParameterSpec.html
+ *  https://security.stackexchange.com/questions/97548/breaking-down-rsa-ecb-oaepwithsha-256andmgf1padding
  */
 public class CipherSymmetricFactory {
     public static final int GCM_TAG_LENGTH = 128;
     public static final int GCM_IV_LENGTH = 96;
+    public static final String ALGORITHM_WAS_INVALID = "Algorithm, %s, was invalid";
+    public static final String PADDING_WAS_INVALID = "Padding for algorithm, %s, was invalid";
+    public static final String KEY_WAS_INVALID_INIT_CIPHER = "Key was invalid when initializing cipher";
+    public static final String ALGORITHM_WAS_INVALID_INIT_CIPHER = "Algorithm, %s, was invalid when initializing cipher";
+
     private static SecureRandom secureRandom = new SecureRandom();
 
     public Cipher forEncrypt(Transformation transformation, Key key, byte[] aad) throws CipherException {
@@ -49,11 +57,7 @@ public class CipherSymmetricFactory {
         AlgorithmParameterSpec spec = null;
         if (transformation == Transformation.AES_GCM_NO_PADDING) {
             spec = new GCMParameterSpec(GCM_TAG_LENGTH, initVector);
-        } else if (transformation == Transformation.RSA_OAEP) {
-            // https://docs.oracle.com/javase/9/docs/api/javax/crypto/spec/OAEPParameterSpec.html
-            // https://security.stackexchange.com/questions/97548/breaking-down-rsa-ecb-oaepwithsha-256andmgf1padding
-            spec =  OAEPParameterSpec.DEFAULT;
-        }
+        } 
         return spec;
     }
 
@@ -62,17 +66,17 @@ public class CipherSymmetricFactory {
         try {
             cipher = Cipher.getInstance(transformation.getValue());
         } catch (NoSuchAlgorithmException e) {
-            throw new CipherException("", e);
+            throw new CipherException(String.format(ALGORITHM_WAS_INVALID, transformation.getValue()), e);
         } catch (NoSuchPaddingException e) {
-            throw new CipherException("", e);
+            throw new CipherException(String.format(PADDING_WAS_INVALID, transformation.getValue()), e);
         }
 
         try {
             cipher.init(mode, key, spec);
         } catch (InvalidKeyException e) {
-            throw new CipherException("", e);
+            throw new CipherException(KEY_WAS_INVALID_INIT_CIPHER, e);
         } catch (InvalidAlgorithmParameterException e) {
-            throw new CipherException("", e);
+            throw new CipherException(String.format(ALGORITHM_WAS_INVALID_INIT_CIPHER, transformation.getValue()), e);
         }
 
         cipher.updateAAD(aad);

@@ -12,8 +12,15 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 
-
+/**
+ * https://docs.oracle.com/javase/9/docs/api/javax/crypto/spec/OAEPParameterSpec.html
+ * https://security.stackexchange.com/questions/97548/breaking-down-rsa-ecb-oaepwithsha-256andmgf1padding
+ */
 public class CipherRSAFactory {
+    public static final String ALGORITHM_WAS_INVALID = "Algorithm, %s, was invalid";
+    public static final String PADDING_WAS_INVALID = "Padding for algorithm, %s, was invalid";
+    public static final String KEY_WAS_INVALID_INIT_CIPHER = "Key was invalid when initializing cipher";
+    public static final String ALGORITHM_WAS_INVALID_INIT_CIPHER = "Algorithm, %s, was invalid when initializing cipher";
 
     public Cipher forEncrypt(Transformation transformation, Key key) throws CipherException {
         AlgorithmParameterSpec spec = makeSpec(transformation);
@@ -30,8 +37,6 @@ public class CipherRSAFactory {
     protected AlgorithmParameterSpec makeSpec(Transformation transformation) {
         AlgorithmParameterSpec spec = null;
         if (transformation == Transformation.RSA_OAEP) {
-            // https://docs.oracle.com/javase/9/docs/api/javax/crypto/spec/OAEPParameterSpec.html
-            // https://security.stackexchange.com/questions/97548/breaking-down-rsa-ecb-oaepwithsha-256andmgf1padding
             spec =  OAEPParameterSpec.DEFAULT;
         }
         return spec;
@@ -42,17 +47,17 @@ public class CipherRSAFactory {
         try {
             cipher = Cipher.getInstance(transformation.getValue());
         } catch (NoSuchAlgorithmException e) {
-            throw new CipherException("", e);
+            throw new CipherException(String.format(ALGORITHM_WAS_INVALID, transformation.getValue()), e);
         } catch (NoSuchPaddingException e) {
-            throw new CipherException("", e);
+            throw new CipherException(String.format(PADDING_WAS_INVALID, transformation.getValue()), e);
         }
 
         try {
             cipher.init(mode, key, spec);
         } catch (InvalidKeyException e) {
-            throw new CipherException("", e);
+            throw new CipherException(KEY_WAS_INVALID_INIT_CIPHER, e);
         } catch (InvalidAlgorithmParameterException e) {
-            throw new CipherException("", e);
+            throw new CipherException(String.format(ALGORITHM_WAS_INVALID_INIT_CIPHER, transformation.getValue()), e);
         }
 
         return cipher;
