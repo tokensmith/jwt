@@ -9,10 +9,9 @@ public enum KeyType {
 
     private String value;
 
-    private KeyType(String value) {
+    KeyType(String value) {
         this.value = value;
     }
-
 
     public String getValue() {
         return value;

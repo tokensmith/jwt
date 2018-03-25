@@ -2,7 +2,7 @@ package org.rootservices.jwt.translator;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.Use;
@@ -25,11 +25,11 @@ import static org.junit.Assert.*;
  */
 public class PemToRSAKeyPairTest {
 
-    private AppFactory appFactory;
+    private JwtAppFactory appFactory;
 
     @Before
     public void setUp() {
-        this.appFactory = new AppFactory();
+        this.appFactory = new JwtAppFactory();
     }
 
     private FileReader makeFileReader(String filePath) {

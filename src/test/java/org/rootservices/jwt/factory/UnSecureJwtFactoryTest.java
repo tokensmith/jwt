@@ -2,7 +2,7 @@ package org.rootservices.jwt.factory;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 
 import helper.entity.Claim;
@@ -24,7 +24,7 @@ public class UnSecureJwtFactoryTest {
 
     @Before
     public void setUp(){
-        AppFactory appFactory = new AppFactory();
+        JwtAppFactory appFactory = new JwtAppFactory();
         subject = appFactory.unsecureJwtFactory();
     }
 

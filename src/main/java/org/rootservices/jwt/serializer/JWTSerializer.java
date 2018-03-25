@@ -21,7 +21,10 @@ import java.util.Optional;
  * - a JsonWebToken to its string representation.
  */
 public class JWTSerializer {
-    private final int SECURE_TOKEN_LENGTH = 3;
+    public static final String JWT_SPLITTER = "\\.";
+    public final int JWT_LENGTH = 2;
+    public final int JWS_LENGTH = 3;
+    public final int JWE_LENGTH = 5;
     private Serializer serializer;
     private Encoder encoder;
     private Decoder decoder;
@@ -35,8 +38,8 @@ public class JWTSerializer {
 
     public String makeSignInput(Header header, Claims claims) throws JwtToJsonException {
 
-        String headerJson = "";
-        String claimsJson = "";
+        String headerJson;
+        String claimsJson;
 
         try {
             headerJson = serializer.objectToJson(header);
@@ -50,12 +53,13 @@ public class JWTSerializer {
 
     public String jwtToString(JsonWebToken jwt) throws JwtToJsonException {
 
-        String jwtAsText = makeSignInput(jwt.getHeader(), jwt.getClaims()) + DELIMITTER;
+        StringBuilder encodedJwt = new StringBuilder();
+        encodedJwt.append(makeSignInput(jwt.getHeader(), jwt.getClaims()) + DELIMITTER);
 
         if (jwt.getSignature().isPresent())
-            jwtAsText+= jwt.getSignature().get();
+            encodedJwt.append(jwt.getSignature().get());
 
-        return jwtAsText;
+        return encodedJwt.toString();
     }
 
     private String encode(String input) {
@@ -63,13 +67,28 @@ public class JWTSerializer {
     }
 
     public JsonWebToken stringToJwt(String jwtAsText, Class claimClass) throws JsonToJwtException {
-        String[] jwtParts = jwtAsText.split("\\.");
+        String[] jwtParts = jwtAsText.split(JWT_SPLITTER);
+        JsonWebToken jwt = null;
 
+        if (jwtParts.length == JWT_LENGTH) {
+            jwt = jwt(jwtParts, claimClass, jwtAsText);
+        } else if (jwtParts.length == JWS_LENGTH && jwtParts[JWS_LENGTH-1] != null) {
+            jwt = jws(jwtParts, claimClass, jwtAsText);
+        } else if (jwtParts.length == JWE_LENGTH) {
+            // TODO: throw a exception here.
+        } else {
+            // TODO: throw a exception here.
+        }
+
+        return jwt;
+    }
+
+    protected JsonWebToken jwt(String[] jwtParts, Class claimClass, String jwtAsText) throws JsonToJwtException {
         byte[] headerJson = decoder.decode(jwtParts[0]);
         byte[] claimsJson = decoder.decode(jwtParts[1]);
 
-        Header header = null;
-        Claims claim = null;
+        Header header;
+        Claims claim;
         try {
             header = (Header) serializer.jsonBytesToObject(headerJson, Header.class);
             claim = (Claims) serializer.jsonBytesToObject(claimsJson, claimClass);
@@ -79,9 +98,14 @@ public class JWTSerializer {
 
         JsonWebToken jwt = new JsonWebToken(header, claim, Optional.of(jwtAsText));
 
-        if (jwtParts.length == SECURE_TOKEN_LENGTH && jwtParts[SECURE_TOKEN_LENGTH-1] != null)
-            jwt.setSignature(Optional.of(jwtParts[SECURE_TOKEN_LENGTH-1]));
+        return jwt;
+    }
+
+    protected JsonWebToken jws(String[] jwsParts, Class claimClass, String jwtAsText) throws JsonToJwtException {
+        JsonWebToken jwt = jwt(jwsParts, claimClass, jwtAsText);
+        jwt.setSignature(Optional.of(jwsParts[JWS_LENGTH-1]));
 
         return jwt;
     }
+
 }

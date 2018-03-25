@@ -1,9 +1,8 @@
 package examples;
 
 import helper.entity.Claim;
-import org.rootservices.jwt.SecureJwtEncoder;
-import org.rootservices.jwt.factory.SecureJwtFactory;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.encoder.SecureJwtEncoder;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
@@ -13,9 +12,9 @@ import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serializer.JWTSerializer;
 import org.rootservices.jwt.serializer.exception.JsonToJwtException;
 import org.rootservices.jwt.serializer.exception.JwtToJsonException;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
-import org.rootservices.jwt.signature.verifier.VerifySignature;
+import org.rootservices.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
+import org.rootservices.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
+import org.rootservices.jwt.jws.verifier.VerifySignature;
 
 import java.math.BigInteger;
 import java.util.Optional;
@@ -44,7 +43,7 @@ public class AsymmetricSignedJsonWebToken {
         Claim claim = new Claim();
         claim.setUriIsRoot(true);
 
-        AppFactory appFactory = new AppFactory();
+        JwtAppFactory appFactory = new JwtAppFactory();
         SecureJwtEncoder secureJwtEncoder = null;
         try {
             secureJwtEncoder = appFactory.secureJwtEncoder(Algorithm.RS256, keyPair);
@@ -75,7 +74,7 @@ public class AsymmetricSignedJsonWebToken {
                 new BigInteger("65537")
         );
 
-        AppFactory appFactory = new AppFactory();
+        JwtAppFactory appFactory = new JwtAppFactory();
         JWTSerializer jwtSerializer = appFactory.jwtSerializer();
         JsonWebToken jsonWebToken = null;
         try {

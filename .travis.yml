@@ -2,7 +2,13 @@ sudo: false
 language: java
 
 jdk:
-  - oraclejdk8
+  - oraclejdk9
+
+install:
+- ./gradlew assemble -x signArchives -i
+
+script:
+- ./gradlew check -x signArchives -i
 
 after_failure:
   chmod +x $TRAVIS_BUILD_DIR/print_surefire_reports.sh; $TRAVIS_BUILD_DIR/print_surefire_reports.sh

@@ -1,6 +1,6 @@
 package examples;
 
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.translator.CSRToRSAPublicKey;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class CSRFileToRSAPublicKey {
 
     public RSAPublicKey toRSAPublicKey() throws MalformedURLException, FileNotFoundException, InvalidCsrException, InvalidKeyException {
-        AppFactory appFactory = new AppFactory();
+        JwtAppFactory appFactory = new JwtAppFactory();
         CSRToRSAPublicKey csrToRSAPublicKey = appFactory.csrToRSAPublicKey();
 
         URL privateKeyURL = null;

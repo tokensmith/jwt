@@ -1,6 +1,6 @@
 package examples;
 
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.translator.PemToRSAKeyPair;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class PemFileToRSAKeyPair {
 
     public RSAKeyPair makeRSAKeyPair() throws MalformedURLException, FileNotFoundException, InvalidPemException, InvalidKeyException {
-        AppFactory appFactory = new AppFactory();
+        JwtAppFactory appFactory = new JwtAppFactory();
         PemToRSAKeyPair pemToRSAKeyPair = appFactory.pemToRSAKeyPair();
 
         URL privateKeyURL = null;
