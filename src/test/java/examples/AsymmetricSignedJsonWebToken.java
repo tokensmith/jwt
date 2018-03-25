@@ -1,7 +1,7 @@
 package examples;
 
 import helper.entity.Claim;
-import org.rootservices.jwt.SecureJwtEncoder;
+import org.rootservices.jwt.encoder.SecureJwtEncoder;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;

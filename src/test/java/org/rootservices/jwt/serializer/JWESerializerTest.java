@@ -11,6 +11,7 @@ import org.rootservices.jwt.jwe.entity.JWE;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -26,7 +27,7 @@ public class JWESerializerTest {
 
         String compactJWE = Factory.compactJWE();
 
-        JWE<ByteArrayInputStream> actual = subject.stringToJWE(compactJWE);
+        JWE actual = subject.stringToJWE(compactJWE);
 
         assertThat(actual, is(notNullValue()));
 
@@ -41,10 +42,7 @@ public class JWESerializerTest {
         assertThat(actual.getIv(), is(notNullValue()));
         assertThat(actual.getAuthTag(), is(notNullValue()));
 
-        int n = actual.getPayload().available();
-        byte[] bytes = new byte[n];
-        actual.getPayload().read(bytes, 0, n);
-        String payload = new String(bytes, StandardCharsets.UTF_8);
+        String payload = new String(actual.getPayload(), StandardCharsets.UTF_8);
         assertThat(payload, is("The true sign of intelligence is not knowledge but imagination."));
     }
 }

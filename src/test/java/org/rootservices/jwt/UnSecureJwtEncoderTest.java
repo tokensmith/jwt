@@ -4,6 +4,7 @@ import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.JwtAppFactory;
+import org.rootservices.jwt.encoder.UnSecureJwtEncoder;
 import org.rootservices.jwt.entity.jwt.Claims;
 
 import static org.hamcrest.core.Is.is;

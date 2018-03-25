@@ -1,4 +1,4 @@
-package org.rootservices.jwt;
+package org.rootservices.jwt.encoder;
 
 import org.rootservices.jwt.entity.jwt.Claims;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;

@@ -7,21 +7,21 @@ import org.rootservices.jwt.jwe.factory.exception.CipherException;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.jwk.KeyAlgorithm;
+import org.rootservices.jwt.jwk.SecretKeyFactory;
 import org.rootservices.jwt.serializer.exception.DecryptException;
+import org.rootservices.jwt.serializer.exception.EncryptException;
 import org.rootservices.jwt.serializer.exception.JsonException;
 import org.rootservices.jwt.serializer.exception.JsonToJwtException;
 
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Base64;
 
 public class JWESerializer {
@@ -32,20 +32,20 @@ public class JWESerializer {
     public static final String COULD_NOT_COMBINE_CIPHER_TEXT_AND_AT = "Could not combine cipher text with authentication tag";
 
     private Serializer serializer;
-    private Base64.Encoder encoder;
     private Base64.Decoder decoder;
     private Cipher RSADecryptCipher;
+    private SecretKeyFactory secretKeyFactory;
     private CipherSymmetricFactory cipherSymmetricFactory;
 
-    public JWESerializer(Serializer serializer, Base64.Encoder encoder, Base64.Decoder decoder, Cipher RSADecryptCipher, CipherSymmetricFactory cipherSymmetricFactory) {
+    public JWESerializer(Serializer serializer, Base64.Decoder decoder, Cipher RSADecryptCipher, SecretKeyFactory secretKeyFactory, CipherSymmetricFactory cipherSymmetricFactory) {
         this.serializer = serializer;
-        this.encoder = encoder;
         this.decoder = decoder;
         this.RSADecryptCipher = RSADecryptCipher;
+        this.secretKeyFactory = secretKeyFactory;
         this.cipherSymmetricFactory = cipherSymmetricFactory;
     }
 
-    public JWE<ByteArrayInputStream> stringToJWE(String compactJWE) throws JsonToJwtException, DecryptException, CipherException {
+    public JWE stringToJWE(String compactJWE) throws JsonToJwtException, DecryptException, CipherException {
         String[] jweParts = compactJWE.split(JWT_SPLITTER);
         byte[] protectedHeader = decoder.decode(jweParts[0]);
         byte[] encryptedKey = decoder.decode(jweParts[1]);
@@ -73,31 +73,29 @@ public class JWESerializer {
 
         Cipher symmetricCipher;
         try {
-            symmetricCipher = symmetricCipher(cek, initVector, aad);
+            symmetricCipher = symmetricCipherForDecrypt(cek, initVector, aad);
         } catch (CipherException e) {
             throw e;
         }
 
         byte[] cipherTextWithAuthTag = cipherTextWithAuthTag(cipherText, authenticationTag);
 
-        byte[] text;
+        byte[] payload;
         try {
-            text = symmetricCipher.doFinal(cipherTextWithAuthTag);
+            payload = symmetricCipher.doFinal(cipherTextWithAuthTag);
         } catch (IllegalBlockSizeException e) {
             throw new DecryptException(COULD_NOT_DECRYPT_CIPHER_TEXT, e);
         } catch (BadPaddingException e) {
             throw new DecryptException(COULD_NOT_DECRYPT_CIPHER_TEXT, e);
         }
 
-        ByteArrayInputStream payload = new ByteArrayInputStream(text);
-        return new JWE<ByteArrayInputStream>(header, payload, cek, initVector, authenticationTag);
+        return new JWE(header, payload, cek, initVector, authenticationTag);
     }
-
 
     // The symmetric cipher should not be a dependency b/c it cannot be re-used.
     // init vectors are different per JWE.
     // it maybe injected in for plain old AES not GCM.
-    protected Cipher symmetricCipher(byte[] cek, byte[] iv, byte[] aad) throws CipherException {
+    protected Cipher symmetricCipherForDecrypt(byte[] cek, byte[] iv, byte[] aad) throws CipherException {
         SecretKey key = new SecretKeySpec(cek, KeyAlgorithm.AES.getValue());
         Cipher cipher;
         try {
@@ -109,7 +107,7 @@ public class JWESerializer {
         return cipher;
     }
 
-    protected byte[] cipherTextWithAuthTag(byte[] cipherText, byte[] authTag) throws DecryptException {
+    public byte[] cipherTextWithAuthTag(byte[] cipherText, byte[] authTag) throws DecryptException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
         try {
             outputStream.write(cipherText);

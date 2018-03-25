@@ -19,7 +19,7 @@ public class SecretKeyFactoryTest {
         subject = new SecretKeyFactory();
     }
     @Test
-    public void makeKeyForAESAnd256ShouldBeOk() {
+    public void makeKeyForAESAnd256ShouldBeOk() throws Exception {
         SecretKey actual = subject.makeKey(KeyAlgorithm.AES);
 
         assertThat(actual, is(notNullValue()));

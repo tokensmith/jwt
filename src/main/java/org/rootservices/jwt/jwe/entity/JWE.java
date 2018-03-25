@@ -2,16 +2,16 @@ package org.rootservices.jwt.jwe.entity;
 
 import org.rootservices.jwt.entity.jwt.header.Header;
 
-public class JWE<T> {
+public class JWE {
     private Header header;
-    private T payload;
+    private byte[] payload;
     private byte[] cek;
     private byte[] iv;
     private byte[] authTag;
 
     public JWE() {}
 
-    public JWE(Header header, T payload, byte[] cek, byte[] iv, byte[] authTag) {
+    public JWE(Header header, byte[] payload, byte[] cek, byte[] iv, byte[] authTag) {
         this.header = header;
         this.payload = payload;
         this.cek = cek;
@@ -27,11 +27,11 @@ public class JWE<T> {
         this.header = header;
     }
 
-    public T getPayload() {
+    public byte[] getPayload() {
         return payload;
     }
 
-    public void setPayload(T payload) {
+    public void setPayload(byte[] payload) {
         this.payload = payload;
     }
 

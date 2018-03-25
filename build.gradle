@@ -40,6 +40,20 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
 }
 
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
 signing {
     sign configurations.archives
 }
@@ -67,6 +81,27 @@ uploadArchives {
                 description project.description
                 packaging 'jar'
                 url 'https://github.com/RootServices/jwt'
+
+                scm {
+                    connection 'git@github.com:RootServices/jwt.git'
+                    developerConnection 'git@github.com:RootServices/jwt.git'
+                    url 'https://github.com/RootServices/jwt'
+                }
+
+                licenses {
+                    license {
+                        name 'The MIT License (MIT)'
+                        url 'https://github.com/RootServices/jwt/blob/development/LICENSE'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'tmackenzie'
+                        name 'Tom MacKenzie'
+                        email 'tom@rootservices.org'
+                    }
+                }
             }
         }
     }

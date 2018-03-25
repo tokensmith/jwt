@@ -8,8 +8,10 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.rootservices.jwt.SecureJwtEncoder;
-import org.rootservices.jwt.UnSecureJwtEncoder;
+import org.rootservices.jwt.encoder.JWEEncoder;
+import org.rootservices.jwt.encoder.SecureJwtEncoder;
+import org.rootservices.jwt.encoder.UnSecureJwtEncoder;
+import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.jwe.Transformation;
 import org.rootservices.jwt.jwe.factory.CipherRSAFactory;
 import org.rootservices.jwt.jwe.factory.CipherSymmetricFactory;
@@ -17,6 +19,8 @@ import org.rootservices.jwt.jwe.factory.exception.CipherException;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.jwk.PrivateKeyFactory;
 import org.rootservices.jwt.jwk.PublicKeyFactory;
+import org.rootservices.jwt.jwk.SecretKeyFactory;
+import org.rootservices.jwt.jws.signer.factory.rsa.exception.PublicKeyException;
 import org.rootservices.jwt.serializer.HeaderSerializer;
 import org.rootservices.jwt.serializer.JWESerializer;
 import org.rootservices.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
@@ -100,14 +104,18 @@ public class JwtAppFactory {
         return new CipherRSAFactory();
     }
 
+    public SecretKeyFactory secretKeyFactory() {
+        return new SecretKeyFactory();
+    }
+
     public JWESerializer jweSerializer(RSAKeyPair jwk) throws PrivateKeyException, CipherException {
         RSAPrivateCrtKey key = privateKeyFactory().makePrivateKey(jwk);
         Cipher rsaDecryptCipher = cipherRSAFactory().forDecrypt(Transformation.RSA_OAEP, key);
         return new JWESerializer(
                 serializer(),
-                encoder(),
                 urlDecoder(),
                 rsaDecryptCipher,
+                secretKeyFactory(),
                 new CipherSymmetricFactory()
         );
     }
@@ -159,7 +167,7 @@ public class JwtAppFactory {
     }
 
     public SecureJwtEncoder secureJwtEncoder(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
-        SecureJwtFactory secureJwtFactory = null;
+        SecureJwtFactory secureJwtFactory;
         try {
             secureJwtFactory = secureJwtFactory(alg, jwk);
         } catch (InvalidAlgorithmException e) {
@@ -171,6 +179,18 @@ public class JwtAppFactory {
         JWTSerializer jwtSerializer = jwtSerializer();
 
         return new SecureJwtEncoder(secureJwtFactory, jwtSerializer);
+    }
+
+    public JWEEncoder jweEncoder(RSAPublicKey jwk) throws PublicKeyException, CipherException {
+        java.security.interfaces.RSAPublicKey jdkKey = publicKeyFactory().makePublicKey(jwk);
+        Cipher rsaEncryptCipher = cipherRSAFactory().forEncrypt(Transformation.RSA_OAEP, jdkKey);
+        return new JWEEncoder(
+                serializer(),
+                encoder(),
+                rsaEncryptCipher,
+                new SecretKeyFactory(),
+                new CipherSymmetricFactory()
+        );
     }
 
     public UnSecureJwtEncoder unSecureJwtEncoder() {

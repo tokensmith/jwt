@@ -1,7 +1,7 @@
 package examples;
 
 import helper.entity.Claim;
-import org.rootservices.jwt.UnSecureJwtEncoder;
+import org.rootservices.jwt.encoder.UnSecureJwtEncoder;
 import org.rootservices.jwt.config.JwtAppFactory;
 
 /**

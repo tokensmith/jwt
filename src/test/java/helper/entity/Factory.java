@@ -138,7 +138,7 @@ public class Factory {
         return new RSAKeyPair(
                 Optional.<String>empty(),
                 KeyType.RSA,
-                Use.SIGNATURE,
+                Use.ENCRYPTION,
                 toBigInt(n.toString()),
                 toBigInt(e.toString()),
                 toBigInt(d.toString()),
@@ -148,6 +148,28 @@ public class Factory {
                 toBigInt(dq.toString()),
                 toBigInt(qi.toString())
         );
+    }
+
+    public static RSAPublicKey makeRSAPublicKeyForJWE() {
+        StringBuilder n = new StringBuilder();
+        n.append("oahUIoWw0K0usKNuOR6H4wkf4oBUXHTxRvgb48E-BVvxkeDNjbC4he8rUW");
+        n.append("cJoZmds2h7M70imEVhRU5djINXtqllXI4DFqcI1DgjT9LewND8MW2Krf3S");
+        n.append("psk_ZkoFnilakGygTwpZ3uesH-PFABNIUYpOiN15dsQRkgr0vEhxN92i2a");
+        n.append("sbOenSZeyaxziK72UwxrrKoExv6kc5twXTq4h-QChLOln0_mtUZwfsRaMS");
+        n.append("tPs6mS6XrgxnxbWhojf663tuEQueGC-FCMfra36C9knDFGzKsNa7LZK2dj");
+        n.append("YgyD3JR_MB_4NUJW_TqOQtwHYbxevoJArm-L5StowjzGy-_bq6Gw");
+
+        StringBuilder e = new StringBuilder();
+        e.append("AQAB");
+
+        return new RSAPublicKey(
+                Optional.<String>empty(),
+                KeyType.RSA,
+                Use.ENCRYPTION,
+                toBigInt(n.toString()),
+                toBigInt(e.toString())
+        );
+
     }
 
     // taken from, https://tools.ietf.org/html/rfc7516#section-3.3
