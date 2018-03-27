@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.rootservices.jwt.encoder.JWEEncoder;
 import org.rootservices.jwt.encoder.SecureJwtEncoder;
 import org.rootservices.jwt.encoder.UnSecureJwtEncoder;
@@ -26,8 +25,6 @@ import org.rootservices.jwt.serializer.JWESerializer;
 import org.rootservices.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.jws.signer.factory.rsa.exception.PrivateKeyException;
-import org.rootservices.jwt.translator.CSRToRSAPublicKey;
-import org.rootservices.jwt.translator.PemToRSAKeyPair;
 import org.rootservices.jwt.factory.SecureJwtFactory;
 import org.rootservices.jwt.factory.UnSecureJwtFactory;
 import org.rootservices.jwt.entity.jwk.Key;
@@ -46,7 +43,6 @@ import org.rootservices.jwt.jws.verifier.factory.VerifySignatureFactory;
 import javax.crypto.Cipher;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
-import java.security.Security;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.util.Base64;
 
@@ -197,11 +193,6 @@ public class JwtAppFactory {
         return new UnSecureJwtEncoder(unsecureJwtFactory(), jwtSerializer());
     }
 
-    public JcaPEMKeyConverter jcaPEMKeyConverter() {
-        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-        return new JcaPEMKeyConverter().setProvider("BC");
-    }
-
     protected KeyFactory rsaKeyFactory() {
         if (this.RSAKeyFactory == null) {
             try {
@@ -212,13 +203,5 @@ public class JwtAppFactory {
             }
         }
         return RSAKeyFactory;
-    }
-
-    public PemToRSAKeyPair pemToRSAKeyPair() {
-        return new PemToRSAKeyPair(jcaPEMKeyConverter(), rsaKeyFactory());
-    }
-
-    public CSRToRSAPublicKey csrToRSAPublicKey() {
-        return new CSRToRSAPublicKey();
     }
 }

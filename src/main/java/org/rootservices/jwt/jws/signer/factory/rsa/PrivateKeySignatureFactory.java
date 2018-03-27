@@ -28,8 +28,9 @@ public class PrivateKeySignatureFactory {
      * Returns a, RSAPrivateCrtKey, which is built from the input parameter, jwk.
      * A RSAPrivateCrtKey is needed per, https://tools.ietf.org/html/rfc7517#section-9.3
      *
-     * @param jwk
-     * @return
+     * @param jwk a RSAKeyPair
+     * @return an instance of RSAPrivateCrtKey
+     * @throws PrivateKeyException if jwk is invalid.
      */
     public RSAPrivateCrtKey makePrivateKey(RSAKeyPair jwk) throws PrivateKeyException {
         RSAPrivateKeySpec keySpec;
