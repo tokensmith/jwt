@@ -37,10 +37,8 @@ public class SymmetricSignedJsonWebToken {
 
         SecureJwtSerializer secureJwtSerializer = null;
         try {
-            secureJwtSerializer = appFactory.secureJwtEncoder(Algorithm.HS256, key);
-        } catch (InvalidAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidJsonWebKeyException e) {
+            secureJwtSerializer = appFactory.secureJwtSerializer(Algorithm.HS256, key);
+        } catch (SignatureException e) {
             e.printStackTrace();
         }
 

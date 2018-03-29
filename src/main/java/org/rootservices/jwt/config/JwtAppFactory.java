@@ -163,14 +163,14 @@ public class JwtAppFactory {
         return new SecureJwtFactory(signer, alg, jwk.getKeyId());
     }
 
-    public SecureJwtSerializer secureJwtEncoder(Algorithm alg, Key jwk) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public SecureJwtSerializer secureJwtSerializer(Algorithm alg, Key jwk) throws SignatureException {
         SecureJwtFactory secureJwtFactory;
         try {
             secureJwtFactory = secureJwtFactory(alg, jwk);
         } catch (InvalidAlgorithmException e) {
-            throw e;
+            throw new SignatureException("Could not construct Signer. Algorithm was invalid.", e);
         } catch (InvalidJsonWebKeyException e) {
-            throw e;
+            throw new SignatureException("Could not construct Signer. Key was invalid.", e);
         }
 
         JWTDeserializer jwtDeserializer = jwtDeserializer();

@@ -68,7 +68,7 @@ public class SignerFactory {
     }
 
     private Signer makeRSASigner(Algorithm alg, RSAKeyPair keyPair) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
-        Signature signature = null;
+        Signature signature;
 
         SignAlgorithm signAlgorithm = SignAlgorithm.valueOf(alg.getValue());
 

@@ -47,10 +47,8 @@ public class AsymmetricSignedJsonWebToken {
         JwtAppFactory appFactory = new JwtAppFactory();
         SecureJwtSerializer secureJwtSerializer = null;
         try {
-            secureJwtSerializer = appFactory.secureJwtEncoder(Algorithm.RS256, keyPair);
-        } catch (InvalidAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidJsonWebKeyException e) {
+            secureJwtSerializer = appFactory.secureJwtSerializer(Algorithm.RS256, keyPair);
+        } catch (SignatureException e) {
             e.printStackTrace();
         }
 
