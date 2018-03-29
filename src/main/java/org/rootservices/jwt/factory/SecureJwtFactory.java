@@ -5,7 +5,7 @@ import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
-import org.rootservices.jwt.serializer.exception.JwtToJsonException;
+import org.rootservices.jwt.serialization.exception.JwtToJsonException;
 import org.rootservices.jwt.jws.signer.Signer;
 
 import java.util.Optional;

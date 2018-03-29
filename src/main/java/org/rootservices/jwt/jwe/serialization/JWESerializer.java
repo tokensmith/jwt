@@ -1,4 +1,4 @@
-package org.rootservices.jwt.encoder;
+package org.rootservices.jwt.jwe.serialization;
 
 import org.rootservices.jwt.jwe.Transformation;
 import org.rootservices.jwt.jwe.entity.JWE;
@@ -7,10 +7,10 @@ import org.rootservices.jwt.jwe.factory.exception.CipherException;
 import org.rootservices.jwt.jwk.KeyAlgorithm;
 import org.rootservices.jwt.jwk.SecretKeyFactory;
 import org.rootservices.jwt.jwk.exception.SecretKeyException;
-import org.rootservices.jwt.serializer.Serializer;
-import org.rootservices.jwt.serializer.exception.EncryptException;
-import org.rootservices.jwt.serializer.exception.JsonException;
-import org.rootservices.jwt.serializer.exception.JsonToJwtException;
+import org.rootservices.jwt.serialization.Serializer;
+import org.rootservices.jwt.serialization.exception.EncryptException;
+import org.rootservices.jwt.serialization.exception.JsonException;
+import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class JWEEncoder {
+public class JWESerializer {
     public static final String COULD_NOT_ENCRYPT_CEK = "Could not encrypt Content Encryption Key";
     public static final String COULD_NOT_ENCRYPT = "Could not encrypt content";
     public static final String HEADER_IS_INVALID = "Header is invalid. Could not serialize to it to JSON";
@@ -34,7 +34,7 @@ public class JWEEncoder {
     private SecretKeyFactory secretKeyFactory;
     private CipherSymmetricFactory cipherSymmetricFactory;
 
-    public JWEEncoder(Serializer serializer, Base64.Encoder encoder, Cipher RSAEncryptCipher, SecretKeyFactory secretKeyFactory, CipherSymmetricFactory cipherSymmetricFactory) {
+    public JWESerializer(Serializer serializer, Base64.Encoder encoder, Cipher RSAEncryptCipher, SecretKeyFactory secretKeyFactory, CipherSymmetricFactory cipherSymmetricFactory) {
         this.serializer = serializer;
         this.encoder = encoder;
         this.RSAEncryptCipher = RSAEncryptCipher;

@@ -1,7 +1,7 @@
 package examples;
 
 import helper.entity.Claim;
-import org.rootservices.jwt.encoder.SecureJwtEncoder;
+import org.rootservices.jwt.jws.serialization.SecureJwtSerializer;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
@@ -9,11 +9,10 @@ import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.serializer.JWTSerializer;
-import org.rootservices.jwt.serializer.exception.JsonToJwtException;
-import org.rootservices.jwt.serializer.exception.JwtToJsonException;
-import org.rootservices.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
+import org.rootservices.jwt.exception.SignatureException;
+import org.rootservices.jwt.serialization.JWTDeserializer;
+import org.rootservices.jwt.serialization.exception.JsonToJwtException;
+import org.rootservices.jwt.serialization.exception.JwtToJsonException;
 import org.rootservices.jwt.jws.verifier.VerifySignature;
 
 import java.math.BigInteger;
@@ -44,18 +43,16 @@ public class AsymmetricSignedJsonWebToken {
         claim.setUriIsRoot(true);
 
         JwtAppFactory appFactory = new JwtAppFactory();
-        SecureJwtEncoder secureJwtEncoder = null;
+        SecureJwtSerializer secureJwtSerializer = null;
         try {
-            secureJwtEncoder = appFactory.secureJwtEncoder(Algorithm.RS256, keyPair);
-        } catch (InvalidAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidJsonWebKeyException e) {
+            secureJwtSerializer = appFactory.secureJwtSerializer(Algorithm.RS256, keyPair);
+        } catch (SignatureException e) {
             e.printStackTrace();
         }
 
         String encodedJwt = null;
         try {
-            encodedJwt = secureJwtEncoder.encode(claim);
+            encodedJwt = secureJwtSerializer.encode(claim);
         } catch (JwtToJsonException e) {
             e.printStackTrace();
         }
@@ -63,7 +60,7 @@ public class AsymmetricSignedJsonWebToken {
         return encodedJwt;
     }
 
-    public Boolean verifySignature() throws JsonToJwtException, InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public Boolean verifySignature() throws JsonToJwtException, SignatureException {
         String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZX0.ZaZoTp-lb3C7Sb7BKQm3BZyGiMxtehBtAeN9anuDPgO_F3eR8o9UU4c1RgCFDLqO_Ftg6QCmoZ1SEDuNw8AskJWSqcuJwcOttrqf46BHB89QuGtfmhEb5fIbyuqD-n2XM2hHhvPL6yJvLd3VQNvW2VexSL3fmutC5MYoPa8IfvjGZ_QKMwA7BBwcm4Djnnlu9HwiNg3a_y6-JJxr_jW5GD8VomHZbLasokR6h5N-y-DXIIYL3-oMl-_rE1BPdm_gE76p4Lo49BM-AyUxbShAHDl-EBKsz_Vo-Pgk_4rXkBOMMJQI95FrK5FeJs2yZxMoZ_V_f5_VGnXYNzq3SFJwnQ";
 
         RSAPublicKey publicKey = new RSAPublicKey(
@@ -75,22 +72,20 @@ public class AsymmetricSignedJsonWebToken {
         );
 
         JwtAppFactory appFactory = new JwtAppFactory();
-        JWTSerializer jwtSerializer = appFactory.jwtSerializer();
-        JsonWebToken jsonWebToken = null;
+        JWTDeserializer jwtDeserializer = appFactory.jwtDeserializer();
+        JsonWebToken jsonWebToken;
         try {
-            jsonWebToken = jwtSerializer.stringToJwt(jwt, Claim.class);
+            jsonWebToken = jwtDeserializer.stringToJwt(jwt, Claim.class);
         } catch (JsonToJwtException e) {
             // could not serialize JsonWebToken to json string
             throw e;
         }
 
 
-        VerifySignature verifySignature = null;
+        VerifySignature verifySignature;
         try {
             verifySignature = appFactory.verifySignature(Algorithm.RS256, publicKey);
-        } catch (InvalidJsonWebKeyException e) {
-            throw e;
-        } catch (InvalidAlgorithmException e) {
+        } catch (SignatureException e) {
             throw e;
         }
 

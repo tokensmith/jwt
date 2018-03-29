@@ -1,11 +1,11 @@
-package org.rootservices.jwt.serializer;
+package org.rootservices.jwt.serialization;
 
 import org.rootservices.jwt.entity.jwt.Claims;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Header;
-import org.rootservices.jwt.serializer.exception.JsonToJwtException;
-import org.rootservices.jwt.serializer.exception.JsonException;
-import org.rootservices.jwt.serializer.exception.JwtToJsonException;
+import org.rootservices.jwt.serialization.exception.JsonToJwtException;
+import org.rootservices.jwt.serialization.exception.JsonException;
+import org.rootservices.jwt.serialization.exception.JwtToJsonException;
 
 import java.nio.charset.Charset;
 
@@ -20,7 +20,7 @@ import java.util.Optional;
  * - a jwt as a string to a instance of a JsonWebToken.
  * - a JsonWebToken to its string representation.
  */
-public class JWTSerializer {
+public class JWTDeserializer {
     public static final String JWT_SPLITTER = "\\.";
     public final int JWT_LENGTH = 2;
     public final int JWS_LENGTH = 3;
@@ -30,7 +30,7 @@ public class JWTSerializer {
     private Decoder decoder;
     private final String DELIMITTER = ".";
 
-    public JWTSerializer(Serializer serializer, Encoder encoder, Decoder decoder) {
+    public JWTDeserializer(Serializer serializer, Encoder encoder, Decoder decoder) {
         this.serializer = serializer;
         this.encoder = encoder;
         this.decoder = decoder;

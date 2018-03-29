@@ -1,4 +1,4 @@
-package org.rootservices.jwt.serializer;
+package org.rootservices.jwt.serialization;
 
 import helper.entity.Factory;
 import org.junit.Before;
@@ -13,13 +13,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
-public class HeaderSerializerTest {
-    private HeaderSerializer subject;
+public class HeaderDeserializerTest {
+    private HeaderDeserializer subject;
 
     @Before
     public void setUp() {
         JwtAppFactory jwtAppFactory = new JwtAppFactory();
-        subject = jwtAppFactory.headerSerializer();
+        subject = jwtAppFactory.headerDeserializer();
     }
 
     @Test

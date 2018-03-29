@@ -1,21 +1,21 @@
-package org.rootservices.jwt.encoder;
+package org.rootservices.jwt.serialization;
 
 import org.rootservices.jwt.entity.jwt.Claims;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.factory.UnSecureJwtFactory;
-import org.rootservices.jwt.serializer.JWTSerializer;
-import org.rootservices.jwt.serializer.exception.JwtToJsonException;
+import org.rootservices.jwt.serialization.JWTDeserializer;
+import org.rootservices.jwt.serialization.exception.JwtToJsonException;
 
 /**
  * Created by tommackenzie on 7/12/16.
  */
-public class UnSecureJwtEncoder {
+public class UnSecureJwtSerializer {
     private UnSecureJwtFactory unSecureJwtFactory;
-    private JWTSerializer jwtSerializer;
+    private JWTDeserializer jwtDeserializer;
 
-    public UnSecureJwtEncoder(UnSecureJwtFactory unSecureJwtFactory, JWTSerializer jwtSerializer) {
+    public UnSecureJwtSerializer(UnSecureJwtFactory unSecureJwtFactory, JWTDeserializer jwtDeserializer) {
         this.unSecureJwtFactory = unSecureJwtFactory;
-        this.jwtSerializer = jwtSerializer;
+        this.jwtDeserializer = jwtDeserializer;
     }
 
     public String encode(Claims claims) {
@@ -24,7 +24,7 @@ public class UnSecureJwtEncoder {
 
         String encodedJwt = null;
         try {
-            encodedJwt = jwtSerializer.jwtToString(jsonWebToken);
+            encodedJwt = jwtDeserializer.jwtToString(jsonWebToken);
         } catch (JwtToJsonException e) {
             e.printStackTrace();
         }

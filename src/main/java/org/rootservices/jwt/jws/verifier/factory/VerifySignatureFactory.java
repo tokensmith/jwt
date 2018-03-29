@@ -4,6 +4,7 @@ import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.exception.SignatureException;
 import org.rootservices.jwt.jws.signer.SignAlgorithm;
 import org.rootservices.jwt.jws.signer.Signer;
 import org.rootservices.jwt.jws.signer.factory.SignerFactory;
@@ -23,7 +24,8 @@ import java.util.Base64.Decoder;
  * Created by tommackenzie on 11/14/15.
  */
 public class VerifySignatureFactory {
-
+    public static final String ALG_WAS_INVALID = "Could not construct Signer. Algorithm was invalid.";
+    public static final String KEY_WAS_INVALID = "Could not construct Signer. Key was invalid.";
     private SignerFactory signerFactory;
     private PublicKeySignatureFactory publicKeySignatureFactory;
     private Decoder decoder;
@@ -34,7 +36,7 @@ public class VerifySignatureFactory {
         this.decoder = decoder;
     }
 
-    public VerifySignature makeVerifySignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public VerifySignature makeVerifySignature(Algorithm algorithm, Key key) throws SignatureException {
         VerifySignature verifySignature = null;
 
         if (key.getKeyType() == KeyType.OCT) {
@@ -45,12 +47,20 @@ public class VerifySignatureFactory {
         return verifySignature;
     }
 
-    private VerifySignature makeVerifyMacSignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
-        Signer macSigner = signerFactory.makeMacSigner(algorithm, key);
+    private VerifySignature makeVerifyMacSignature(Algorithm algorithm, Key key) throws SignatureException {
+        Signer macSigner;
+        try {
+            macSigner = signerFactory.makeMacSigner(algorithm, key);
+        } catch (InvalidAlgorithmException e) {
+            throw new SignatureException(ALG_WAS_INVALID, e);
+        } catch (InvalidJsonWebKeyException e) {
+            throw new SignatureException(KEY_WAS_INVALID, e);
+        }
+
         return new VerifyMacSignature(macSigner);
     }
 
-    private VerifySignature makeVerifyRsaSignature(Algorithm algorithm, RSAPublicKey key) throws InvalidJsonWebKeyException, InvalidAlgorithmException {
+    private VerifySignature makeVerifyRsaSignature(Algorithm algorithm, RSAPublicKey key) throws SignatureException {
         Signature signature;
 
         SignAlgorithm signAlgorithm = SignAlgorithm.valueOf(algorithm.getValue());
@@ -58,11 +68,11 @@ public class VerifySignatureFactory {
         try {
             signature = publicKeySignatureFactory.makeSignature(signAlgorithm, key);
         } catch (PublicKeyException e) {
-            throw new InvalidJsonWebKeyException("", e);
+            throw new SignatureException(KEY_WAS_INVALID, e);
         } catch (RSAPublicKeyException e) {
-            throw new InvalidJsonWebKeyException("", e);
+            throw new SignatureException(KEY_WAS_INVALID, e);
         } catch (InvalidAlgorithmException e) {
-            throw e;
+            throw new SignatureException(ALG_WAS_INVALID, e);
         }
 
         return new VerifyRsaSignature(signature, decoder);

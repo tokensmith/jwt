@@ -1,7 +1,7 @@
 package org.rootservices.jwt.jws.signer;
 
 
-import org.rootservices.jwt.serializer.JWTSerializer;
+import org.rootservices.jwt.serialization.JWTDeserializer;
 
 import javax.crypto.Mac;
 import java.util.Base64.Encoder;
@@ -14,8 +14,8 @@ import java.util.Base64.Encoder;
 public class MacSigner extends Signer {
     private Mac mac;
 
-    public MacSigner(JWTSerializer jwtSerializer, Mac mac, Encoder encoder) {
-        super(jwtSerializer, encoder);
+    public MacSigner(JWTDeserializer jwtDeserializer, Mac mac, Encoder encoder) {
+        super(jwtDeserializer, encoder);
         this.mac = mac;
     }
 

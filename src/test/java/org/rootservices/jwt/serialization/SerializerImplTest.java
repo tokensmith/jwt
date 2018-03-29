@@ -1,4 +1,4 @@
-package org.rootservices.jwt.serializer;
+package org.rootservices.jwt.serialization;
 
 
 import helper.entity.Claim;
@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.serializer.exception.JsonException;
+import org.rootservices.jwt.serialization.exception.JsonException;
 
 import java.util.Optional;
 

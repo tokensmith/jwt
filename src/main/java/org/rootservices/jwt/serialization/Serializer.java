@@ -1,15 +1,15 @@
-package org.rootservices.jwt.serializer;
+package org.rootservices.jwt.serialization;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.rootservices.jwt.serializer.exception.JsonException;
+import org.rootservices.jwt.serialization.exception.JsonException;
 
 import java.io.IOException;
 
 /**
  * Created by tommackenzie on 8/12/15.
  *
- * A Generic serializer that converts:
+ * A Generic serialization that converts:
  * - a object to json
  * - json to a object
  *
