@@ -24,7 +24,8 @@ import java.util.Base64.Decoder;
  * Created by tommackenzie on 11/14/15.
  */
 public class VerifySignatureFactory {
-
+    public static final String ALG_WAS_INVALID = "Could not construct Signer. Algorithm was invalid.";
+    public static final String KEY_WAS_INVALID = "Could not construct Signer. Key was invalid.";
     private SignerFactory signerFactory;
     private PublicKeySignatureFactory publicKeySignatureFactory;
     private Decoder decoder;
@@ -51,9 +52,9 @@ public class VerifySignatureFactory {
         try {
             macSigner = signerFactory.makeMacSigner(algorithm, key);
         } catch (InvalidAlgorithmException e) {
-            throw new SignatureException("Could not construct Signer. Algorithm was invalid.", e);
+            throw new SignatureException(ALG_WAS_INVALID, e);
         } catch (InvalidJsonWebKeyException e) {
-            throw new SignatureException("Could not construct Signer. Key was invalid.", e);
+            throw new SignatureException(KEY_WAS_INVALID, e);
         }
 
         return new VerifyMacSignature(macSigner);
@@ -67,11 +68,11 @@ public class VerifySignatureFactory {
         try {
             signature = publicKeySignatureFactory.makeSignature(signAlgorithm, key);
         } catch (PublicKeyException e) {
-            throw new SignatureException("Could not construct Signer. Key was invalid.", e);
+            throw new SignatureException(KEY_WAS_INVALID, e);
         } catch (RSAPublicKeyException e) {
-            throw new SignatureException("Could not construct Signer. Key was invalid.", e);
+            throw new SignatureException(KEY_WAS_INVALID, e);
         } catch (InvalidAlgorithmException e) {
-            throw new SignatureException("Could not construct Signer. Algorithm was invalid.", e);
+            throw new SignatureException(ALG_WAS_INVALID, e);
         }
 
         return new VerifyRsaSignature(signature, decoder);
