@@ -38,7 +38,7 @@ public class JWESerializerTest {
         JWEDeserializer jweDeserializer = jwtAppFactory.jweDeserializer(jwk);
 
         RSAPublicKey publicKey = Factory.makeRSAPublicKeyForJWE();
-        JWESerializer subject = jwtAppFactory.jweEncoder(publicKey);
+        JWESerializer subject = jwtAppFactory.jweSerializer(publicKey);
 
         byte[] cipherTextWithAuthTag = jweDeserializer.cipherTextWithAuthTag(cipherText, authenticationTag);
 
@@ -67,7 +67,7 @@ public class JWESerializerTest {
         JWEDeserializer jweDeserializer = jwtAppFactory.jweDeserializer(jwk);
 
         RSAPublicKey publicKey = Factory.makeRSAPublicKeyForJWE();
-        JWESerializer subject = jwtAppFactory.jweEncoder(publicKey);
+        JWESerializer subject = jwtAppFactory.jweSerializer(publicKey);
 
         byte[] cipherTextWithAuthTag = jweDeserializer.cipherTextWithAuthTag(cipherText, authenticationTag);
 
@@ -83,7 +83,7 @@ public class JWESerializerTest {
         JwtAppFactory jwtAppFactory = new JwtAppFactory();
 
         RSAPublicKey publicKey = Factory.makeRSAPublicKeyForJWE();
-        JWESerializer subject = jwtAppFactory.jweEncoder(publicKey);
+        JWESerializer subject = jwtAppFactory.jweSerializer(publicKey);
 
         Header header = new Header();
         header.setEncryptionAlgorithm(Optional.of(EncryptionAlgorithm.AES_GCM_256));

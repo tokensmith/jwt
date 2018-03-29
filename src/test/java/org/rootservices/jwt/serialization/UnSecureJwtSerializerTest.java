@@ -4,7 +4,6 @@ import helper.entity.Factory;
 import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.config.JwtAppFactory;
-import org.rootservices.jwt.serialization.UnSecureJwtSerializer;
 import org.rootservices.jwt.entity.jwt.Claims;
 
 import static org.hamcrest.core.Is.is;
@@ -23,7 +22,7 @@ public class UnSecureJwtSerializerTest {
 
     @Test
     public void encodeShouldEncode() {
-        UnSecureJwtSerializer subject = appFactory.unSecureJwtEncoder();
+        UnSecureJwtSerializer subject = appFactory.unSecureJwtSerializer();
 
         Claims claims = Factory.makeClaim();
 

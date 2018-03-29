@@ -11,7 +11,7 @@ public class UnsecuredJsonWebTokenEncoder {
 
     public String toEncodedJwt() {
         JwtAppFactory appFactory = new JwtAppFactory();
-        UnSecureJwtSerializer unSecureJwtSerializer = appFactory.unSecureJwtEncoder();
+        UnSecureJwtSerializer unSecureJwtSerializer = appFactory.unSecureJwtSerializer();
 
         Claim claim = new Claim();
         claim.setUriIsRoot(true);
