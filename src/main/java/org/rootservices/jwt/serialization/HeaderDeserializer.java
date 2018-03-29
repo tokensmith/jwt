@@ -1,20 +1,20 @@
-package org.rootservices.jwt.serializer;
+package org.rootservices.jwt.serialization;
 
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.exception.InvalidJWT;
-import org.rootservices.jwt.serializer.exception.JsonException;
-import org.rootservices.jwt.serializer.exception.JsonToJwtException;
+import org.rootservices.jwt.serialization.exception.JsonException;
+import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 
 import java.util.Base64;
 
-public class HeaderSerializer {
+public class HeaderDeserializer {
     public static final String JWT_SPLITTER = "\\.";
     public static final String INVALID_HEADER = "JOSE Header is invalid";
     public static final String JWT_IS_NOT_SPLITTABLE = "JWT is not splittable by '.'";
     private Base64.Decoder decoder;
     private Serializer serializer;
 
-    public HeaderSerializer(Base64.Decoder decoder, Serializer serializer) {
+    public HeaderDeserializer(Base64.Decoder decoder, Serializer serializer) {
         this.decoder = decoder;
         this.serializer = serializer;
     }

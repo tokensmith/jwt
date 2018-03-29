@@ -1,7 +1,7 @@
 package examples;
 
 import helper.entity.Claim;
-import org.rootservices.jwt.encoder.UnSecureJwtEncoder;
+import org.rootservices.jwt.serialization.UnSecureJwtSerializer;
 import org.rootservices.jwt.config.JwtAppFactory;
 
 /**
@@ -11,12 +11,12 @@ public class UnsecuredJsonWebTokenEncoder {
 
     public String toEncodedJwt() {
         JwtAppFactory appFactory = new JwtAppFactory();
-        UnSecureJwtEncoder unSecureJwtEncoder = appFactory.unSecureJwtEncoder();
+        UnSecureJwtSerializer unSecureJwtSerializer = appFactory.unSecureJwtEncoder();
 
         Claim claim = new Claim();
         claim.setUriIsRoot(true);
 
-        String encodedJwt = unSecureJwtEncoder.encode(claim);
+        String encodedJwt = unSecureJwtSerializer.encode(claim);
 
         return encodedJwt;
     }

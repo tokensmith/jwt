@@ -1,30 +1,27 @@
-package org.rootservices.jwt.serializer;
+package org.rootservices.jwt.jwe.serialization;
 
 import org.rootservices.jwt.jwe.Transformation;
 import org.rootservices.jwt.jwe.entity.JWE;
 import org.rootservices.jwt.jwe.factory.CipherSymmetricFactory;
 import org.rootservices.jwt.jwe.factory.exception.CipherException;
-import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.jwk.KeyAlgorithm;
 import org.rootservices.jwt.jwk.SecretKeyFactory;
-import org.rootservices.jwt.serializer.exception.DecryptException;
-import org.rootservices.jwt.serializer.exception.EncryptException;
-import org.rootservices.jwt.serializer.exception.JsonException;
-import org.rootservices.jwt.serializer.exception.JsonToJwtException;
+import org.rootservices.jwt.serialization.Serializer;
+import org.rootservices.jwt.serialization.exception.DecryptException;
+import org.rootservices.jwt.serialization.exception.JsonException;
+import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Base64;
 
-public class JWESerializer {
+public class JWEDeserializer {
     public static final String JWT_SPLITTER = "\\.";
     public static final String COMPACT_JWE_INVALID = "Compact JWE is invalid";
     public static final String COULD_NOT_DECRYPT_ENCRYPTED_KEY = "Could not Decrypt encrypted key";
@@ -37,7 +34,7 @@ public class JWESerializer {
     private SecretKeyFactory secretKeyFactory;
     private CipherSymmetricFactory cipherSymmetricFactory;
 
-    public JWESerializer(Serializer serializer, Base64.Decoder decoder, Cipher RSADecryptCipher, SecretKeyFactory secretKeyFactory, CipherSymmetricFactory cipherSymmetricFactory) {
+    public JWEDeserializer(Serializer serializer, Base64.Decoder decoder, Cipher RSADecryptCipher, SecretKeyFactory secretKeyFactory, CipherSymmetricFactory cipherSymmetricFactory) {
         this.serializer = serializer;
         this.decoder = decoder;
         this.RSADecryptCipher = RSADecryptCipher;

@@ -1,7 +1,7 @@
 package examples;
 
 import helper.entity.Claim;
-import org.rootservices.jwt.encoder.SecureJwtEncoder;
+import org.rootservices.jwt.jws.serialization.SecureJwtSerializer;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
@@ -9,9 +9,9 @@ import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.serializer.JWTSerializer;
-import org.rootservices.jwt.serializer.exception.JsonToJwtException;
-import org.rootservices.jwt.serializer.exception.JwtToJsonException;
+import org.rootservices.jwt.serialization.JWTDeserializer;
+import org.rootservices.jwt.serialization.exception.JsonToJwtException;
+import org.rootservices.jwt.serialization.exception.JwtToJsonException;
 import org.rootservices.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.jws.verifier.VerifySignature;
@@ -44,9 +44,9 @@ public class AsymmetricSignedJsonWebToken {
         claim.setUriIsRoot(true);
 
         JwtAppFactory appFactory = new JwtAppFactory();
-        SecureJwtEncoder secureJwtEncoder = null;
+        SecureJwtSerializer secureJwtSerializer = null;
         try {
-            secureJwtEncoder = appFactory.secureJwtEncoder(Algorithm.RS256, keyPair);
+            secureJwtSerializer = appFactory.secureJwtEncoder(Algorithm.RS256, keyPair);
         } catch (InvalidAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidJsonWebKeyException e) {
@@ -55,7 +55,7 @@ public class AsymmetricSignedJsonWebToken {
 
         String encodedJwt = null;
         try {
-            encodedJwt = secureJwtEncoder.encode(claim);
+            encodedJwt = secureJwtSerializer.encode(claim);
         } catch (JwtToJsonException e) {
             e.printStackTrace();
         }
@@ -75,10 +75,10 @@ public class AsymmetricSignedJsonWebToken {
         );
 
         JwtAppFactory appFactory = new JwtAppFactory();
-        JWTSerializer jwtSerializer = appFactory.jwtSerializer();
+        JWTDeserializer jwtDeserializer = appFactory.jwtDeserializer();
         JsonWebToken jsonWebToken = null;
         try {
-            jsonWebToken = jwtSerializer.stringToJwt(jwt, Claim.class);
+            jsonWebToken = jwtDeserializer.stringToJwt(jwt, Claim.class);
         } catch (JsonToJwtException e) {
             // could not serialize JsonWebToken to json string
             throw e;
