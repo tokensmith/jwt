@@ -9,6 +9,7 @@ import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.jws.verifier.factory.SignatureException;
 import org.rootservices.jwt.serialization.JWTDeserializer;
 import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 import org.rootservices.jwt.serialization.exception.JwtToJsonException;
@@ -63,7 +64,7 @@ public class AsymmetricSignedJsonWebToken {
         return encodedJwt;
     }
 
-    public Boolean verifySignature() throws JsonToJwtException, InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public Boolean verifySignature() throws JsonToJwtException, SignatureException {
         String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZX0.ZaZoTp-lb3C7Sb7BKQm3BZyGiMxtehBtAeN9anuDPgO_F3eR8o9UU4c1RgCFDLqO_Ftg6QCmoZ1SEDuNw8AskJWSqcuJwcOttrqf46BHB89QuGtfmhEb5fIbyuqD-n2XM2hHhvPL6yJvLd3VQNvW2VexSL3fmutC5MYoPa8IfvjGZ_QKMwA7BBwcm4Djnnlu9HwiNg3a_y6-JJxr_jW5GD8VomHZbLasokR6h5N-y-DXIIYL3-oMl-_rE1BPdm_gE76p4Lo49BM-AyUxbShAHDl-EBKsz_Vo-Pgk_4rXkBOMMJQI95FrK5FeJs2yZxMoZ_V_f5_VGnXYNzq3SFJwnQ";
 
         RSAPublicKey publicKey = new RSAPublicKey(
@@ -76,7 +77,7 @@ public class AsymmetricSignedJsonWebToken {
 
         JwtAppFactory appFactory = new JwtAppFactory();
         JWTDeserializer jwtDeserializer = appFactory.jwtDeserializer();
-        JsonWebToken jsonWebToken = null;
+        JsonWebToken jsonWebToken;
         try {
             jsonWebToken = jwtDeserializer.stringToJwt(jwt, Claim.class);
         } catch (JsonToJwtException e) {
@@ -85,12 +86,10 @@ public class AsymmetricSignedJsonWebToken {
         }
 
 
-        VerifySignature verifySignature = null;
+        VerifySignature verifySignature;
         try {
             verifySignature = appFactory.verifySignature(Algorithm.RS256, publicKey);
-        } catch (InvalidJsonWebKeyException e) {
-            throw e;
-        } catch (InvalidAlgorithmException e) {
+        } catch (SignatureException e) {
             throw e;
         }
 

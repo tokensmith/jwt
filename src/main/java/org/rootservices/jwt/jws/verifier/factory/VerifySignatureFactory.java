@@ -34,7 +34,7 @@ public class VerifySignatureFactory {
         this.decoder = decoder;
     }
 
-    public VerifySignature makeVerifySignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public VerifySignature makeVerifySignature(Algorithm algorithm, Key key) throws SignatureException {
         VerifySignature verifySignature = null;
 
         if (key.getKeyType() == KeyType.OCT) {
@@ -45,12 +45,20 @@ public class VerifySignatureFactory {
         return verifySignature;
     }
 
-    private VerifySignature makeVerifyMacSignature(Algorithm algorithm, Key key) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
-        Signer macSigner = signerFactory.makeMacSigner(algorithm, key);
+    private VerifySignature makeVerifyMacSignature(Algorithm algorithm, Key key) throws SignatureException {
+        Signer macSigner;
+        try {
+            macSigner = signerFactory.makeMacSigner(algorithm, key);
+        } catch (InvalidAlgorithmException e) {
+            throw new SignatureException("Could not construct Signer. Algorithm was invalid.", e);
+        } catch (InvalidJsonWebKeyException e) {
+            throw new SignatureException("Could not construct Signer. Key was invalid.", e);
+        }
+
         return new VerifyMacSignature(macSigner);
     }
 
-    private VerifySignature makeVerifyRsaSignature(Algorithm algorithm, RSAPublicKey key) throws InvalidJsonWebKeyException, InvalidAlgorithmException {
+    private VerifySignature makeVerifyRsaSignature(Algorithm algorithm, RSAPublicKey key) throws SignatureException {
         Signature signature;
 
         SignAlgorithm signAlgorithm = SignAlgorithm.valueOf(algorithm.getValue());
@@ -58,11 +66,11 @@ public class VerifySignatureFactory {
         try {
             signature = publicKeySignatureFactory.makeSignature(signAlgorithm, key);
         } catch (PublicKeyException e) {
-            throw new InvalidJsonWebKeyException("", e);
+            throw new SignatureException("Could not construct Signer. Key was invalid.", e);
         } catch (RSAPublicKeyException e) {
-            throw new InvalidJsonWebKeyException("", e);
+            throw new SignatureException("Could not construct Signer. Key was invalid.", e);
         } catch (InvalidAlgorithmException e) {
-            throw e;
+            throw new SignatureException("Could not construct Signer. Algorithm was invalid.", e);
         }
 
         return new VerifyRsaSignature(signature, decoder);

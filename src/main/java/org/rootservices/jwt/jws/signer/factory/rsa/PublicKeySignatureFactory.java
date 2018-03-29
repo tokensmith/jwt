@@ -38,7 +38,7 @@ public class PublicKeySignatureFactory {
     public Signature makeSignature(SignAlgorithm alg, RSAPublicKey jwk) throws PublicKeyException, InvalidAlgorithmException, RSAPublicKeyException {
         java.security.interfaces.RSAPublicKey securityPublicKey = makePublicKey(jwk);
 
-        Signature signature = null;
+        Signature signature;
         try {
             signature = Signature.getInstance(alg.getJdkAlgorithm());
         } catch (NoSuchAlgorithmException e) {

@@ -31,7 +31,7 @@ public class VerifyMacSignatureTest {
     }
 
     @Test
-    public void verifySecureJwtWithJwtShouldBeTrue() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public void verifySecureJwtWithJwtShouldBeTrue() throws Exception {
 
         String jwtAsText = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
@@ -53,7 +53,7 @@ public class VerifyMacSignatureTest {
     }
 
     @Test
-    public void verifyUnsecureJwtWithJwtShouldBeTrue() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public void verifyUnsecureJwtWithJwtShouldBeTrue() throws Exception {
 
         String jwtAsText = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";

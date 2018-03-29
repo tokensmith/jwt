@@ -7,6 +7,7 @@ import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.jws.verifier.factory.SignatureException;
 import org.rootservices.jwt.serialization.JWTDeserializer;
 import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 import org.rootservices.jwt.serialization.exception.JwtToJsonException;
@@ -53,7 +54,7 @@ public class SymmetricSignedJsonWebToken {
         return encodedJwt;
     }
 
-    public Boolean verifySignature() throws JsonToJwtException, InvalidJsonWebKeyException, InvalidAlgorithmException {
+    public Boolean verifySignature() throws JsonToJwtException, SignatureException {
 
         JwtAppFactory appFactory = new JwtAppFactory();
 
@@ -78,9 +79,7 @@ public class SymmetricSignedJsonWebToken {
         VerifySignature verifySignature = null;
         try {
             verifySignature = appFactory.verifySignature(Algorithm.HS256, key);
-        } catch (InvalidJsonWebKeyException e) {
-            throw e;
-        } catch (InvalidAlgorithmException e) {
+        } catch (SignatureException e) {
             throw e;
         }
 
