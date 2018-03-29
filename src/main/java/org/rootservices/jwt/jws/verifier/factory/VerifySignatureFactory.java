@@ -4,6 +4,7 @@ import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
+import org.rootservices.jwt.exception.SignatureException;
 import org.rootservices.jwt.jws.signer.SignAlgorithm;
 import org.rootservices.jwt.jws.signer.Signer;
 import org.rootservices.jwt.jws.signer.factory.SignerFactory;

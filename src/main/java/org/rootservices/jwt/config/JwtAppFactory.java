@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.rootservices.jwt.jwe.serialization.JWESerializer;
 import org.rootservices.jwt.jws.serialization.SecureJwtSerializer;
-import org.rootservices.jwt.jws.verifier.factory.SignatureException;
+import org.rootservices.jwt.exception.SignatureException;
 import org.rootservices.jwt.serialization.UnSecureJwtSerializer;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.jwe.Transformation;

@@ -1,4 +1,4 @@
-package org.rootservices.jwt.jws.verifier.factory;
+package org.rootservices.jwt.exception;
 
 /**
  * Represents when a Signer could not be constructed due to a invalid key or algorithm.

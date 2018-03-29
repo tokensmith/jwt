@@ -9,12 +9,10 @@ import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.jws.verifier.factory.SignatureException;
+import org.rootservices.jwt.exception.SignatureException;
 import org.rootservices.jwt.serialization.JWTDeserializer;
 import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 import org.rootservices.jwt.serialization.exception.JwtToJsonException;
-import org.rootservices.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.jws.verifier.VerifySignature;
 
 import java.math.BigInteger;
