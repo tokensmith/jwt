@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.rootservices.jwt.jwe.serialization.JWESerializer;
+import org.rootservices.jwt.jwe.serialization.rsa.JWERSASerializer;
 import org.rootservices.jwt.jws.serialization.SecureJwtSerializer;
 import org.rootservices.jwt.exception.SignatureException;
 import org.rootservices.jwt.serialization.UnSecureJwtSerializer;
@@ -22,7 +22,7 @@ import org.rootservices.jwt.jwk.PublicKeyFactory;
 import org.rootservices.jwt.jwk.SecretKeyFactory;
 import org.rootservices.jwt.jws.signer.factory.rsa.exception.PublicKeyException;
 import org.rootservices.jwt.serialization.HeaderDeserializer;
-import org.rootservices.jwt.jwe.serialization.JWEDeserializer;
+import org.rootservices.jwt.jwe.serialization.rsa.JWERSADeserializer;
 import org.rootservices.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.jws.signer.factory.rsa.exception.PrivateKeyException;
@@ -104,11 +104,7 @@ public class JwtAppFactory {
         return new CipherRSAFactory();
     }
 
-    public SecretKeyFactory secretKeyFactory() {
-        return new SecretKeyFactory();
-    }
-
-    public JWEDeserializer jweDeserializer(RSAKeyPair jwk) throws PrivateKeyException, CipherException {
+    public JWERSADeserializer jweRsaDeserializer(RSAKeyPair jwk) throws PrivateKeyException, CipherException {
         RSAPrivateCrtKey key;
         try {
             key = privateKeyFactory().makePrivateKey(jwk);
@@ -122,11 +118,10 @@ public class JwtAppFactory {
             throw e;
         }
 
-        return new JWEDeserializer(
+        return new JWERSADeserializer(
                 serializer(),
                 urlDecoder(),
                 rsaDecryptCipher,
-                secretKeyFactory(),
                 new CipherSymmetricFactory()
         );
     }
@@ -192,7 +187,7 @@ public class JwtAppFactory {
         return new SecureJwtSerializer(secureJwtFactory, jwtDeserializer);
     }
 
-    public JWESerializer jweSerializer(RSAPublicKey jwk) throws PublicKeyException, CipherException {
+    public JWERSASerializer jweRsaSerializer(RSAPublicKey jwk) throws PublicKeyException, CipherException {
         java.security.interfaces.RSAPublicKey jdkKey;
         try {
             jdkKey = publicKeyFactory().makePublicKey(jwk);
@@ -207,7 +202,7 @@ public class JwtAppFactory {
             throw e;
         }
 
-        return new JWESerializer(
+        return new JWERSASerializer(
                 serializer(),
                 encoder(),
                 rsaEncryptCipher,
