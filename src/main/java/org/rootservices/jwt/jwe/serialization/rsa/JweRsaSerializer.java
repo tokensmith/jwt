@@ -1,9 +1,10 @@
-package org.rootservices.jwt.jwe.serialization;
+package org.rootservices.jwt.jwe.serialization.rsa;
 
 import org.rootservices.jwt.jwe.Transformation;
 import org.rootservices.jwt.jwe.entity.JWE;
 import org.rootservices.jwt.jwe.factory.CipherSymmetricFactory;
 import org.rootservices.jwt.jwe.factory.exception.CipherException;
+import org.rootservices.jwt.jwe.serialization.JweSerializer;
 import org.rootservices.jwt.jwk.KeyAlgorithm;
 import org.rootservices.jwt.jwk.SecretKeyFactory;
 import org.rootservices.jwt.jwk.exception.SecretKeyException;
@@ -16,17 +17,14 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class JWESerializer {
+public class JweRsaSerializer implements JweSerializer {
     public static final String COULD_NOT_ENCRYPT_CEK = "Could not encrypt Content Encryption Key";
     public static final String COULD_NOT_ENCRYPT = "Could not encrypt content";
     public static final String HEADER_IS_INVALID = "Header is invalid. Could not serialize to it to JSON";
-    public static final String COULD_NOT_COMPACT = "Could not compact";
     public static final String FAILED_TO_CREATE_CONTENT_ENCRYPTION_KEY = "Failed to create Content Encryption Key";
     private Serializer serializer;
     private Base64.Encoder encoder;
@@ -34,7 +32,7 @@ public class JWESerializer {
     private SecretKeyFactory secretKeyFactory;
     private CipherSymmetricFactory cipherSymmetricFactory;
 
-    public JWESerializer(Serializer serializer, Base64.Encoder encoder, Cipher RSAEncryptCipher, SecretKeyFactory secretKeyFactory, CipherSymmetricFactory cipherSymmetricFactory) {
+    public JweRsaSerializer(Serializer serializer, Base64.Encoder encoder, Cipher RSAEncryptCipher, SecretKeyFactory secretKeyFactory, CipherSymmetricFactory cipherSymmetricFactory) {
         this.serializer = serializer;
         this.encoder = encoder;
         this.RSAEncryptCipher = RSAEncryptCipher;
@@ -109,47 +107,5 @@ public class JWESerializer {
         }
 
         return cipher;
-    }
-
-    protected byte[] extractCipherText(byte[] cipherTextWithAuthTag) {
-        int tagLength = CipherSymmetricFactory.GCM_TAG_LENGTH / Byte.SIZE;
-        int cipherTextEnd = cipherTextWithAuthTag.length - tagLength;
-
-        byte[] cipherText = new byte[cipherTextEnd];
-        System.arraycopy(cipherTextWithAuthTag, 0, cipherText, 0, cipherTextEnd);
-        return cipherText;
-    }
-
-    protected byte[] extractAuthTag(byte[] cipherTextWithAuthTag) {
-        int tagLength = CipherSymmetricFactory.GCM_TAG_LENGTH / Byte.SIZE;
-        int cipherTextEnd = cipherTextWithAuthTag.length - tagLength;
-
-        byte[] authTag = new byte[tagLength];
-        System.arraycopy(cipherTextWithAuthTag, cipherTextEnd, authTag, 0, tagLength);
-        return authTag;
-    }
-
-    protected byte[] toCompact(List<byte[]> jweParts) throws EncryptException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
-        byte[] delimitter = ".".getBytes();
-
-        for(int i=0; i < jweParts.size(); i++) {
-
-            try {
-                outputStream.write(jweParts.get(i));
-            } catch (IOException e) {
-                throw new EncryptException(COULD_NOT_COMPACT, e);
-            }
-
-            if (i < jweParts.size() - 1) {
-                try {
-                    outputStream.write(delimitter);
-                } catch (IOException e) {
-                    throw new EncryptException(COULD_NOT_COMPACT, e);
-                }
-            }
-        }
-
-        return outputStream.toByteArray();
     }
 }

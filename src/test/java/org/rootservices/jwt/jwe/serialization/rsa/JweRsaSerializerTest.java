@@ -1,4 +1,4 @@
-package org.rootservices.jwt.jwe.serialization;
+package org.rootservices.jwt.jwe.serialization.rsa;
 
 import helper.entity.Factory;
 import org.junit.Test;
@@ -6,6 +6,7 @@ import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwe.EncryptionAlgorithm;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
+import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.jwe.entity.JWE;
@@ -19,7 +20,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
-public class JWESerializerTest {
+public class JweRsaSerializerTest {
 
     @Test
     public void extractCipherText() throws Exception {
@@ -27,7 +28,7 @@ public class JWESerializerTest {
         Base64.Decoder decoder = jwtAppFactory.urlDecoder();
         String compactJWE = Factory.compactJWE();
 
-        String[] jweParts = compactJWE.split(JWEDeserializer.JWT_SPLITTER);
+        String[] jweParts = compactJWE.split(JweRsaDeserializer.JWT_SPLITTER);
         byte[] protectedHeader = decoder.decode(jweParts[0]);
         byte[] encryptedKey = decoder.decode(jweParts[1]);
         byte[] initVector = decoder.decode(jweParts[2]);
@@ -35,12 +36,12 @@ public class JWESerializerTest {
         byte[] authenticationTag = decoder.decode(jweParts[4]);
 
         RSAKeyPair jwk = Factory.makeRSAKeyPairForJWE();
-        JWEDeserializer jweDeserializer = jwtAppFactory.jweDeserializer(jwk);
+        JweRsaDeserializer JweRsaDeserializer = jwtAppFactory.jweRsaDeserializer();
 
         RSAPublicKey publicKey = Factory.makeRSAPublicKeyForJWE();
-        JWESerializer subject = jwtAppFactory.jweSerializer(publicKey);
+        JweRsaSerializer subject = jwtAppFactory.jweRsaSerializer(publicKey);
 
-        byte[] cipherTextWithAuthTag = jweDeserializer.cipherTextWithAuthTag(cipherText, authenticationTag);
+        byte[] cipherTextWithAuthTag = JweRsaDeserializer.cipherTextWithAuthTag(cipherText, authenticationTag);
 
         assertThat(cipherTextWithAuthTag.length, is(cipherText.length + authenticationTag.length));
 
@@ -55,7 +56,7 @@ public class JWESerializerTest {
         Base64.Decoder decoder = jwtAppFactory.urlDecoder();
         String compactJWE = Factory.compactJWE();
 
-        String[] jweParts = compactJWE.split(JWEDeserializer.JWT_SPLITTER);
+        String[] jweParts = compactJWE.split(JweRsaDeserializer.JWT_SPLITTER);
         byte[] protectedHeader = decoder.decode(jweParts[0]);
         byte[] encryptedKey = decoder.decode(jweParts[1]);
         byte[] initVector = decoder.decode(jweParts[2]);
@@ -64,12 +65,12 @@ public class JWESerializerTest {
 
 
         RSAKeyPair jwk = Factory.makeRSAKeyPairForJWE();
-        JWEDeserializer jweDeserializer = jwtAppFactory.jweDeserializer(jwk);
+        JweRsaDeserializer JweRsaDeserializer = jwtAppFactory.jweRsaDeserializer();
 
         RSAPublicKey publicKey = Factory.makeRSAPublicKeyForJWE();
-        JWESerializer subject = jwtAppFactory.jweSerializer(publicKey);
+        JweRsaSerializer subject = jwtAppFactory.jweRsaSerializer(publicKey);
 
-        byte[] cipherTextWithAuthTag = jweDeserializer.cipherTextWithAuthTag(cipherText, authenticationTag);
+        byte[] cipherTextWithAuthTag = JweRsaDeserializer.cipherTextWithAuthTag(cipherText, authenticationTag);
 
         assertThat(cipherTextWithAuthTag.length, is(cipherText.length + authenticationTag.length));
 
@@ -83,7 +84,7 @@ public class JWESerializerTest {
         JwtAppFactory jwtAppFactory = new JwtAppFactory();
 
         RSAPublicKey publicKey = Factory.makeRSAPublicKeyForJWE();
-        JWESerializer subject = jwtAppFactory.jweSerializer(publicKey);
+        JweRsaSerializer subject = jwtAppFactory.jweRsaSerializer(publicKey);
 
         Header header = new Header();
         header.setEncryptionAlgorithm(Optional.of(EncryptionAlgorithm.AES_GCM_256));
@@ -97,11 +98,11 @@ public class JWESerializerTest {
 
         // make sure it can be read.
         RSAKeyPair jwk = Factory.makeRSAKeyPairForJWE();
-        JWEDeserializer jweDeserializer = jwtAppFactory.jweDeserializer(jwk);
+        JweRsaDeserializer JweRsaDeserializer = jwtAppFactory.jweRsaDeserializer();
 
         String compactJWE = new String(actual, StandardCharsets.UTF_8);
 
-        JWE leia = jweDeserializer.stringToJWE(compactJWE);
+        JWE leia = JweRsaDeserializer.stringToJWE(compactJWE, jwk);
 
         assertThat(leia, is(notNullValue()));
         String payload = new String(leia.getPayload());

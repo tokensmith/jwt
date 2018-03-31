@@ -2,7 +2,6 @@ package org.rootservices.jwt.serialization;
 
 import helper.entity.Claim;
 import helper.entity.Factory;
-import org.junit.Before;
 import org.junit.Test;
 import org.rootservices.jwt.factory.SecureJwtFactory;
 import org.rootservices.jwt.factory.UnSecureJwtFactory;
@@ -11,10 +10,6 @@ import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
-import org.rootservices.jwt.serialization.exception.JsonToJwtException;
-import org.rootservices.jwt.serialization.exception.JwtToJsonException;
-import org.rootservices.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
 
 import java.util.Optional;
 
@@ -28,36 +23,31 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by tommackenzie on 8/13/15.
  */
-public class JWTDeserializerTest {
+public class JwtSerdeTest {
 
-    private JwtAppFactory appFactory;
-
-    @Before
-    public void setUp() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
-        appFactory = new JwtAppFactory();
-    }
+    private static JwtAppFactory appFactory = new JwtAppFactory();
 
     @Test
-    public void UnsecuredJwtToStringShouldBeValidJWT() throws JwtToJsonException {
+    public void UnsecuredJwtToStringShouldBeValidJWT() throws Exception {
 
         UnSecureJwtFactory unsecureTokenBuilder = appFactory.unsecureJwtFactory();
-        JWTDeserializer subject = appFactory.jwtDeserializer();
+        JwtSerde subject = appFactory.jwtSerde();
 
         String expectedJwt = "eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";
 
         Claim claim = Factory.makeClaim();
 
         JsonWebToken tokenToMarshal = unsecureTokenBuilder.makeJwt(claim);
-        String actual = subject.jwtToString(tokenToMarshal);
+        String actual = subject.compactJwt(tokenToMarshal);
         assertThat(actual, is(expectedJwt));
     }
 
     @Test
-    public void SecuredJwtToStringShouldBeValid() throws JwtToJsonException, InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public void SecuredJwtToStringShouldBeValid() throws Exception {
 
         SymmetricKey key = Factory.makeSymmetricKey();
         SecureJwtFactory secureJwtFactory = appFactory.secureJwtFactory(Algorithm.HS256, key);
-        JWTDeserializer subject = appFactory.jwtDeserializer();
+        JwtSerde subject = appFactory.jwtSerde();
 
         String signature = "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
 
@@ -68,18 +58,18 @@ public class JWTDeserializerTest {
         Claim claim = Factory.makeClaim();
 
         JsonWebToken tokenToMarshal = secureJwtFactory.makeJwt(claim);
-        String actual = subject.jwtToString(tokenToMarshal);
+        String actual = subject.compactJwt(tokenToMarshal);
 
         assertThat(actual, is(expectedJwt));
     }
 
     @Test
-    public void SecuredJwtWithKeyIdToStringShouldBeValid() throws JwtToJsonException, InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public void SecuredJwtWithKeyIdToStringShouldBeValid() throws Exception {
         SymmetricKey key = Factory.makeSymmetricKey();
         key.setKeyId(Optional.of("test-key-id"));
 
         SecureJwtFactory secureJwtFactory = appFactory.secureJwtFactory(Algorithm.HS256, key);
-        JWTDeserializer subject = appFactory.jwtDeserializer();
+        JwtSerde subject = appFactory.jwtSerde();
 
         String signature = "YiFm03WWrDAbFn7omROmU2GHACkaGI30xdbWFzyoCNQ";
 
@@ -90,15 +80,15 @@ public class JWTDeserializerTest {
         Claim claim = Factory.makeClaim();
 
         JsonWebToken tokenToMarshal = secureJwtFactory.makeJwt(claim);
-        String actual = subject.jwtToString(tokenToMarshal);
+        String actual = subject.compactJwt(tokenToMarshal);
 
         assertThat(actual, is(expectedJwt));
     }
 
     @Test
-    public void stringToJwtShouldBeUnsecuredJwt() throws JsonToJwtException {
+    public void stringToJwtShouldBeUnsecuredJwt() throws Exception {
 
-        JWTDeserializer subject = appFactory.jwtDeserializer();
+        JwtSerde subject = appFactory.jwtSerde();
 
         String jwtAsText = "eyJhbGciOiJub25lIn0=." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ==.";
@@ -129,9 +119,9 @@ public class JWTDeserializerTest {
     }
 
     @Test
-    public void stringToJwtShouldBeSecuredJwt() throws JsonToJwtException {
+    public void stringToJwtShouldBeSecuredJwt() throws Exception {
 
-        JWTDeserializer subject = appFactory.jwtDeserializer();
+        JwtSerde subject = appFactory.jwtSerde();
 
         String signature = "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
 
@@ -171,9 +161,9 @@ public class JWTDeserializerTest {
     }
 
     @Test
-    public void stringToJwtShouldBeSecuredJwtWithKeyId() throws JsonToJwtException {
+    public void stringToJwtShouldBeSecuredJwtWithKeyId() throws Exception {
 
-        JWTDeserializer subject = appFactory.jwtDeserializer();
+        JwtSerde subject = appFactory.jwtSerde();
 
         String signature = "YiFm03WWrDAbFn7omROmU2GHACkaGI30xdbWFzyoCNQ";
 

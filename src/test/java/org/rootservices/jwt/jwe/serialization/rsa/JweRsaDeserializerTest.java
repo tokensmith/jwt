@@ -1,4 +1,4 @@
-package org.rootservices.jwt.jwe.serialization;
+package org.rootservices.jwt.jwe.serialization.rsa;
 
 import helper.entity.Factory;
 import org.junit.Test;
@@ -16,17 +16,17 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
-public class JWEDeserializerTest {
+public class JweRsaDeserializerTest {
 
     @Test
     public void stringToJWE() throws Exception {
         JwtAppFactory jwtAppFactory = new JwtAppFactory();
         RSAKeyPair jwk = Factory.makeRSAKeyPairForJWE();
-        JWEDeserializer subject = jwtAppFactory.jweDeserializer(jwk);
+        JweRsaDeserializer subject = jwtAppFactory.jweRsaDeserializer();
 
         String compactJWE = Factory.compactJWE();
 
-        JWE actual = subject.stringToJWE(compactJWE);
+        JWE actual = subject.stringToJWE(compactJWE, jwk);
 
         assertThat(actual, is(notNullValue()));
 

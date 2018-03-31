@@ -5,7 +5,7 @@ import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.serialization.JWTDeserializer;
+import org.rootservices.jwt.serialization.JwtSerde;
 import org.rootservices.jwt.jws.signer.MacSigner;
 import org.rootservices.jwt.jws.signer.RSASigner;
 import org.rootservices.jwt.jws.signer.SignAlgorithm;
@@ -32,12 +32,12 @@ public class SignerFactory {
     private MacFactory macFactory;
     private PrivateKeySignatureFactory privateKeySignatureFactory;
     private Base64.Encoder encoder;
-    private JWTDeserializer jwtDeserializer;
+    private JwtSerde jwtSerde;
 
-    public SignerFactory(MacFactory macFactory, PrivateKeySignatureFactory privateKeySignatureFactory, JWTDeserializer jwtDeserializer, Base64.Encoder encoder){
+    public SignerFactory(MacFactory macFactory, PrivateKeySignatureFactory privateKeySignatureFactory, JwtSerde jwtSerde, Base64.Encoder encoder){
         this.macFactory = macFactory;
         this.privateKeySignatureFactory = privateKeySignatureFactory;
-        this.jwtDeserializer = jwtDeserializer;
+        this.jwtSerde = jwtSerde;
         this.encoder = encoder;
     }
 
@@ -64,7 +64,7 @@ public class SignerFactory {
             throw e;
         }
 
-        return new MacSigner(jwtDeserializer, mac, encoder);
+        return new MacSigner(jwtSerde, mac, encoder);
     }
 
     private Signer makeRSASigner(Algorithm alg, RSAKeyPair keyPair) throws InvalidAlgorithmException, InvalidJsonWebKeyException {
@@ -81,6 +81,6 @@ public class SignerFactory {
         } catch (InvalidAlgorithmException e) {
             throw e;
         }
-        return new RSASigner(signature, jwtDeserializer, encoder);
+        return new RSASigner(signature, jwtSerde, encoder);
     }
 }

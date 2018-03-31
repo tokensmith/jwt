@@ -1,6 +1,6 @@
 package org.rootservices.jwt.jws.signer;
 
-import org.rootservices.jwt.serialization.JWTDeserializer;
+import org.rootservices.jwt.serialization.JwtSerde;
 
 import java.security.Signature;
 import java.security.SignatureException;
@@ -12,8 +12,8 @@ import java.util.Base64.Encoder;
 public class RSASigner extends Signer {
     private Signature signature;
 
-    public RSASigner(Signature signature, JWTDeserializer jwtDeserializer, Encoder encoder) {
-        super(jwtDeserializer, encoder);
+    public RSASigner(Signature signature, JwtSerde jwtSerde, Encoder encoder) {
+        super(jwtSerde, encoder);
         this.signature = signature;
     }
 

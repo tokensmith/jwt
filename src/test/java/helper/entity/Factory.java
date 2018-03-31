@@ -58,6 +58,16 @@ public class Factory {
         return key;
     }
 
+    public static SymmetricKey makeSymmetricKeyForJWE() {
+        SymmetricKey key = new SymmetricKey(
+                Optional.<String>empty(),
+                "MMNj8rE5m7NIDhwKYDmHSnlU1wfKuVvW6G--GKPYkRA",
+                Use.ENCRYPTION
+        );
+
+        return key;
+    }
+
     public static Claim makeClaim() {
         Claim claim = new Claim();
         Optional<String> issuer = Optional.of("joe");
@@ -188,5 +198,9 @@ public class Factory {
         encoded.append("XFBoMYUZodetZdvTiFvSkQ");
 
         return encoded.toString();
+    }
+
+    public static String symmetricCompactJWE() {
+        return "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..0gDRrNTkCcMW_nnA1Q1yKUi0kJEAFxblm2-oUG0QhxEVtbzhWAlUnS5azsiC24Zk7Vv6DYOGCBkt2WSt_Yp2BYWrSHyxWVhNnQ0qtvm2TTh2MHjonN2Kb1NH_ooRLs6Z.NgpZSFNCr7s3SuA4mgoU1jY3bUi5KCp1pZwJ4VZT9yM8qduQaOAZj7qGRbxh.vSdENsFN2CpC1AunaZFJ-w";
     }
 }

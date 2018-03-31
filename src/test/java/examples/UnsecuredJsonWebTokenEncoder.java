@@ -16,7 +16,7 @@ public class UnsecuredJsonWebTokenEncoder {
         Claim claim = new Claim();
         claim.setUriIsRoot(true);
 
-        String encodedJwt = unSecureJwtSerializer.encode(claim);
+        String encodedJwt = unSecureJwtSerializer.compactJWT(claim);
 
         return encodedJwt;
     }

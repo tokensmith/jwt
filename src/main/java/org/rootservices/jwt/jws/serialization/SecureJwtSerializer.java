@@ -4,7 +4,7 @@ package org.rootservices.jwt.jws.serialization;
 import org.rootservices.jwt.entity.jwt.Claims;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.factory.SecureJwtFactory;
-import org.rootservices.jwt.serialization.JWTDeserializer;
+import org.rootservices.jwt.serialization.JwtSerde;
 import org.rootservices.jwt.serialization.exception.JwtToJsonException;
 
 /**
@@ -12,16 +12,16 @@ import org.rootservices.jwt.serialization.exception.JwtToJsonException;
  */
 public class SecureJwtSerializer {
     private SecureJwtFactory secureJwtFactory;
-    private JWTDeserializer jwtDeserializer;
+    private JwtSerde jwtSerde;
 
-    public SecureJwtSerializer(SecureJwtFactory secureJwtFactory, JWTDeserializer jwtDeserializer) {
+    public SecureJwtSerializer(SecureJwtFactory secureJwtFactory, JwtSerde jwtSerde) {
         this.secureJwtFactory = secureJwtFactory;
-        this.jwtDeserializer = jwtDeserializer;
+        this.jwtSerde = jwtSerde;
     }
 
-    public String encode(Claims claims) throws JwtToJsonException {
+    public String compactJWT(Claims claims) throws JwtToJsonException {
 
-        JsonWebToken jsonWebToken = null;
+        JsonWebToken jsonWebToken;
         try {
             jsonWebToken = secureJwtFactory.makeJwt(claims);
         } catch (JwtToJsonException e) {
@@ -30,7 +30,7 @@ public class SecureJwtSerializer {
 
         String jwt;
         try {
-            jwt = jwtDeserializer.jwtToString(jsonWebToken);
+            jwt = jwtSerde.compactJwt(jsonWebToken);
         } catch (JwtToJsonException e) {
             throw e;
         }
