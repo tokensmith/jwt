@@ -3,6 +3,7 @@ package org.rootservices.jwt.serialization;
 import org.rootservices.jwt.entity.jwt.Claims;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Header;
+import org.rootservices.jwt.exception.InvalidJWT;
 import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 import org.rootservices.jwt.serialization.exception.JsonException;
 import org.rootservices.jwt.serialization.exception.JwtToJsonException;
@@ -14,14 +15,16 @@ import java.util.Base64.Decoder;
 import java.util.Optional;
 
 /**
- * Created by tommackenzie on 8/13/15.
- *
- * A Serializer that converts:
+ * A Serializer and Deserializer that converts:
  * - a jwt as a string to a instance of a JsonWebToken.
  * - a JsonWebToken to its string representation.
  */
-public class JWTDeserializer {
+public class JwtSerde {
     public static final String JWT_SPLITTER = "\\.";
+    public static final String INVALID_JSON = "JWT json is invalid";
+    public static final String COULD_NOT_SERIALIZE = "Could not make sign input";
+    public static final String THIS_IS_A_JWE = "This is a JWE";
+    public static final String TOO_MANY_MEMBERS = "Too many members";
     public final int JWT_LENGTH = 2;
     public final int JWS_LENGTH = 3;
     public final int JWE_LENGTH = 5;
@@ -30,7 +33,7 @@ public class JWTDeserializer {
     private Decoder decoder;
     private final String DELIMITTER = ".";
 
-    public JWTDeserializer(Serializer serializer, Encoder encoder, Decoder decoder) {
+    public JwtSerde(Serializer serializer, Encoder encoder, Decoder decoder) {
         this.serializer = serializer;
         this.encoder = encoder;
         this.decoder = decoder;
@@ -45,13 +48,13 @@ public class JWTDeserializer {
             headerJson = serializer.objectToJson(header);
             claimsJson = serializer.objectToJson(claims);
         } catch (JsonException e) {
-            throw new JwtToJsonException("Could not make sign input", e);
+            throw new JwtToJsonException(COULD_NOT_SERIALIZE, e);
         }
 
         return encode(headerJson) + DELIMITTER + encode(claimsJson);
     }
 
-    public String jwtToString(JsonWebToken jwt) throws JwtToJsonException {
+    public String compactJwt(JsonWebToken jwt) throws JwtToJsonException {
 
         StringBuilder encodedJwt = new StringBuilder();
         encodedJwt.append(makeSignInput(jwt.getHeader(), jwt.getClaims()) + DELIMITTER);
@@ -66,18 +69,18 @@ public class JWTDeserializer {
         return encoder.encodeToString(input.getBytes(Charset.forName("UTF-8")));
     }
 
-    public JsonWebToken stringToJwt(String jwtAsText, Class claimClass) throws JsonToJwtException {
+    public JsonWebToken stringToJwt(String jwtAsText, Class claimClass) throws JsonToJwtException, InvalidJWT {
         String[] jwtParts = jwtAsText.split(JWT_SPLITTER);
-        JsonWebToken jwt = null;
+        JsonWebToken jwt;
 
         if (jwtParts.length == JWT_LENGTH) {
             jwt = jwt(jwtParts, claimClass, jwtAsText);
         } else if (jwtParts.length == JWS_LENGTH && jwtParts[JWS_LENGTH-1] != null) {
             jwt = jws(jwtParts, claimClass, jwtAsText);
         } else if (jwtParts.length == JWE_LENGTH) {
-            // TODO: throw a exception here.
+            throw new InvalidJWT(THIS_IS_A_JWE);
         } else {
-            // TODO: throw a exception here.
+            throw new InvalidJWT(TOO_MANY_MEMBERS);
         }
 
         return jwt;
@@ -93,7 +96,7 @@ public class JWTDeserializer {
             header = (Header) serializer.jsonBytesToObject(headerJson, Header.class);
             claim = (Claims) serializer.jsonBytesToObject(claimsJson, claimClass);
         } catch (JsonException e) {
-            throw new JsonToJwtException("JWT json is invalid", e);
+            throw new JsonToJwtException(INVALID_JSON, e);
         }
 
         JsonWebToken jwt = new JsonWebToken(header, claim, Optional.of(jwtAsText));

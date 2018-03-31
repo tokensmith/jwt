@@ -9,10 +9,8 @@ import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.serialization.JWTDeserializer;
+import org.rootservices.jwt.serialization.JwtSerde;
 import org.rootservices.jwt.serialization.exception.JsonToJwtException;
-import org.rootservices.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
 
 import static org.junit.Assert.assertTrue;
 
@@ -22,12 +20,12 @@ import static org.junit.Assert.assertTrue;
 public class VerifyMacSignatureTest {
 
     private JwtAppFactory appFactory;
-    private JWTDeserializer jwtDeserializer;
+    private JwtSerde jwtSerde;
 
     @Before
     public void setUp() {
         appFactory = new JwtAppFactory();
-        jwtDeserializer = appFactory.jwtDeserializer();
+        jwtSerde = appFactory.jwtSerde();
     }
 
     @Test
@@ -39,7 +37,7 @@ public class VerifyMacSignatureTest {
 
         JsonWebToken jwt = null;
         try {
-            jwt = jwtDeserializer.stringToJwt(jwtAsText, Claim.class);
+            jwt = jwtSerde.stringToJwt(jwtAsText, Claim.class);
         } catch (JsonToJwtException e) {
             e.printStackTrace();
         }
@@ -60,7 +58,7 @@ public class VerifyMacSignatureTest {
 
         JsonWebToken jwt = null;
         try {
-            jwt = jwtDeserializer.stringToJwt(jwtAsText, Claim.class);
+            jwt = jwtSerde.stringToJwt(jwtAsText, Claim.class);
         } catch (JsonToJwtException e) {
             e.printStackTrace();
         }

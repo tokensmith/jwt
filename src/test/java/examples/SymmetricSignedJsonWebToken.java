@@ -8,7 +8,7 @@ import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.exception.SignatureException;
-import org.rootservices.jwt.serialization.JWTDeserializer;
+import org.rootservices.jwt.serialization.JwtSerde;
 import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 import org.rootservices.jwt.serialization.exception.JwtToJsonException;
 import org.rootservices.jwt.jws.verifier.VerifySignature;
@@ -42,7 +42,7 @@ public class SymmetricSignedJsonWebToken {
 
         String encodedJwt = null;
         try {
-            encodedJwt = secureJwtSerializer.encode(claim);
+            encodedJwt = secureJwtSerializer.compactJWT(claim);
         } catch (JwtToJsonException e) {
             e.printStackTrace();
         }
@@ -50,16 +50,16 @@ public class SymmetricSignedJsonWebToken {
         return encodedJwt;
     }
 
-    public Boolean verifySignature() throws JsonToJwtException, SignatureException {
+    public Boolean verifySignature() throws Exception {
 
         JwtAppFactory appFactory = new JwtAppFactory();
 
         String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZX0.TeZ3DKSE-gplbaoA8CK_RMojt8CfA1MTYaM_ZuOeGNw";
-        JWTDeserializer jwtDeserializer = appFactory.jwtDeserializer();
+        JwtSerde jwtSerde = appFactory.jwtSerde();
 
         JsonWebToken jsonWebToken = null;
         try {
-            jsonWebToken = jwtDeserializer.stringToJwt(jwt, Claim.class);
+            jsonWebToken = jwtSerde.stringToJwt(jwt, Claim.class);
         } catch (JsonToJwtException e) {
             // could not create a JsonWebToken from the jwt json.
             throw e;

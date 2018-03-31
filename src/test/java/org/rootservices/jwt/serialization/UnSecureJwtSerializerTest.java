@@ -26,7 +26,7 @@ public class UnSecureJwtSerializerTest {
 
         Claims claims = Factory.makeClaim();
 
-        String jwt = subject.encode(claims);
+        String jwt = subject.compactJWT(claims);
 
         assertThat(jwt, is("eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ."));
     }
