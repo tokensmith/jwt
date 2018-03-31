@@ -40,8 +40,8 @@ public class JweDirectSerializer implements JweSerializer {
      *
      * Ignores the value for the jwe iv and generates a new one.
      *
-     * The variable symmetricCipher is a propagating dependency. I think that is ok b/c it cannot be reused per
-     * encryption attempt b/c per encryption attempt it needs to use a new iv and add.
+     * The variable symmetricCipher is a propagating dependency. It cannot be reused per
+     * encryption attempt because it requires a new iv and aad per attempt.
      *
      * @param jwe must have values for header, cek, payload. Ignores the value for iv and generates a new one.
      * @return a byte[] that is a compact JWE
