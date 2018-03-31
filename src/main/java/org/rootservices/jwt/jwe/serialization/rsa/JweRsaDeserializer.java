@@ -1,12 +1,17 @@
 package org.rootservices.jwt.jwe.serialization.rsa;
 
+import org.rootservices.jwt.entity.jwk.Key;
+import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.jwe.Transformation;
 import org.rootservices.jwt.jwe.entity.JWE;
+import org.rootservices.jwt.jwe.factory.CipherRSAFactory;
 import org.rootservices.jwt.jwe.factory.CipherSymmetricFactory;
 import org.rootservices.jwt.jwe.factory.exception.CipherException;
 import org.rootservices.jwt.entity.jwt.header.Header;
-import org.rootservices.jwt.jwe.serialization.JWEDeserializer;
-import org.rootservices.jwt.jwk.KeyAlgorithm;
+import org.rootservices.jwt.jwe.serialization.JweDeserializer;
+import org.rootservices.jwt.jwe.serialization.exception.KeyException;
+import org.rootservices.jwt.jwk.PrivateKeyFactory;
+import org.rootservices.jwt.jws.signer.factory.rsa.exception.PrivateKeyException;
 import org.rootservices.jwt.serialization.Serializer;
 import org.rootservices.jwt.serialization.exception.DecryptException;
 import org.rootservices.jwt.serialization.exception.JsonException;
@@ -14,31 +19,28 @@ import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 
 
 import javax.crypto.*;
-import javax.crypto.spec.SecretKeySpec;
-
 
 import java.nio.charset.StandardCharsets;
+import java.security.interfaces.RSAPrivateCrtKey;
 import java.util.Base64;
 
-public class JWERSADeserializer implements JWEDeserializer {
-    public static final String JWT_SPLITTER = "\\.";
-    public static final String COMPACT_JWE_INVALID = "Compact JWE is invalid";
-    public static final String COULD_NOT_DECRYPT_ENCRYPTED_KEY = "Could not Decrypt encrypted key";
-    public static final String COULD_NOT_DECRYPT_CIPHER_TEXT = "Could not decrypt cipher text";
+public class JweRsaDeserializer implements JweDeserializer {
 
     private Serializer serializer;
     private Base64.Decoder decoder;
-    private Cipher RSADecryptCipher;
+    private PrivateKeyFactory privateKeyFactory;
+    private CipherRSAFactory cipherRSAFactory;
     private CipherSymmetricFactory cipherSymmetricFactory;
 
-    public JWERSADeserializer(Serializer serializer, Base64.Decoder decoder, Cipher RSADecryptCipher, CipherSymmetricFactory cipherSymmetricFactory) {
+    public JweRsaDeserializer(Serializer serializer, Base64.Decoder decoder, PrivateKeyFactory privateKeyFactory, CipherRSAFactory cipherRSAFactory, CipherSymmetricFactory cipherSymmetricFactory) {
         this.serializer = serializer;
         this.decoder = decoder;
-        this.RSADecryptCipher = RSADecryptCipher;
+        this.privateKeyFactory = privateKeyFactory;
+        this.cipherRSAFactory = cipherRSAFactory;
         this.cipherSymmetricFactory = cipherSymmetricFactory;
     }
 
-    public JWE stringToJWE(String compactJWE) throws JsonToJwtException, DecryptException, CipherException {
+    public JWE stringToJWE(String compactJWE, Key key) throws JsonToJwtException, DecryptException, CipherException, KeyException {
         String[] jweParts = compactJWE.split(JWT_SPLITTER);
         byte[] protectedHeader = decoder.decode(jweParts[0]);
         byte[] encryptedKey = decoder.decode(jweParts[1]);
@@ -53,9 +55,24 @@ public class JWERSADeserializer implements JWEDeserializer {
             throw new JsonToJwtException(COMPACT_JWE_INVALID, e);
         }
 
+        RSAKeyPair keyPair = (RSAKeyPair) key;
+        RSAPrivateCrtKey jdkKey;
+        try {
+            jdkKey = privateKeyFactory.makePrivateKey(keyPair);
+        } catch (PrivateKeyException e) {
+            throw new KeyException("", e);
+        }
+
+        Cipher rsaDecryptCipher;
+        try {
+            rsaDecryptCipher = cipherRSAFactory.forDecrypt(Transformation.RSA_OAEP, jdkKey);
+        } catch (CipherException e) {
+            throw e;
+        }
+
         byte[] cek;
         try {
-            cek = RSADecryptCipher.doFinal(encryptedKey);
+            cek = rsaDecryptCipher.doFinal(encryptedKey);
         } catch (IllegalBlockSizeException e) {
             throw new DecryptException(COULD_NOT_DECRYPT_ENCRYPTED_KEY, e);
         } catch (BadPaddingException e) {
@@ -66,7 +83,7 @@ public class JWERSADeserializer implements JWEDeserializer {
 
         Cipher symmetricCipher;
         try {
-            symmetricCipher = symmetricCipherForDecrypt(cek, initVector, aad);
+            symmetricCipher = cipherSymmetricFactory.forDecrypt(Transformation.AES_GCM_NO_PADDING, cek, initVector, aad);
         } catch (CipherException e) {
             throw e;
         }
@@ -83,20 +100,5 @@ public class JWERSADeserializer implements JWEDeserializer {
         }
 
         return new JWE(header, payload, cek, initVector, authenticationTag);
-    }
-
-    // The symmetric cipher should not be a dependency b/c it cannot be re-used.
-    // init vectors are different per JWE.
-    // it maybe injected in for plain old AES not GCM.
-    protected Cipher symmetricCipherForDecrypt(byte[] cek, byte[] iv, byte[] aad) throws CipherException {
-        SecretKey key = new SecretKeySpec(cek, KeyAlgorithm.AES.getValue());
-        Cipher cipher;
-        try {
-            cipher = cipherSymmetricFactory.forDecrypt(Transformation.AES_GCM_NO_PADDING, key, iv, aad);
-        } catch (CipherException e) {
-            throw e;
-        }
-
-        return cipher;
     }
 }

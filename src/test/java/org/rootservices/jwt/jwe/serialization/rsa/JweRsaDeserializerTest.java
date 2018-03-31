@@ -16,17 +16,17 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
-public class JWERSADeserializerTest {
+public class JweRsaDeserializerTest {
 
     @Test
     public void stringToJWE() throws Exception {
         JwtAppFactory jwtAppFactory = new JwtAppFactory();
         RSAKeyPair jwk = Factory.makeRSAKeyPairForJWE();
-        JWERSADeserializer subject = jwtAppFactory.jweRsaDeserializer(jwk);
+        JweRsaDeserializer subject = jwtAppFactory.jweRsaDeserializer();
 
         String compactJWE = Factory.compactJWE();
 
-        JWE actual = subject.stringToJWE(compactJWE);
+        JWE actual = subject.stringToJWE(compactJWE, jwk);
 
         assertThat(actual, is(notNullValue()));
 

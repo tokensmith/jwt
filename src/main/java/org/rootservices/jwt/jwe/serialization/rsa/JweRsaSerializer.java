@@ -4,7 +4,7 @@ import org.rootservices.jwt.jwe.Transformation;
 import org.rootservices.jwt.jwe.entity.JWE;
 import org.rootservices.jwt.jwe.factory.CipherSymmetricFactory;
 import org.rootservices.jwt.jwe.factory.exception.CipherException;
-import org.rootservices.jwt.jwe.serialization.JWESerializer;
+import org.rootservices.jwt.jwe.serialization.JweSerializer;
 import org.rootservices.jwt.jwk.KeyAlgorithm;
 import org.rootservices.jwt.jwk.SecretKeyFactory;
 import org.rootservices.jwt.jwk.exception.SecretKeyException;
@@ -17,13 +17,11 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class JWERSASerializer implements JWESerializer {
+public class JweRsaSerializer implements JweSerializer {
     public static final String COULD_NOT_ENCRYPT_CEK = "Could not encrypt Content Encryption Key";
     public static final String COULD_NOT_ENCRYPT = "Could not encrypt content";
     public static final String HEADER_IS_INVALID = "Header is invalid. Could not serialize to it to JSON";
@@ -34,7 +32,7 @@ public class JWERSASerializer implements JWESerializer {
     private SecretKeyFactory secretKeyFactory;
     private CipherSymmetricFactory cipherSymmetricFactory;
 
-    public JWERSASerializer(Serializer serializer, Base64.Encoder encoder, Cipher RSAEncryptCipher, SecretKeyFactory secretKeyFactory, CipherSymmetricFactory cipherSymmetricFactory) {
+    public JweRsaSerializer(Serializer serializer, Base64.Encoder encoder, Cipher RSAEncryptCipher, SecretKeyFactory secretKeyFactory, CipherSymmetricFactory cipherSymmetricFactory) {
         this.serializer = serializer;
         this.encoder = encoder;
         this.RSAEncryptCipher = RSAEncryptCipher;

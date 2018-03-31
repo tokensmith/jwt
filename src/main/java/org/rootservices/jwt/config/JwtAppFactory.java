@@ -7,7 +7,9 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.rootservices.jwt.jwe.serialization.rsa.JWERSASerializer;
+import org.rootservices.jwt.jwe.serialization.direct.JweDirectDesializer;
+import org.rootservices.jwt.jwe.serialization.direct.JweDirectSerializer;
+import org.rootservices.jwt.jwe.serialization.rsa.JweRsaSerializer;
 import org.rootservices.jwt.jws.serialization.SecureJwtSerializer;
 import org.rootservices.jwt.exception.SignatureException;
 import org.rootservices.jwt.serialization.UnSecureJwtSerializer;
@@ -22,7 +24,7 @@ import org.rootservices.jwt.jwk.PublicKeyFactory;
 import org.rootservices.jwt.jwk.SecretKeyFactory;
 import org.rootservices.jwt.jws.signer.factory.rsa.exception.PublicKeyException;
 import org.rootservices.jwt.serialization.HeaderDeserializer;
-import org.rootservices.jwt.jwe.serialization.rsa.JWERSADeserializer;
+import org.rootservices.jwt.jwe.serialization.rsa.JweRsaDeserializer;
 import org.rootservices.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
 import org.rootservices.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
 import org.rootservices.jwt.jws.signer.factory.rsa.exception.PrivateKeyException;
@@ -42,6 +44,8 @@ import org.rootservices.jwt.jws.verifier.factory.VerifySignatureFactory;
 
 
 import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateCrtKey;
@@ -104,25 +108,26 @@ public class JwtAppFactory {
         return new CipherRSAFactory();
     }
 
-    public JWERSADeserializer jweRsaDeserializer(RSAKeyPair jwk) throws PrivateKeyException, CipherException {
-        RSAPrivateCrtKey key;
-        try {
-            key = privateKeyFactory().makePrivateKey(jwk);
-        } catch (PrivateKeyException e) {
-            throw e;
-        }
-        Cipher rsaDecryptCipher;
-        try {
-            rsaDecryptCipher = cipherRSAFactory().forDecrypt(Transformation.RSA_OAEP, key);
-        } catch (CipherException e) {
-            throw e;
-        }
+    public CipherSymmetricFactory cipherSymmetricFactory() {
+        return new CipherSymmetricFactory();
+    }
 
-        return new JWERSADeserializer(
+    public JweRsaDeserializer jweRsaDeserializer() {
+
+        return new JweRsaDeserializer(
                 serializer(),
                 urlDecoder(),
-                rsaDecryptCipher,
-                new CipherSymmetricFactory()
+                privateKeyFactory(),
+                cipherRSAFactory(),
+                cipherSymmetricFactory()
+        );
+    }
+
+    public JweDirectDesializer jweDirectDesializer() {
+        return new JweDirectDesializer(
+                serializer(),
+                urlDecoder(),
+                cipherSymmetricFactory()
         );
     }
 
@@ -187,7 +192,7 @@ public class JwtAppFactory {
         return new SecureJwtSerializer(secureJwtFactory, jwtDeserializer);
     }
 
-    public JWERSASerializer jweRsaSerializer(RSAPublicKey jwk) throws PublicKeyException, CipherException {
+    public JweRsaSerializer jweRsaSerializer(RSAPublicKey jwk) throws PublicKeyException, CipherException {
         java.security.interfaces.RSAPublicKey jdkKey;
         try {
             jdkKey = publicKeyFactory().makePublicKey(jwk);
@@ -202,12 +207,21 @@ public class JwtAppFactory {
             throw e;
         }
 
-        return new JWERSASerializer(
+        return new JweRsaSerializer(
                 serializer(),
                 encoder(),
                 rsaEncryptCipher,
                 new SecretKeyFactory(),
-                new CipherSymmetricFactory()
+                cipherSymmetricFactory()
+        );
+    }
+
+    public JweDirectSerializer jweDirectSerializer() {
+
+        return new JweDirectSerializer(
+                serializer(),
+                encoder(),
+                cipherSymmetricFactory()
         );
     }
 

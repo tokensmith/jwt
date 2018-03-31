@@ -11,6 +11,7 @@ public enum Algorithm {
     NONE ("none", AlgorithmFor.JWS),
     HS256 ("HS256", AlgorithmFor.JWS),
     RS256 ("RS256", AlgorithmFor.JWS),
+    DIRECT ("dir", AlgorithmFor.JWE),
     RSAES_OAEP  ("RSA-OAEP", AlgorithmFor.JWE);
 
     private String value;

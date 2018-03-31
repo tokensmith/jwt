@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-public interface JWESerializer {
+public interface JweSerializer {
     byte[] DELIMITER = ".".getBytes();
     String COULD_NOT_COMPACT = "Could not compact";
     byte[] JWEToCompact(JWE jwe) throws JsonToJwtException, CipherException, EncryptException;
@@ -37,11 +37,12 @@ public interface JWESerializer {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
 
         for(int i=0; i < jweParts.size(); i++) {
-
-            try {
-                outputStream.write(jweParts.get(i));
-            } catch (IOException e) {
-                throw new EncryptException(COULD_NOT_COMPACT, e);
+            if (jweParts.get(i) != null) {
+                try {
+                    outputStream.write(jweParts.get(i));
+                } catch (IOException e) {
+                    throw new EncryptException(COULD_NOT_COMPACT, e);
+                }
             }
 
             if (i < jweParts.size() - 1) {

@@ -20,7 +20,7 @@ import java.util.Optional;
  */
 public class SymmetricSignedJsonWebToken {
 
-    public String toEncodedJwt() {
+    public String tocCompactJwt() {
 
         JwtAppFactory appFactory = new JwtAppFactory();
 

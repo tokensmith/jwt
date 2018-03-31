@@ -2,11 +2,14 @@ package org.rootservices.jwt.jwe.factory;
 
 import org.rootservices.jwt.jwe.Transformation;
 import org.rootservices.jwt.jwe.factory.exception.CipherException;
+import org.rootservices.jwt.jwk.KeyAlgorithm;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.OAEPParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
 import java.security.spec.AlgorithmParameterSpec;
 
@@ -44,6 +47,18 @@ public class CipherSymmetricFactory {
     public Cipher forDecrypt(Transformation transformation, Key key, byte[] initVector, byte[] aad) throws CipherException {
         AlgorithmParameterSpec spec = makeSpec(transformation, initVector);
         Cipher cipher = makeCipher(transformation, key, Cipher.DECRYPT_MODE, spec, aad);
+        return cipher;
+    }
+
+    public Cipher forDecrypt(Transformation transformation, byte[] cek, byte[] initVector, byte[] aad) throws CipherException {
+        SecretKey key = new SecretKeySpec(cek, KeyAlgorithm.AES.getValue());
+        Cipher cipher;
+        try {
+            cipher = forDecrypt(transformation, key, initVector, aad);
+        } catch (CipherException e) {
+            throw e;
+        }
+
         return cipher;
     }
 
