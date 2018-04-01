@@ -20,9 +20,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 
-/**
- * Created by tommackenzie on 8/13/15.
- */
+
 public class JwtSerdeTest {
 
     private static JwtAppFactory appFactory = new JwtAppFactory();
@@ -154,7 +152,7 @@ public class JwtSerdeTest {
         assertThat(actual.getClaims().getJwtId().isPresent(), is(false));
 
         assertThat(actual.getSignature().isPresent(), is(true));
-        assertThat(actual.getSignature().get(), is(signature));
+        assertThat(actual.getSignature().get(), is(signature.getBytes()));
 
         assertThat(actual.getJwt().isPresent(), is(true));
         assertThat(actual.getJwt().get(), is(jwtAsText));
@@ -197,7 +195,7 @@ public class JwtSerdeTest {
         assertThat(actual.getClaims().getJwtId().isPresent(), is(false));
 
         assertThat(actual.getSignature().isPresent(), is(true));
-        assertThat(actual.getSignature().get(), is(signature));
+        assertThat(actual.getSignature().get(), is(signature.getBytes()));
 
         assertThat(actual.getJwt().isPresent(), is(true));
         assertThat(actual.getJwt().get(), is(jwtAsText));

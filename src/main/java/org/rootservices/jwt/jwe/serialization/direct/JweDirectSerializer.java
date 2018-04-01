@@ -1,13 +1,12 @@
 package org.rootservices.jwt.jwe.serialization.direct;
 
-import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.jwe.Transformation;
 import org.rootservices.jwt.jwe.entity.JWE;
 import org.rootservices.jwt.jwe.factory.CipherSymmetricFactory;
 import org.rootservices.jwt.jwe.factory.exception.CipherException;
 import org.rootservices.jwt.jwe.serialization.JweSerializer;
 import org.rootservices.jwt.jwk.KeyAlgorithm;
-import org.rootservices.jwt.serialization.Serializer;
+import org.rootservices.jwt.serialization.Serdes;
 import org.rootservices.jwt.serialization.exception.EncryptException;
 import org.rootservices.jwt.serialization.exception.JsonException;
 import org.rootservices.jwt.serialization.exception.JsonToJwtException;
@@ -25,12 +24,12 @@ public class JweDirectSerializer implements JweSerializer {
     public static final String COULD_NOT_ENCRYPT = "Could not encrypt content";
     public static final String HEADER_IS_INVALID = "Header is invalid. Could not serialize to it to JSON";
 
-    private Serializer serializer;
+    private Serdes serdes;
     private Base64.Encoder encoder;
     private CipherSymmetricFactory cipherSymmetricFactory;
 
-    public JweDirectSerializer(Serializer serializer, Base64.Encoder encoder, CipherSymmetricFactory cipherSymmetricFactory) {
-        this.serializer = serializer;
+    public JweDirectSerializer(Serdes serdes, Base64.Encoder encoder, CipherSymmetricFactory cipherSymmetricFactory) {
+        this.serdes = serdes;
         this.encoder = encoder;
         this.cipherSymmetricFactory = cipherSymmetricFactory;
     }
@@ -53,7 +52,7 @@ public class JweDirectSerializer implements JweSerializer {
     public byte[] JWEToCompact(JWE jwe) throws JsonToJwtException, CipherException, EncryptException {
         String protectedHeader;
         try {
-            protectedHeader = serializer.objectToJson(jwe.getHeader());
+            protectedHeader = serdes.objectToJson(jwe.getHeader());
         } catch (JsonException e) {
             throw new JsonToJwtException(HEADER_IS_INVALID, e);
         }

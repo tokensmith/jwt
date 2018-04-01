@@ -13,6 +13,7 @@ import org.rootservices.jwt.jwe.serialization.rsa.JweRsaSerializer;
 import org.rootservices.jwt.jws.serialization.SecureJwtSerializer;
 import org.rootservices.jwt.exception.SignatureException;
 import org.rootservices.jwt.serialization.JwtSerde;
+import org.rootservices.jwt.serialization.Serdes;
 import org.rootservices.jwt.serialization.UnSecureJwtSerializer;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.jwe.Transformation;
@@ -31,7 +32,6 @@ import org.rootservices.jwt.factory.SecureJwtFactory;
 import org.rootservices.jwt.factory.UnSecureJwtFactory;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.serialization.Serializer;
 import org.rootservices.jwt.jws.signer.factory.hmac.MacFactory;
 import org.rootservices.jwt.jws.signer.factory.rsa.PrivateKeySignatureFactory;
 import org.rootservices.jwt.jws.signer.factory.rsa.PublicKeySignatureFactory;
@@ -71,8 +71,8 @@ public class JwtAppFactory {
         return objectMapper;
     }
 
-    public Serializer serializer() {
-        return new Serializer(objectMapper());
+    public Serdes serializer() {
+        return new Serdes(objectMapper());
     }
 
     public Base64.Decoder decoder() {

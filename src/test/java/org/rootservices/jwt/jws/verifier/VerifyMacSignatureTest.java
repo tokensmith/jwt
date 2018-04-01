@@ -14,9 +14,7 @@ import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by tommackenzie on 8/30/15.
- */
+
 public class VerifyMacSignatureTest {
 
     private JwtAppFactory appFactory;

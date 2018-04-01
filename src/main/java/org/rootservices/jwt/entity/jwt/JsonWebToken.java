@@ -11,7 +11,7 @@ import java.util.Optional;
 public class JsonWebToken {
     private Header header;
     private Claims claims;
-    private Optional<String> signature = Optional.empty();
+    private Optional<byte[]> signature = Optional.empty();
     private Optional<String> jwt = Optional.empty();
 
     public JsonWebToken() {}
@@ -43,11 +43,11 @@ public class JsonWebToken {
         this.claims = claims;
     }
 
-    public Optional<String> getSignature() {
+    public Optional<byte[]> getSignature() {
         return signature;
     }
 
-    public void setSignature(Optional<String> signature) {
+    public void setSignature(Optional<byte[]> signature) {
         this.signature = signature;
     }
 

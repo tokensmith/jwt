@@ -8,9 +8,8 @@ import org.rootservices.jwt.jwe.entity.JWE;
 import org.rootservices.jwt.jwe.factory.CipherSymmetricFactory;
 import org.rootservices.jwt.jwe.factory.exception.CipherException;
 import org.rootservices.jwt.jwe.serialization.JweDeserializer;
-import org.rootservices.jwt.serialization.Serializer;
+import org.rootservices.jwt.serialization.Serdes;
 import org.rootservices.jwt.serialization.exception.DecryptException;
-import org.rootservices.jwt.serialization.exception.EncryptException;
 import org.rootservices.jwt.serialization.exception.JsonException;
 import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 
@@ -22,12 +21,12 @@ import java.util.Base64;
 
 
 public class JweDirectDesializer implements JweDeserializer {
-    private Serializer serializer;
+    private Serdes serdes;
     private Base64.Decoder decoder;
     private CipherSymmetricFactory cipherSymmetricFactory;
 
-    public JweDirectDesializer(Serializer serializer, Base64.Decoder decoder, CipherSymmetricFactory cipherSymmetricFactory) {
-        this.serializer = serializer;
+    public JweDirectDesializer(Serdes serdes, Base64.Decoder decoder, CipherSymmetricFactory cipherSymmetricFactory) {
+        this.serdes = serdes;
         this.decoder = decoder;
         this.cipherSymmetricFactory = cipherSymmetricFactory;
     }
@@ -42,7 +41,7 @@ public class JweDirectDesializer implements JweDeserializer {
 
         Header header;
         try {
-            header = (Header) serializer.jsonBytesToObject(protectedHeader, Header.class);
+            header = (Header) serdes.jsonBytesToObject(protectedHeader, Header.class);
         } catch (JsonException e) {
             throw new JsonToJwtException(COMPACT_JWE_INVALID, e);
         }

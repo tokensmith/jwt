@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 /**
  * Created by tommackenzie on 9/3/16.
  */
-public class UnSecureJwtSerializerTest {
+public class UnSecureJwtSerdesTest {
     private JwtAppFactory appFactory;
 
     @Before

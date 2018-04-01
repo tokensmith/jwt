@@ -20,11 +20,11 @@ public class MacSigner extends Signer {
     }
 
     @Override
-    public String run(byte[] input) {
+    public byte[] run(byte[] input) {
         return sign(input);
     }
 
-    private String sign(byte[] input) {
+    private byte[] sign(byte[] input) {
         byte[] signature = mac.doFinal(input);
         return encode(signature);
     }

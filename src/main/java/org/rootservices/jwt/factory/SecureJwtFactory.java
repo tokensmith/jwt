@@ -34,7 +34,7 @@ public class SecureJwtFactory {
         jwt.setHeader(header);
         jwt.setClaims(claimNames);
 
-        String signature = signer.run(jwt);
+        byte[] signature = signer.run(jwt);
         jwt.setSignature(Optional.of(signature));
 
         return jwt;

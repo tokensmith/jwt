@@ -20,7 +20,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
-public class JweRsaSerializerTest {
+public class JweRsaSerdesTest {
 
     @Test
     public void extractCipherText() throws Exception {

@@ -14,9 +14,7 @@ import java.util.Optional;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-/**
- * Created by tommackenzie on 9/3/16.
- */
+
 public class SecureJwtSerializerTest {
     private JwtAppFactory appFactory;
 
