@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwt.Claims;
 
+import java.io.ByteArrayOutputStream;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -16,6 +18,17 @@ public class UnSecureJwtSerializerTest {
     @Before
     public void setUp() {
         appFactory = new JwtAppFactory();
+    }
+
+    @Test
+    public void compactJwtShouldBeOk() {
+        UnSecureJwtSerializer subject = appFactory.unSecureJwtSerializer();
+
+        Claims claims = Factory.makeClaim();
+
+        ByteArrayOutputStream actual = subject.compactJwt(claims);
+
+        assertThat(actual.toString(), is("eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ."));
     }
 
     @Test

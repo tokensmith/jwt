@@ -13,6 +13,7 @@ import org.rootservices.jwt.jwe.serialization.JweDeserializer;
 import org.rootservices.jwt.jwe.serialization.JweSerializer;
 import org.rootservices.jwt.jwe.serialization.rsa.JweRsaDeserializer;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
@@ -42,10 +43,10 @@ public class JweDirectSerdesTest {
         jwe.setCek(decoder.decode(key.getKey()));
         jwe.setPayload("Help me, Obi-Wan Kenobi. You're my only hope.".getBytes());
 
-        byte[] actual = subject.JWEToCompact(jwe);
+        ByteArrayOutputStream actual = subject.JWEToCompact(jwe);
         assertThat(actual, is(notNullValue()));
 
-        String compactJWE = new String(actual, StandardCharsets.UTF_8);
+        String compactJWE = actual.toString();
 
         String[] jweParts = compactJWE.split("\\.");
         String protectedHeader = new String(decoder.decode(jweParts[0]), StandardCharsets.UTF_8);

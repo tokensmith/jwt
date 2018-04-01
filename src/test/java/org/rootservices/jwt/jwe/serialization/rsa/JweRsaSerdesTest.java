@@ -12,6 +12,7 @@ import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.jwe.entity.JWE;
 
 
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
@@ -94,13 +95,13 @@ public class JweRsaSerdesTest {
         jwe.setHeader(header);
         jwe.setPayload("Help me, Obi-Wan Kenobi. You're my only hope.".getBytes());
 
-        byte[] actual = subject.JWEToCompact(jwe);
+        ByteArrayOutputStream actual = subject.JWEToCompact(jwe);
 
         // make sure it can be read.
         RSAKeyPair jwk = Factory.makeRSAKeyPairForJWE();
         JweRsaDeserializer JweRsaDeserializer = jwtAppFactory.jweRsaDeserializer();
 
-        String compactJWE = new String(actual, StandardCharsets.UTF_8);
+        String compactJWE = actual.toString();
 
         JWE leia = JweRsaDeserializer.stringToJWE(compactJWE, jwk);
 

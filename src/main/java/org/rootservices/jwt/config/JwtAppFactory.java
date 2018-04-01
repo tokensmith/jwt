@@ -46,9 +46,7 @@ import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-/**
- * Created by tommackenzie on 8/13/15.
- */
+
 public class JwtAppFactory {
     private static final Logger LOGGER = LogManager.getLogger(JwtAppFactory.class);
     public static final String KEY_WAS_INVALID = "Could not construct Signer. Key was invalid.";
@@ -71,7 +69,7 @@ public class JwtAppFactory {
         return objectMapper;
     }
 
-    public Serdes serializer() {
+    public Serdes serdes() {
         return new Serdes(objectMapper());
     }
 
@@ -88,12 +86,12 @@ public class JwtAppFactory {
     }
 
     public HeaderDeserializer headerDeserializer() {
-        return new HeaderDeserializer(decoder(), serializer());
+        return new HeaderDeserializer(decoder(), serdes());
     }
 
     public JwtSerde jwtSerde() {
         return new JwtSerde(
-                serializer(),
+                serdes(),
                 encoder(),
                 decoder()
         );
@@ -110,7 +108,7 @@ public class JwtAppFactory {
     public JweRsaDeserializer jweRsaDeserializer() {
 
         return new JweRsaDeserializer(
-                serializer(),
+                serdes(),
                 urlDecoder(),
                 privateKeyFactory(),
                 cipherRSAFactory(),
@@ -120,7 +118,7 @@ public class JwtAppFactory {
 
     public JweDirectDesializer jweDirectDesializer() {
         return new JweDirectDesializer(
-                serializer(),
+                serdes(),
                 urlDecoder(),
                 cipherSymmetricFactory()
         );
@@ -203,7 +201,7 @@ public class JwtAppFactory {
         }
 
         return new JweRsaSerializer(
-                serializer(),
+                serdes(),
                 encoder(),
                 rsaEncryptCipher,
                 new SecretKeyFactory(),
@@ -214,7 +212,7 @@ public class JwtAppFactory {
     public JweDirectSerializer jweDirectSerializer() {
 
         return new JweDirectSerializer(
-                serializer(),
+                serdes(),
                 encoder(),
                 cipherSymmetricFactory()
         );

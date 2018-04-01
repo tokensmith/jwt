@@ -162,11 +162,11 @@ public class JwtSerde {
      *
      * When its not for signing
      *
-     * Then a un secure jwt will have a trailing "."
+     * Then a unsecure jwt will have a trailing "."
      * Then a secure jwt (signed) will not have a trailing "."
      *
      * When its for signing
-     * Then a un secure jwt will have a trailing "."
+     * Then a unsecure jwt will not have a trailing "."
      *
      * @param i the current index of the jwt
      * @param numberOfMembers the number of members in the jwt

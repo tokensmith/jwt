@@ -9,6 +9,7 @@ import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.serialization.exception.JsonException;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -17,10 +18,8 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-/**
- * Created by tommackenzie on 8/12/15.
- */
-public class SerdesImplTest {
+
+public class SerdesTest {
 
     private JwtAppFactory appFactory;
 
@@ -31,16 +30,18 @@ public class SerdesImplTest {
 
     @Test
     public void headerToJson() throws JsonException {
-        Serdes subject = appFactory.serializer();
+        Serdes subject = appFactory.serdes();
         Header header = new Header();
         header.setAlgorithm(Algorithm.NONE);
-        String json = subject.objectToJson(header);
-        assertThat(json, is("{\"alg\":\"none\"}"));
+
+        byte[] actual = subject.objectToByte(header);
+        String actualAsString = new String(actual, StandardCharsets.UTF_8);
+        assertThat(actualAsString, is("{\"alg\":\"none\"}"));
     }
 
     @Test
     public void claimToJsonExpectExcludesNullAndOptionalEmpty() throws JsonException {
-        Serdes subject = appFactory.serializer();
+        Serdes subject = appFactory.serdes();
         Claim claim = new Claim();
 
         Optional<String> issuer = Optional.of("joe");
@@ -50,13 +51,14 @@ public class SerdesImplTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        String json = subject.objectToJson(claim);
-        assertThat(json, is("{\"iss\":\"joe\",\"exp\":1300819380,\"http://example.com/is_root\":true}"));
+        byte[] actual = subject.objectToByte(claim);
+        String actualAsString = new String(actual, StandardCharsets.UTF_8);
+        assertThat(actualAsString, is("{\"iss\":\"joe\",\"exp\":1300819380,\"http://example.com/is_root\":true}"));
     }
 
     @Test
     public void jsonToUnsecuredHeader() throws JsonException {
-        Serdes subject = appFactory.serializer();
+        Serdes subject = appFactory.serdes();
         byte[] json = "{\"alg\":\"none\"}".getBytes();
         Header actual = (Header) subject.jsonBytesToObject(json, Header.class);
         assertThat(actual.getAlgorithm(), is(Algorithm.NONE));
@@ -64,7 +66,7 @@ public class SerdesImplTest {
 
     @Test
     public void jsonToClaim() throws JsonException {
-        Serdes subject = appFactory.serializer();
+        Serdes subject = appFactory.serdes();
         byte[] json = "{\"iss\":\"joe\",\"exp\":1300819380,\"http://example.com/is_root\":true}".getBytes();
         Claim actual = (Claim) subject.jsonBytesToObject(json, Claim.class);
 
@@ -83,7 +85,7 @@ public class SerdesImplTest {
 
     @Test(expected=JsonException.class)
     public void jsonBytesToObjectShouldThrowJsonException() throws JsonException {
-        Serdes subject = appFactory.serializer();
+        Serdes subject = appFactory.serdes();
         byte[] invalidJson = "{\"iss\":\"joe\"".getBytes();
 
         subject.jsonBytesToObject(invalidJson, Claim.class);

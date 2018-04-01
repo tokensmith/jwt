@@ -8,7 +8,7 @@ import java.io.IOException;
 
 /**
  * A Generic serializer and deserializer that converts:
- * - a object to json
+ * - an object to json
  * - json to a object
  *
  */
@@ -18,15 +18,6 @@ public class Serdes {
 
     public Serdes(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-    }
-
-
-    public String objectToJson(Object object) throws JsonException {
-        try {
-            return objectMapper.writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            throw new JsonException(String.format(COULD_NOT_CREATE_JSON_FROM, object.toString()), e);
-        }
     }
 
     public byte[] objectToByte(Object object) throws JsonException {

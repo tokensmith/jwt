@@ -16,6 +16,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -43,21 +44,21 @@ public class JweDirectSerializer implements JweSerializer {
      * encryption attempt because it requires a new iv and aad per attempt.
      *
      * @param jwe must have values for header, cek, payload. Ignores the value for iv and generates a new one.
-     * @return a byte[] that is a compact JWE
+     * @return a ByteArrayOutputStream that is a compact JWE
      * @throws JsonToJwtException if the header cannot be serialized.
      * @throws CipherException if the cipher for encryption could not be instantiated
      * @throws EncryptException if the payload could not be encrypted
      */
     @Override
-    public byte[] JWEToCompact(JWE jwe) throws JsonToJwtException, CipherException, EncryptException {
-        String protectedHeader;
+    public ByteArrayOutputStream JWEToCompact(JWE jwe) throws JsonToJwtException, CipherException, EncryptException {
+        byte[] protectedHeader;
         try {
-            protectedHeader = serdes.objectToJson(jwe.getHeader());
+            protectedHeader = serdes.objectToByte(jwe.getHeader());
         } catch (JsonException e) {
             throw new JsonToJwtException(HEADER_IS_INVALID, e);
         }
 
-        byte[] aad = encoder.encode(protectedHeader.getBytes());
+        byte[] aad = encoder.encode(protectedHeader);
 
         SecretKey key = new SecretKeySpec(jwe.getCek(), KeyAlgorithm.AES.getValue());
 
@@ -83,7 +84,7 @@ public class JweDirectSerializer implements JweSerializer {
         byte[] authTag = extractAuthTag(cipherTextWithAuthTag);
 
         List<byte[]> jweParts = new ArrayList<>();
-        jweParts.add(encoder.encode(protectedHeader.getBytes()));
+        jweParts.add(encoder.encode(protectedHeader));
         jweParts.add(null);
         jweParts.add(encoder.encode(initVector));
         jweParts.add(encoder.encode(cipherText));

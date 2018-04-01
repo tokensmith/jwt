@@ -17,6 +17,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -40,16 +41,16 @@ public class JweRsaSerializer implements JweSerializer {
         this.cipherSymmetricFactory = cipherSymmetricFactory;
     }
 
-    public byte[] JWEToCompact(JWE jwe) throws JsonToJwtException, CipherException, EncryptException {
+    public ByteArrayOutputStream JWEToCompact(JWE jwe) throws JsonToJwtException, CipherException, EncryptException {
 
-        String protectedHeader;
+        byte[] protectedHeader;
         try {
-            protectedHeader = serdes.objectToJson(jwe.getHeader());
+            protectedHeader = serdes.objectToByte(jwe.getHeader());
         } catch (JsonException e) {
             throw new JsonToJwtException(HEADER_IS_INVALID, e);
         }
 
-        byte[] aad = encoder.encode(protectedHeader.getBytes());
+        byte[] aad = encoder.encode(protectedHeader);
 
 
         SecretKey cek;
@@ -89,7 +90,7 @@ public class JweRsaSerializer implements JweSerializer {
         byte[] authTag = extractAuthTag(cipherTextWithAuthTag);
 
         List<byte[]> jweParts = new ArrayList<>();
-        jweParts.add(encoder.encode(protectedHeader.getBytes()));
+        jweParts.add(encoder.encode(protectedHeader));
         jweParts.add(encoder.encode(encryptedKey));
         jweParts.add(encoder.encode(initVector));
         jweParts.add(encoder.encode(cipherText));
