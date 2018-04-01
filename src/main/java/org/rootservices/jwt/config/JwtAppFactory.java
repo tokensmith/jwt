@@ -13,6 +13,7 @@ import org.rootservices.jwt.jwe.serialization.rsa.JweRsaSerializer;
 import org.rootservices.jwt.jws.serialization.SecureJwtSerializer;
 import org.rootservices.jwt.exception.SignatureException;
 import org.rootservices.jwt.serialization.JwtSerde;
+import org.rootservices.jwt.serialization.Serdes;
 import org.rootservices.jwt.serialization.UnSecureJwtSerializer;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.jwe.Transformation;
@@ -31,7 +32,6 @@ import org.rootservices.jwt.factory.SecureJwtFactory;
 import org.rootservices.jwt.factory.UnSecureJwtFactory;
 import org.rootservices.jwt.entity.jwk.Key;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.serialization.Serializer;
 import org.rootservices.jwt.jws.signer.factory.hmac.MacFactory;
 import org.rootservices.jwt.jws.signer.factory.rsa.PrivateKeySignatureFactory;
 import org.rootservices.jwt.jws.signer.factory.rsa.PublicKeySignatureFactory;
@@ -46,9 +46,7 @@ import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-/**
- * Created by tommackenzie on 8/13/15.
- */
+
 public class JwtAppFactory {
     private static final Logger LOGGER = LogManager.getLogger(JwtAppFactory.class);
     public static final String KEY_WAS_INVALID = "Could not construct Signer. Key was invalid.";
@@ -71,8 +69,8 @@ public class JwtAppFactory {
         return objectMapper;
     }
 
-    public Serializer serializer() {
-        return new Serializer(objectMapper());
+    public Serdes serdes() {
+        return new Serdes(objectMapper());
     }
 
     public Base64.Decoder decoder() {
@@ -88,12 +86,12 @@ public class JwtAppFactory {
     }
 
     public HeaderDeserializer headerDeserializer() {
-        return new HeaderDeserializer(decoder(), serializer());
+        return new HeaderDeserializer(decoder(), serdes());
     }
 
     public JwtSerde jwtSerde() {
         return new JwtSerde(
-                serializer(),
+                serdes(),
                 encoder(),
                 decoder()
         );
@@ -110,7 +108,7 @@ public class JwtAppFactory {
     public JweRsaDeserializer jweRsaDeserializer() {
 
         return new JweRsaDeserializer(
-                serializer(),
+                serdes(),
                 urlDecoder(),
                 privateKeyFactory(),
                 cipherRSAFactory(),
@@ -120,7 +118,7 @@ public class JwtAppFactory {
 
     public JweDirectDesializer jweDirectDesializer() {
         return new JweDirectDesializer(
-                serializer(),
+                serdes(),
                 urlDecoder(),
                 cipherSymmetricFactory()
         );
@@ -203,7 +201,7 @@ public class JwtAppFactory {
         }
 
         return new JweRsaSerializer(
-                serializer(),
+                serdes(),
                 encoder(),
                 rsaEncryptCipher,
                 new SecretKeyFactory(),
@@ -214,7 +212,7 @@ public class JwtAppFactory {
     public JweDirectSerializer jweDirectSerializer() {
 
         return new JweDirectSerializer(
-                serializer(),
+                serdes(),
                 encoder(),
                 cipherSymmetricFactory()
         );

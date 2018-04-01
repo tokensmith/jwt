@@ -6,9 +6,7 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.util.Base64.Encoder;
 
-/**
- * Created by tommackenzie on 11/3/15.
- */
+
 public class RSASigner extends Signer {
     private Signature signature;
 
@@ -18,7 +16,7 @@ public class RSASigner extends Signer {
     }
 
     @Override
-    public String run(byte[] input) {
+    public byte[] run(byte[] input) {
         try {
             signature.update(input);
         } catch (SignatureException e) {

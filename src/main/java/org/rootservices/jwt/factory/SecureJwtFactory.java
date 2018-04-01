@@ -10,9 +10,7 @@ import org.rootservices.jwt.jws.signer.Signer;
 
 import java.util.Optional;
 
-/**
- * Created by tommackenzie on 9/15/15.
- */
+
 public class SecureJwtFactory {
     private Signer signer;
     private Algorithm algorithm;
@@ -34,7 +32,7 @@ public class SecureJwtFactory {
         jwt.setHeader(header);
         jwt.setClaims(claimNames);
 
-        String signature = signer.run(jwt);
+        byte[] signature = signer.run(jwt);
         jwt.setSignature(Optional.of(signature));
 
         return jwt;

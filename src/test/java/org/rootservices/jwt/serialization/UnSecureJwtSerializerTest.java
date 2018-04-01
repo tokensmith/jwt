@@ -6,12 +6,12 @@ import org.junit.Test;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwt.Claims;
 
+import java.io.ByteArrayOutputStream;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-/**
- * Created by tommackenzie on 9/3/16.
- */
+
 public class UnSecureJwtSerializerTest {
     private JwtAppFactory appFactory;
 
@@ -21,12 +21,23 @@ public class UnSecureJwtSerializerTest {
     }
 
     @Test
-    public void encodeShouldEncode() {
+    public void compactJwtShouldBeOk() {
         UnSecureJwtSerializer subject = appFactory.unSecureJwtSerializer();
 
         Claims claims = Factory.makeClaim();
 
-        String jwt = subject.compactJWT(claims);
+        ByteArrayOutputStream actual = subject.compactJwt(claims);
+
+        assertThat(actual.toString(), is("eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ."));
+    }
+
+    @Test
+    public void compactJwtToStringShouldBeOk() {
+        UnSecureJwtSerializer subject = appFactory.unSecureJwtSerializer();
+
+        Claims claims = Factory.makeClaim();
+
+        String jwt = subject.compactJwtToString(claims);
 
         assertThat(jwt, is("eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ."));
     }

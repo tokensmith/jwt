@@ -59,8 +59,8 @@ public class MacSignerTest {
 
         JsonWebToken jwt = new JsonWebToken(header, claim);
 
-        String actual = subject.run(jwt);
-        assertThat(actual, is("lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY"));
+        byte[] actual = subject.run(jwt);
+        assertThat(actual, is("lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY".getBytes()));
     }
 
     /**
@@ -75,8 +75,8 @@ public class MacSignerTest {
         String input = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ";
 
-        String actual = subject.run(input.getBytes());
+        byte[] actual = subject.run(input.getBytes());
 
-        assertThat(actual, is("lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY"));
+        assertThat(actual, is("lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY".getBytes()));
     }
 }

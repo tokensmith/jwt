@@ -4,10 +4,8 @@ import helper.entity.Claim;
 import org.rootservices.jwt.serialization.UnSecureJwtSerializer;
 import org.rootservices.jwt.config.JwtAppFactory;
 
-/**
- * Created by tommackenzie on 12/12/15.
- */
-public class UnsecuredJsonWebTokenEncoder {
+
+public class UnsecuredJsonWebTokenSerializer {
 
     public String toEncodedJwt() {
         JwtAppFactory appFactory = new JwtAppFactory();
@@ -16,7 +14,7 @@ public class UnsecuredJsonWebTokenEncoder {
         Claim claim = new Claim();
         claim.setUriIsRoot(true);
 
-        String encodedJwt = unSecureJwtSerializer.compactJWT(claim);
+        String encodedJwt = unSecureJwtSerializer.compactJwtToString(claim);
 
         return encodedJwt;
     }

@@ -19,18 +19,14 @@ public abstract class Signer {
         this.encoder = encoder;
     }
 
-    private String encode(String input) {
-        return encode(input.getBytes(Charset.forName("UTF-8")));
+    public byte[] run(JsonWebToken jwt) throws JwtToJsonException {
+        byte[] signInput = jwtSerde.makeSignInput(jwt.getHeader(), jwt.getClaims());
+        return run(signInput);
     }
 
-    public String run(JsonWebToken jwt) throws JwtToJsonException {
-        String signInput = jwtSerde.makeSignInput(jwt.getHeader(), jwt.getClaims());
-        return run(signInput.getBytes());
+    protected byte[] encode(byte[] input) {
+        return encoder.encode(input);
     }
 
-    protected String encode(byte[] input) {
-        return encoder.encodeToString(input);
-    }
-
-    public abstract String run(byte[] input);
+    public abstract byte[] run(byte[] input);
 }

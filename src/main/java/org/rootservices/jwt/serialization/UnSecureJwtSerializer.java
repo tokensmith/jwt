@@ -5,9 +5,9 @@ import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.factory.UnSecureJwtFactory;
 import org.rootservices.jwt.serialization.exception.JwtToJsonException;
 
-/**
- * Created by tommackenzie on 7/12/16.
- */
+import java.io.ByteArrayOutputStream;
+
+
 public class UnSecureJwtSerializer {
     private UnSecureJwtFactory unSecureJwtFactory;
     private JwtSerde jwtSerde;
@@ -17,11 +17,15 @@ public class UnSecureJwtSerializer {
         this.jwtSerde = jwtSerde;
     }
 
-    public String compactJWT(Claims claims) {
+    public String compactJwtToString(Claims claims) {
+        return compactJwt(claims).toString();
+    }
+
+    public ByteArrayOutputStream compactJwt(Claims claims) {
 
         JsonWebToken jsonWebToken = unSecureJwtFactory.makeJwt(claims);
 
-        String encodedJwt = null;
+        ByteArrayOutputStream encodedJwt = null;
         try {
             encodedJwt = jwtSerde.compactJwt(jsonWebToken);
         } catch (JwtToJsonException e) {

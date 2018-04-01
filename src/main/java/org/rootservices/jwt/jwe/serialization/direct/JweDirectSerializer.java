@@ -1,13 +1,12 @@
 package org.rootservices.jwt.jwe.serialization.direct;
 
-import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.jwe.Transformation;
 import org.rootservices.jwt.jwe.entity.JWE;
 import org.rootservices.jwt.jwe.factory.CipherSymmetricFactory;
 import org.rootservices.jwt.jwe.factory.exception.CipherException;
 import org.rootservices.jwt.jwe.serialization.JweSerializer;
 import org.rootservices.jwt.jwk.KeyAlgorithm;
-import org.rootservices.jwt.serialization.Serializer;
+import org.rootservices.jwt.serialization.Serdes;
 import org.rootservices.jwt.serialization.exception.EncryptException;
 import org.rootservices.jwt.serialization.exception.JsonException;
 import org.rootservices.jwt.serialization.exception.JsonToJwtException;
@@ -17,6 +16,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -25,12 +25,12 @@ public class JweDirectSerializer implements JweSerializer {
     public static final String COULD_NOT_ENCRYPT = "Could not encrypt content";
     public static final String HEADER_IS_INVALID = "Header is invalid. Could not serialize to it to JSON";
 
-    private Serializer serializer;
+    private Serdes serdes;
     private Base64.Encoder encoder;
     private CipherSymmetricFactory cipherSymmetricFactory;
 
-    public JweDirectSerializer(Serializer serializer, Base64.Encoder encoder, CipherSymmetricFactory cipherSymmetricFactory) {
-        this.serializer = serializer;
+    public JweDirectSerializer(Serdes serdes, Base64.Encoder encoder, CipherSymmetricFactory cipherSymmetricFactory) {
+        this.serdes = serdes;
         this.encoder = encoder;
         this.cipherSymmetricFactory = cipherSymmetricFactory;
     }
@@ -44,21 +44,21 @@ public class JweDirectSerializer implements JweSerializer {
      * encryption attempt because it requires a new iv and aad per attempt.
      *
      * @param jwe must have values for header, cek, payload. Ignores the value for iv and generates a new one.
-     * @return a byte[] that is a compact JWE
+     * @return a ByteArrayOutputStream that is a compact JWE
      * @throws JsonToJwtException if the header cannot be serialized.
      * @throws CipherException if the cipher for encryption could not be instantiated
      * @throws EncryptException if the payload could not be encrypted
      */
     @Override
-    public byte[] JWEToCompact(JWE jwe) throws JsonToJwtException, CipherException, EncryptException {
-        String protectedHeader;
+    public ByteArrayOutputStream JWEToCompact(JWE jwe) throws JsonToJwtException, CipherException, EncryptException {
+        byte[] protectedHeader;
         try {
-            protectedHeader = serializer.objectToJson(jwe.getHeader());
+            protectedHeader = serdes.objectToByte(jwe.getHeader());
         } catch (JsonException e) {
             throw new JsonToJwtException(HEADER_IS_INVALID, e);
         }
 
-        byte[] aad = encoder.encode(protectedHeader.getBytes());
+        byte[] aad = encoder.encode(protectedHeader);
 
         SecretKey key = new SecretKeySpec(jwe.getCek(), KeyAlgorithm.AES.getValue());
 
@@ -84,7 +84,7 @@ public class JweDirectSerializer implements JweSerializer {
         byte[] authTag = extractAuthTag(cipherTextWithAuthTag);
 
         List<byte[]> jweParts = new ArrayList<>();
-        jweParts.add(encoder.encode(protectedHeader.getBytes()));
+        jweParts.add(encoder.encode(protectedHeader));
         jweParts.add(null);
         jweParts.add(encoder.encode(initVector));
         jweParts.add(encoder.encode(cipherText));

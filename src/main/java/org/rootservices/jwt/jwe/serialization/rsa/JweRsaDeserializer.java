@@ -12,7 +12,7 @@ import org.rootservices.jwt.jwe.serialization.JweDeserializer;
 import org.rootservices.jwt.jwe.serialization.exception.KeyException;
 import org.rootservices.jwt.jwk.PrivateKeyFactory;
 import org.rootservices.jwt.jws.signer.factory.rsa.exception.PrivateKeyException;
-import org.rootservices.jwt.serialization.Serializer;
+import org.rootservices.jwt.serialization.Serdes;
 import org.rootservices.jwt.serialization.exception.DecryptException;
 import org.rootservices.jwt.serialization.exception.JsonException;
 import org.rootservices.jwt.serialization.exception.JsonToJwtException;
@@ -26,14 +26,14 @@ import java.util.Base64;
 
 public class JweRsaDeserializer implements JweDeserializer {
 
-    private Serializer serializer;
+    private Serdes serdes;
     private Base64.Decoder decoder;
     private PrivateKeyFactory privateKeyFactory;
     private CipherRSAFactory cipherRSAFactory;
     private CipherSymmetricFactory cipherSymmetricFactory;
 
-    public JweRsaDeserializer(Serializer serializer, Base64.Decoder decoder, PrivateKeyFactory privateKeyFactory, CipherRSAFactory cipherRSAFactory, CipherSymmetricFactory cipherSymmetricFactory) {
-        this.serializer = serializer;
+    public JweRsaDeserializer(Serdes serdes, Base64.Decoder decoder, PrivateKeyFactory privateKeyFactory, CipherRSAFactory cipherRSAFactory, CipherSymmetricFactory cipherSymmetricFactory) {
+        this.serdes = serdes;
         this.decoder = decoder;
         this.privateKeyFactory = privateKeyFactory;
         this.cipherRSAFactory = cipherRSAFactory;
@@ -50,7 +50,7 @@ public class JweRsaDeserializer implements JweDeserializer {
 
         Header header;
         try {
-            header = (Header) serializer.jsonBytesToObject(protectedHeader, Header.class);
+            header = (Header) serdes.jsonBytesToObject(protectedHeader, Header.class);
         } catch (JsonException e) {
             throw new JsonToJwtException(COMPACT_JWE_INVALID, e);
         }

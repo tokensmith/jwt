@@ -13,7 +13,7 @@ import java.util.List;
 public interface JweSerializer {
     byte[] DELIMITER = ".".getBytes();
     String COULD_NOT_COMPACT = "Could not compact";
-    byte[] JWEToCompact(JWE jwe) throws JsonToJwtException, CipherException, EncryptException;
+    ByteArrayOutputStream JWEToCompact(JWE jwe) throws JsonToJwtException, CipherException, EncryptException;
 
     default byte[] extractCipherText(byte[] cipherTextWithAuthTag) {
         int tagLength = CipherSymmetricFactory.GCM_TAG_LENGTH / Byte.SIZE;
@@ -33,7 +33,7 @@ public interface JweSerializer {
         return authTag;
     }
 
-    default byte[] toCompact(List<byte[]> jweParts) throws EncryptException {
+    default ByteArrayOutputStream toCompact(List<byte[]> jweParts) throws EncryptException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
 
         for(int i=0; i < jweParts.size(); i++) {
@@ -54,6 +54,6 @@ public interface JweSerializer {
             }
         }
 
-        return outputStream.toByteArray();
+        return outputStream;
     }
 }

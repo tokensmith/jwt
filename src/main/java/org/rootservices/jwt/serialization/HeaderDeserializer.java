@@ -12,11 +12,11 @@ public class HeaderDeserializer {
     public static final String INVALID_HEADER = "JOSE Header is invalid";
     public static final String JWT_IS_NOT_SPLITTABLE = "JWT is not splittable by '.'";
     private Base64.Decoder decoder;
-    private Serializer serializer;
+    private Serdes serdes;
 
-    public HeaderDeserializer(Base64.Decoder decoder, Serializer serializer) {
+    public HeaderDeserializer(Base64.Decoder decoder, Serdes serdes) {
         this.decoder = decoder;
-        this.serializer = serializer;
+        this.serdes = serdes;
     }
 
     public Header toHeader(String encodedJwt) throws JsonToJwtException, InvalidJWT {
@@ -30,7 +30,7 @@ public class HeaderDeserializer {
 
         Header header;
         try {
-            header = (Header) serializer.jsonBytesToObject(headerJson, Header.class);
+            header = (Header) serdes.jsonBytesToObject(headerJson, Header.class);
         } catch (JsonException e) {
             throw new JsonToJwtException(INVALID_HEADER, e);
         }

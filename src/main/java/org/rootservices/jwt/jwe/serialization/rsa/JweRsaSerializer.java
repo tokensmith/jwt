@@ -8,7 +8,7 @@ import org.rootservices.jwt.jwe.serialization.JweSerializer;
 import org.rootservices.jwt.jwk.KeyAlgorithm;
 import org.rootservices.jwt.jwk.SecretKeyFactory;
 import org.rootservices.jwt.jwk.exception.SecretKeyException;
-import org.rootservices.jwt.serialization.Serializer;
+import org.rootservices.jwt.serialization.Serdes;
 import org.rootservices.jwt.serialization.exception.EncryptException;
 import org.rootservices.jwt.serialization.exception.JsonException;
 import org.rootservices.jwt.serialization.exception.JsonToJwtException;
@@ -17,6 +17,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -26,30 +27,30 @@ public class JweRsaSerializer implements JweSerializer {
     public static final String COULD_NOT_ENCRYPT = "Could not encrypt content";
     public static final String HEADER_IS_INVALID = "Header is invalid. Could not serialize to it to JSON";
     public static final String FAILED_TO_CREATE_CONTENT_ENCRYPTION_KEY = "Failed to create Content Encryption Key";
-    private Serializer serializer;
+    private Serdes serdes;
     private Base64.Encoder encoder;
     private Cipher RSAEncryptCipher;
     private SecretKeyFactory secretKeyFactory;
     private CipherSymmetricFactory cipherSymmetricFactory;
 
-    public JweRsaSerializer(Serializer serializer, Base64.Encoder encoder, Cipher RSAEncryptCipher, SecretKeyFactory secretKeyFactory, CipherSymmetricFactory cipherSymmetricFactory) {
-        this.serializer = serializer;
+    public JweRsaSerializer(Serdes serdes, Base64.Encoder encoder, Cipher RSAEncryptCipher, SecretKeyFactory secretKeyFactory, CipherSymmetricFactory cipherSymmetricFactory) {
+        this.serdes = serdes;
         this.encoder = encoder;
         this.RSAEncryptCipher = RSAEncryptCipher;
         this.secretKeyFactory = secretKeyFactory;
         this.cipherSymmetricFactory = cipherSymmetricFactory;
     }
 
-    public byte[] JWEToCompact(JWE jwe) throws JsonToJwtException, CipherException, EncryptException {
+    public ByteArrayOutputStream JWEToCompact(JWE jwe) throws JsonToJwtException, CipherException, EncryptException {
 
-        String protectedHeader;
+        byte[] protectedHeader;
         try {
-            protectedHeader = serializer.objectToJson(jwe.getHeader());
+            protectedHeader = serdes.objectToByte(jwe.getHeader());
         } catch (JsonException e) {
             throw new JsonToJwtException(HEADER_IS_INVALID, e);
         }
 
-        byte[] aad = encoder.encode(protectedHeader.getBytes());
+        byte[] aad = encoder.encode(protectedHeader);
 
 
         SecretKey cek;
@@ -89,7 +90,7 @@ public class JweRsaSerializer implements JweSerializer {
         byte[] authTag = extractAuthTag(cipherTextWithAuthTag);
 
         List<byte[]> jweParts = new ArrayList<>();
-        jweParts.add(encoder.encode(protectedHeader.getBytes()));
+        jweParts.add(encoder.encode(protectedHeader));
         jweParts.add(encoder.encode(encryptedKey));
         jweParts.add(encoder.encode(initVector));
         jweParts.add(encoder.encode(cipherText));

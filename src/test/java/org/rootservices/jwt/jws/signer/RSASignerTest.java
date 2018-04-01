@@ -53,10 +53,10 @@ public class RSASignerTest {
                 98, 83, 57, 112, 99, 49, 57, 121, 98, 50, 57, 48, 73, 106, 112, 48,
                 99, 110, 86, 108, 102, 81};
 
-        String actual = subject.run(signInput);
+        byte[] actual = subject.run(signInput);
 
         assertThat(actual, is(notNullValue()));
-        assertThat(actual, is(expected));
+        assertThat(actual, is(expected.getBytes()));
     }
 
     /**
@@ -77,9 +77,9 @@ public class RSASignerTest {
 
         JsonWebToken jwt = Factory.makeToken(Algorithm.RS256, Optional.<TokenType>empty());
 
-        String actual = subject.run(jwt);
+        byte[] actual = subject.run(jwt);
 
         assertThat(actual, is(notNullValue()));
-        assertThat(actual, is(expected));
+        assertThat(actual, is(expected.getBytes()));
     }
 }

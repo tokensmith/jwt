@@ -11,6 +11,7 @@ import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -20,9 +21,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 
-/**
- * Created by tommackenzie on 8/13/15.
- */
+
 public class JwtSerdeTest {
 
     private static JwtAppFactory appFactory = new JwtAppFactory();
@@ -38,8 +37,8 @@ public class JwtSerdeTest {
         Claim claim = Factory.makeClaim();
 
         JsonWebToken tokenToMarshal = unsecureTokenBuilder.makeJwt(claim);
-        String actual = subject.compactJwt(tokenToMarshal);
-        assertThat(actual, is(expectedJwt));
+        ByteArrayOutputStream actual = subject.compactJwt(tokenToMarshal);
+        assertThat(actual.toString(), is(expectedJwt));
     }
 
     @Test
@@ -58,9 +57,9 @@ public class JwtSerdeTest {
         Claim claim = Factory.makeClaim();
 
         JsonWebToken tokenToMarshal = secureJwtFactory.makeJwt(claim);
-        String actual = subject.compactJwt(tokenToMarshal);
+        ByteArrayOutputStream actual = subject.compactJwt(tokenToMarshal);
 
-        assertThat(actual, is(expectedJwt));
+        assertThat(actual.toString(), is(expectedJwt));
     }
 
     @Test
@@ -80,9 +79,9 @@ public class JwtSerdeTest {
         Claim claim = Factory.makeClaim();
 
         JsonWebToken tokenToMarshal = secureJwtFactory.makeJwt(claim);
-        String actual = subject.compactJwt(tokenToMarshal);
+        ByteArrayOutputStream actual = subject.compactJwt(tokenToMarshal);
 
-        assertThat(actual, is(expectedJwt));
+        assertThat(actual.toString(), is(expectedJwt));
     }
 
     @Test
@@ -154,7 +153,7 @@ public class JwtSerdeTest {
         assertThat(actual.getClaims().getJwtId().isPresent(), is(false));
 
         assertThat(actual.getSignature().isPresent(), is(true));
-        assertThat(actual.getSignature().get(), is(signature));
+        assertThat(actual.getSignature().get(), is(signature.getBytes()));
 
         assertThat(actual.getJwt().isPresent(), is(true));
         assertThat(actual.getJwt().get(), is(jwtAsText));
@@ -197,7 +196,7 @@ public class JwtSerdeTest {
         assertThat(actual.getClaims().getJwtId().isPresent(), is(false));
 
         assertThat(actual.getSignature().isPresent(), is(true));
-        assertThat(actual.getSignature().get(), is(signature));
+        assertThat(actual.getSignature().get(), is(signature.getBytes()));
 
         assertThat(actual.getJwt().isPresent(), is(true));
         assertThat(actual.getJwt().get(), is(jwtAsText));
