@@ -9,10 +9,8 @@ import org.rootservices.jwt.entity.jwt.Claims;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-/**
- * Created by tommackenzie on 9/3/16.
- */
-public class UnSecureJwtSerdesTest {
+
+public class UnSecureJwtSerializerTest {
     private JwtAppFactory appFactory;
 
     @Before
@@ -21,7 +19,7 @@ public class UnSecureJwtSerdesTest {
     }
 
     @Test
-    public void encodeShouldEncode() {
+    public void compactJWTShouldBeOk() {
         UnSecureJwtSerializer subject = appFactory.unSecureJwtSerializer();
 
         Claims claims = Factory.makeClaim();

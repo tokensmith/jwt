@@ -33,6 +33,8 @@ public class JwtSerde {
     public static final String COULD_NOT_SERIALIZE = "Could not make sign input";
     public static final String THIS_IS_A_JWE = "This is a JWE";
     public static final String TOO_MANY_MEMBERS = "Too many members";
+    public static final String COULD_NOT_COMBINE_JWT_MEMBERS = "Could not combine jwt members";
+    public static final String COULD_NOT_COMBINE_SIGN_INPUTS = "Could not combine sign inputs";
     public final int JWT_LENGTH = 2;
     public final int JWS_LENGTH = 3;
     public final int JWE_LENGTH = 5;
@@ -50,6 +52,20 @@ public class JwtSerde {
 
     public byte[] makeSignInput(Header header, Claims claims) throws JwtToJsonException {
 
+        List<byte[]> members = membersForSigning(header, claims);
+        byte[] signInput;
+
+        try {
+            signInput = compact(members, true);
+        } catch (IOException e) {
+            throw  new JwtToJsonException(COULD_NOT_COMBINE_SIGN_INPUTS, e);
+        }
+
+        return signInput;
+    }
+
+    protected List<byte[]> membersForSigning(Header header, Claims claims) throws JwtToJsonException {
+        List<byte[]> members = new ArrayList<>();
         byte[] headerJson;
         byte[] claimsJson;
 
@@ -60,32 +76,25 @@ public class JwtSerde {
             throw new JwtToJsonException(COULD_NOT_SERIALIZE, e);
         }
 
-        List<byte[]> parts = new ArrayList<>();
-        parts.add(encoder.encode(headerJson));
-        parts.add(encoder.encode(claimsJson));
-        byte[] signInput;
-
-        try {
-            signInput = compact(parts);
-        } catch (IOException e) {
-            throw  new JwtToJsonException("Could not combine sign inputs", e);
-        }
-
-        return signInput;
+        members.add(encoder.encode(headerJson));
+        members.add(encoder.encode(claimsJson));
+        return members;
     }
 
     public String compactJwt(JsonWebToken jwt) throws JwtToJsonException {
 
-        StringBuilder compactJwt = new StringBuilder();
-        byte[] signInput = makeSignInput(jwt.getHeader(), jwt.getClaims());
-
-        compactJwt.append(new String(signInput, StandardCharsets.UTF_8));
-        compactJwt.append(DELIMITTER);
+        List<byte[]> members = membersForSigning(jwt.getHeader(), jwt.getClaims());
 
         if (jwt.getSignature().isPresent())
-            compactJwt.append(new String(jwt.getSignature().get(), StandardCharsets.UTF_8));
+            members.add(jwt.getSignature().get());
 
-        return compactJwt.toString();
+        byte[] compactJwt;
+        try {
+            compactJwt = compact(members, false);
+        } catch (IOException e) {
+            throw new JwtToJsonException(COULD_NOT_COMBINE_JWT_MEMBERS, e);
+        }
+        return new String(compactJwt, StandardCharsets.UTF_8);
     }
 
     public JsonWebToken stringToJwt(String jwtAsText, Class claimClass) throws JsonToJwtException, InvalidJWT {
@@ -130,18 +139,18 @@ public class JwtSerde {
         return jwt;
     }
 
-    protected byte[] compact(List<byte[]> parts) throws IOException {
+    protected byte[] compact(List<byte[]> members, Boolean forSigning) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        for(int i=0; i < parts.size(); i++) {
-            if (parts.get(i) != null) {
+        for(int i=0; i < members.size(); i++) {
+            if (members.get(i) != null) {
                 try {
-                    outputStream.write(parts.get(i));
+                    outputStream.write(members.get(i));
                 } catch (IOException e) {
                     throw e;
                 }
             }
-            if (i < parts.size() - 1) {
+            if (shouldAppendDelimiter(i, members.size(), forSigning)) {
                 try {
                     outputStream.write(DELIMITER);
                 } catch (IOException e) {
@@ -150,6 +159,26 @@ public class JwtSerde {
             }
         }
         return outputStream.toByteArray();
+    }
+
+    /**
+     * Deteremines if a "." should be appended to the current index of a compact jwt.
+     *
+     * When its not for signing
+     *
+     * Then a un secure jwt will have a trailing "."
+     * Then a secure jwt (signed) will not have a trailing "."
+     *
+     * When its for signing
+     * Then a un secure jwt will have a trailing "."
+     *
+     * @param i the current index of the jwt
+     * @param numberOfMembers the number of members in the jwt
+     * @param forSigning is it being compacted to be signed.
+     * @return true if a "." should be appended. false if not.
+     */
+    protected Boolean shouldAppendDelimiter(int i, int numberOfMembers, Boolean forSigning) {
+        return (i < numberOfMembers - 1 || (forSigning == false && i == numberOfMembers - 1 && i == 1));
     }
 
 }
