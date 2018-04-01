@@ -7,9 +7,9 @@ import org.rootservices.jwt.factory.SecureJwtFactory;
 import org.rootservices.jwt.serialization.JwtSerde;
 import org.rootservices.jwt.serialization.exception.JwtToJsonException;
 
-/**
- * Created by tommackenzie on 9/1/16.
- */
+import java.io.ByteArrayOutputStream;
+
+
 public class SecureJwtSerializer {
     private SecureJwtFactory secureJwtFactory;
     private JwtSerde jwtSerde;
@@ -19,8 +19,11 @@ public class SecureJwtSerializer {
         this.jwtSerde = jwtSerde;
     }
 
-    public String compactJWT(Claims claims) throws JwtToJsonException {
+    public String compactJwtToString(Claims claims) throws JwtToJsonException {
+        return compactJwt(claims).toString();
+    }
 
+    public ByteArrayOutputStream compactJwt(Claims claims) throws JwtToJsonException {
         JsonWebToken jsonWebToken;
         try {
             jsonWebToken = secureJwtFactory.makeJwt(claims);
@@ -28,13 +31,13 @@ public class SecureJwtSerializer {
             throw e;
         }
 
-        String jwt;
+        ByteArrayOutputStream compactJwt;
         try {
-            jwt = jwtSerde.compactJwt(jsonWebToken);
+            compactJwt = jwtSerde.compactJwt(jsonWebToken);
         } catch (JwtToJsonException e) {
             throw e;
         }
 
-        return jwt;
+        return compactJwt;
     }
 }

@@ -42,7 +42,7 @@ public class SymmetricSignedJsonWebToken {
 
         String encodedJwt = null;
         try {
-            encodedJwt = secureJwtSerializer.compactJWT(claim);
+            encodedJwt = secureJwtSerializer.compactJwtToString(claim);
         } catch (JwtToJsonException e) {
             e.printStackTrace();
         }

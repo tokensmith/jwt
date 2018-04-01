@@ -4,23 +4,19 @@ import org.rootservices.jwt.entity.jwt.Claims;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.exception.InvalidJWT;
-import org.rootservices.jwt.serialization.exception.EncryptException;
 import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 import org.rootservices.jwt.serialization.exception.JsonException;
 import org.rootservices.jwt.serialization.exception.JwtToJsonException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64.Encoder;
 import java.util.Base64.Decoder;
 import java.util.List;
 import java.util.Optional;
 
-import static org.rootservices.jwt.jwe.serialization.JweSerializer.COULD_NOT_COMPACT;
 
 /**
  * A Serializer and Deserializer that converts:
@@ -56,7 +52,7 @@ public class JwtSerde {
         byte[] signInput;
 
         try {
-            signInput = compact(members, true);
+            signInput = compact(members, true).toByteArray();
         } catch (IOException e) {
             throw  new JwtToJsonException(COULD_NOT_COMBINE_SIGN_INPUTS, e);
         }
@@ -81,20 +77,20 @@ public class JwtSerde {
         return members;
     }
 
-    public String compactJwt(JsonWebToken jwt) throws JwtToJsonException {
+    public ByteArrayOutputStream compactJwt(JsonWebToken jwt) throws JwtToJsonException {
 
         List<byte[]> members = membersForSigning(jwt.getHeader(), jwt.getClaims());
 
         if (jwt.getSignature().isPresent())
             members.add(jwt.getSignature().get());
 
-        byte[] compactJwt;
+        ByteArrayOutputStream compactJwt;
         try {
             compactJwt = compact(members, false);
         } catch (IOException e) {
             throw new JwtToJsonException(COULD_NOT_COMBINE_JWT_MEMBERS, e);
         }
-        return new String(compactJwt, StandardCharsets.UTF_8);
+        return compactJwt;
     }
 
     public JsonWebToken stringToJwt(String jwtAsText, Class claimClass) throws JsonToJwtException, InvalidJWT {
@@ -139,7 +135,7 @@ public class JwtSerde {
         return jwt;
     }
 
-    protected byte[] compact(List<byte[]> members, Boolean forSigning) throws IOException {
+    protected ByteArrayOutputStream compact(List<byte[]> members, Boolean forSigning) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         for(int i=0; i < members.size(); i++) {
@@ -158,7 +154,7 @@ public class JwtSerde {
                 }
             }
         }
-        return outputStream.toByteArray();
+        return outputStream;
     }
 
     /**

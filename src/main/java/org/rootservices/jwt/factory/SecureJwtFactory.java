@@ -10,9 +10,7 @@ import org.rootservices.jwt.jws.signer.Signer;
 
 import java.util.Optional;
 
-/**
- * Created by tommackenzie on 9/15/15.
- */
+
 public class SecureJwtFactory {
     private Signer signer;
     private Algorithm algorithm;

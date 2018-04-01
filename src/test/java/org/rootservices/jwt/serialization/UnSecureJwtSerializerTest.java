@@ -19,12 +19,12 @@ public class UnSecureJwtSerializerTest {
     }
 
     @Test
-    public void compactJWTShouldBeOk() {
+    public void compactJwtToStringShouldBeOk() {
         UnSecureJwtSerializer subject = appFactory.unSecureJwtSerializer();
 
         Claims claims = Factory.makeClaim();
 
-        String jwt = subject.compactJWT(claims);
+        String jwt = subject.compactJwtToString(claims);
 
         assertThat(jwt, is("eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ."));
     }

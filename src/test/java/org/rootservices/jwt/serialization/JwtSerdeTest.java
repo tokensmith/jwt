@@ -11,6 +11,7 @@ import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.TokenType;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -36,8 +37,8 @@ public class JwtSerdeTest {
         Claim claim = Factory.makeClaim();
 
         JsonWebToken tokenToMarshal = unsecureTokenBuilder.makeJwt(claim);
-        String actual = subject.compactJwt(tokenToMarshal);
-        assertThat(actual, is(expectedJwt));
+        ByteArrayOutputStream actual = subject.compactJwt(tokenToMarshal);
+        assertThat(actual.toString(), is(expectedJwt));
     }
 
     @Test
@@ -56,9 +57,9 @@ public class JwtSerdeTest {
         Claim claim = Factory.makeClaim();
 
         JsonWebToken tokenToMarshal = secureJwtFactory.makeJwt(claim);
-        String actual = subject.compactJwt(tokenToMarshal);
+        ByteArrayOutputStream actual = subject.compactJwt(tokenToMarshal);
 
-        assertThat(actual, is(expectedJwt));
+        assertThat(actual.toString(), is(expectedJwt));
     }
 
     @Test
@@ -78,9 +79,9 @@ public class JwtSerdeTest {
         Claim claim = Factory.makeClaim();
 
         JsonWebToken tokenToMarshal = secureJwtFactory.makeJwt(claim);
-        String actual = subject.compactJwt(tokenToMarshal);
+        ByteArrayOutputStream actual = subject.compactJwt(tokenToMarshal);
 
-        assertThat(actual, is(expectedJwt));
+        assertThat(actual.toString(), is(expectedJwt));
     }
 
     @Test
