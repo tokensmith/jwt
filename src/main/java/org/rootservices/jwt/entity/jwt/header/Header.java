@@ -1,6 +1,8 @@
 package org.rootservices.jwt.entity.jwt.header;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.rootservices.jwt.entity.jwe.EncryptionAlgorithm;
 
 import java.util.Optional;
 
@@ -11,11 +13,13 @@ import java.util.Optional;
  */
 public class Header {
     @JsonProperty(value="typ")
-    Optional<TokenType> type;
+    private Optional<TokenType> type = Optional.empty();;
     @JsonProperty(value="alg")
-    Algorithm algorithm;
+    private Algorithm algorithm;
     @JsonProperty(value="kid")
     private Optional<String> keyId = Optional.empty();
+    @JsonProperty(value="enc")
+    private Optional<EncryptionAlgorithm> encryptionAlgorithm = Optional.empty();
 
     public Optional<TokenType> getType() {
         return type;
@@ -39,5 +43,13 @@ public class Header {
 
     public void setKeyId(Optional<String> keyId) {
         this.keyId = keyId;
+    }
+
+    public Optional<EncryptionAlgorithm> getEncryptionAlgorithm() {
+        return encryptionAlgorithm;
+    }
+
+    public void setEncryptionAlgorithm(Optional<EncryptionAlgorithm> encryptionAlgorithm) {
+        this.encryptionAlgorithm = encryptionAlgorithm;
     }
 }

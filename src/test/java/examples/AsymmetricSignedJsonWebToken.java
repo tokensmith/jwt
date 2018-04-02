@@ -1,21 +1,19 @@
 package examples;
 
 import helper.entity.Claim;
-import org.rootservices.jwt.SecureJwtEncoder;
-import org.rootservices.jwt.factory.SecureJwtFactory;
-import org.rootservices.jwt.config.AppFactory;
+import org.rootservices.jwt.jws.serialization.SecureJwtSerializer;
+import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.Use;
 import org.rootservices.jwt.entity.jwt.JsonWebToken;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.serializer.JWTSerializer;
-import org.rootservices.jwt.serializer.exception.JsonToJwtException;
-import org.rootservices.jwt.serializer.exception.JwtToJsonException;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidAlgorithmException;
-import org.rootservices.jwt.signature.signer.factory.exception.InvalidJsonWebKeyException;
-import org.rootservices.jwt.signature.verifier.VerifySignature;
+import org.rootservices.jwt.exception.SignatureException;
+import org.rootservices.jwt.serialization.JwtSerde;
+import org.rootservices.jwt.serialization.exception.JsonToJwtException;
+import org.rootservices.jwt.serialization.exception.JwtToJsonException;
+import org.rootservices.jwt.jws.verifier.VerifySignature;
 
 import java.math.BigInteger;
 import java.util.Optional;
@@ -25,7 +23,7 @@ import java.util.Optional;
  */
 public class AsymmetricSignedJsonWebToken {
 
-    public String toEncodedJwt() {
+    public String toCompactJwt() {
 
         RSAKeyPair keyPair = new RSAKeyPair(
                 Optional.of("test-key-id"),
@@ -44,19 +42,17 @@ public class AsymmetricSignedJsonWebToken {
         Claim claim = new Claim();
         claim.setUriIsRoot(true);
 
-        AppFactory appFactory = new AppFactory();
-        SecureJwtEncoder secureJwtEncoder = null;
+        JwtAppFactory appFactory = new JwtAppFactory();
+        SecureJwtSerializer secureJwtSerializer = null;
         try {
-            secureJwtEncoder = appFactory.secureJwtEncoder(Algorithm.RS256, keyPair);
-        } catch (InvalidAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidJsonWebKeyException e) {
+            secureJwtSerializer = appFactory.secureJwtSerializer(Algorithm.RS256, keyPair);
+        } catch (SignatureException e) {
             e.printStackTrace();
         }
 
         String encodedJwt = null;
         try {
-            encodedJwt = secureJwtEncoder.encode(claim);
+            encodedJwt = secureJwtSerializer.compactJwtToString(claim);
         } catch (JwtToJsonException e) {
             e.printStackTrace();
         }
@@ -64,7 +60,7 @@ public class AsymmetricSignedJsonWebToken {
         return encodedJwt;
     }
 
-    public Boolean verifySignature() throws JsonToJwtException, InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public Boolean verifySignature() throws Exception {
         String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZX0.ZaZoTp-lb3C7Sb7BKQm3BZyGiMxtehBtAeN9anuDPgO_F3eR8o9UU4c1RgCFDLqO_Ftg6QCmoZ1SEDuNw8AskJWSqcuJwcOttrqf46BHB89QuGtfmhEb5fIbyuqD-n2XM2hHhvPL6yJvLd3VQNvW2VexSL3fmutC5MYoPa8IfvjGZ_QKMwA7BBwcm4Djnnlu9HwiNg3a_y6-JJxr_jW5GD8VomHZbLasokR6h5N-y-DXIIYL3-oMl-_rE1BPdm_gE76p4Lo49BM-AyUxbShAHDl-EBKsz_Vo-Pgk_4rXkBOMMJQI95FrK5FeJs2yZxMoZ_V_f5_VGnXYNzq3SFJwnQ";
 
         RSAPublicKey publicKey = new RSAPublicKey(
@@ -75,23 +71,21 @@ public class AsymmetricSignedJsonWebToken {
                 new BigInteger("65537")
         );
 
-        AppFactory appFactory = new AppFactory();
-        JWTSerializer jwtSerializer = appFactory.jwtSerializer();
-        JsonWebToken jsonWebToken = null;
+        JwtAppFactory appFactory = new JwtAppFactory();
+        JwtSerde jwtSerde = appFactory.jwtSerde();
+        JsonWebToken jsonWebToken;
         try {
-            jsonWebToken = jwtSerializer.stringToJwt(jwt, Claim.class);
+            jsonWebToken = jwtSerde.stringToJwt(jwt, Claim.class);
         } catch (JsonToJwtException e) {
             // could not serialize JsonWebToken to json string
             throw e;
         }
 
 
-        VerifySignature verifySignature = null;
+        VerifySignature verifySignature;
         try {
             verifySignature = appFactory.verifySignature(Algorithm.RS256, publicKey);
-        } catch (InvalidJsonWebKeyException e) {
-            throw e;
-        } catch (InvalidAlgorithmException e) {
+        } catch (SignatureException e) {
             throw e;
         }
 

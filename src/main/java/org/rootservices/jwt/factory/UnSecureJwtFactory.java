@@ -20,7 +20,7 @@ public class UnSecureJwtFactory {
         JsonWebToken jwt = new JsonWebToken();
         jwt.setHeader(header);
         jwt.setClaims(claimNames);
-        jwt.setSignature(Optional.<String>empty());
+        jwt.setSignature(Optional.<byte[]>empty());
 
         return jwt;
     }

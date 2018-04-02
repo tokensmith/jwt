@@ -8,14 +8,18 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Algorithm {
-    NONE ("none"),
-    HS256 ("HS256"),
-    RS256 ("RS256");
+    NONE ("none", AlgorithmFor.JWS),
+    HS256 ("HS256", AlgorithmFor.JWS),
+    RS256 ("RS256", AlgorithmFor.JWS),
+    DIRECT ("dir", AlgorithmFor.JWE),
+    RSAES_OAEP  ("RSA-OAEP", AlgorithmFor.JWE);
 
     private String value;
+    private AlgorithmFor algorithmFor;
 
-    Algorithm(String value) {
+    Algorithm(String value, AlgorithmFor algorithmFor) {
         this.value = value;
+        this.algorithmFor = algorithmFor;
     }
 
     @JsonValue
@@ -25,5 +29,9 @@ public enum Algorithm {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public AlgorithmFor getAlgorithmFor() {
+        return algorithmFor;
     }
 }

@@ -58,6 +58,16 @@ public class Factory {
         return key;
     }
 
+    public static SymmetricKey makeSymmetricKeyForJWE() {
+        SymmetricKey key = new SymmetricKey(
+                Optional.<String>empty(),
+                "MMNj8rE5m7NIDhwKYDmHSnlU1wfKuVvW6G--GKPYkRA",
+                Use.ENCRYPTION
+        );
+
+        return key;
+    }
+
     public static Claim makeClaim() {
         Claim claim = new Claim();
         Optional<String> issuer = Optional.of("joe");
@@ -80,5 +90,117 @@ public class Factory {
         Claim claim = makeClaim();
 
         return new JsonWebToken(header, claim);
+    }
+
+    public static byte[] aad() {
+        byte[] aad = "aad".getBytes();
+        return aad;
+    }
+
+    // taken from, https://tools.ietf.org/html/rfc7515#appendix-A.1
+    public static RSAKeyPair makeRSAKeyPairForJWE() {
+
+
+        StringBuilder n = new StringBuilder();
+        n.append("oahUIoWw0K0usKNuOR6H4wkf4oBUXHTxRvgb48E-BVvxkeDNjbC4he8rUW");
+        n.append("cJoZmds2h7M70imEVhRU5djINXtqllXI4DFqcI1DgjT9LewND8MW2Krf3S");
+        n.append("psk_ZkoFnilakGygTwpZ3uesH-PFABNIUYpOiN15dsQRkgr0vEhxN92i2a");
+        n.append("sbOenSZeyaxziK72UwxrrKoExv6kc5twXTq4h-QChLOln0_mtUZwfsRaMS");
+        n.append("tPs6mS6XrgxnxbWhojf663tuEQueGC-FCMfra36C9knDFGzKsNa7LZK2dj");
+        n.append("YgyD3JR_MB_4NUJW_TqOQtwHYbxevoJArm-L5StowjzGy-_bq6Gw");
+
+        StringBuilder e = new StringBuilder();
+        e.append("AQAB");
+
+        StringBuilder d = new StringBuilder();
+        d.append("kLdtIj6GbDks_ApCSTYQtelcNttlKiOyPzMrXHeI-yk1F7-kpDxY4-WY5N");
+        d.append("WV5KntaEeXS1j82E375xxhWMHXyvjYecPT9fpwR_M9gV8n9Hrh2anTpTD9");
+        d.append("3Dt62ypW3yDsJzBnTnrYu1iwWRgBKrEYY46qAZIrA2xAwnm2X7uGR1hghk");
+        d.append("qDp0Vqj3kbSCz1XyfCs6_LehBwtxHIyh8Ripy40p24moOAbgxVw3rxT_vl");
+        d.append("t3UVe4WO3JkJOzlpUf-KTVI2Ptgm-dARxTEtE-id-4OJr0h-K-VFs3VSnd");
+        d.append("VTIznSxfyrj8ILL6MG_Uv8YAu7VILSB3lOW085-4qE3DzgrTjgyQ");
+
+        StringBuilder p = new StringBuilder();
+        p.append("1r52Xk46c-LsfB5P442p7atdPUrxQSy4mti_tZI3Mgf2EuFVbUoDBvaRQ-");
+        p.append("SWxkbkmoEzL7JXroSBjSrK3YIQgYdMgyAEPTPjXv_hI2_1eTSPVZfzL0lf");
+        p.append("fNn03IXqWF5MDFuoUYE0hzb2vhrlN_rKrbfDIwUbTrjjgieRbwC6Cl0");
+
+        StringBuilder q = new StringBuilder();
+        q.append("wLb35x7hmQWZsWJmB_vle87ihgZ19S8lBEROLIsZG4ayZVe9Hi9gDVCOBm");
+        q.append("UDdaDYVTSNx_8Fyw1YYa9XGrGnDew00J28cRUoeBB_jKI1oma0Orv1T9aX");
+        q.append("IWxKwd4gvxFImOWr3QRL9KEBRzk2RatUBnmDZJTIAfwTs0g68UZHvtc");
+
+        StringBuilder dp = new StringBuilder();
+        dp.append("ZK-YwE7diUh0qR1tR7w8WHtolDx3MZ_OTowiFvgfeQ3SiresXjm9gZ5KL");
+        dp.append("hMXvo-uz-KUJWDxS5pFQ_M0evdo1dKiRTjVw_x4NyqyXPM5nULPkcpU827");
+        dp.append("rnpZzAJKpdhWAgqrXGKAECQH0Xt4taznjnd_zVpAmZZq60WPMBMfKcuE");
+
+        StringBuilder dq = new StringBuilder();
+        dq.append("Dq0gfgJ1DdFGXiLvQEZnuKEN0UUmsJBxkjydc3j4ZYdBiMRAy86x0vHCj");
+        dq.append("ywcMlYYg4yoC4YZa9hNVcsjqA3FeiL19rk8g6Qn29Tt0cj8qqyFpz9vNDB");
+        dq.append("UfCAiJVeESOjJDZPYHdHY8v1b-o-Z2X5tvLx-TCekf7oxyeKDUqKWjis");
+
+        StringBuilder qi = new StringBuilder();
+        qi.append("VIMpMYbPf47dT1w_zDUXfPimsSegnMOA1zTaX7aGk_8urY6R8-ZW1FxU7");
+        qi.append("AlWAyLWybqq6t16VFd7hQd0y6flUK4SlOydB61gwanOsXGOAOv82cHq0E3");
+        qi.append("eL4HrtZkUuKvnPrMnsUUFlfUdybVzxyjz9JF_XyaY14ardLSjf4L_FNY");
+
+        return new RSAKeyPair(
+                Optional.<String>empty(),
+                KeyType.RSA,
+                Use.ENCRYPTION,
+                toBigInt(n.toString()),
+                toBigInt(e.toString()),
+                toBigInt(d.toString()),
+                toBigInt(p.toString()),
+                toBigInt(q.toString()),
+                toBigInt(dp.toString()),
+                toBigInt(dq.toString()),
+                toBigInt(qi.toString())
+        );
+    }
+
+    public static RSAPublicKey makeRSAPublicKeyForJWE() {
+        StringBuilder n = new StringBuilder();
+        n.append("oahUIoWw0K0usKNuOR6H4wkf4oBUXHTxRvgb48E-BVvxkeDNjbC4he8rUW");
+        n.append("cJoZmds2h7M70imEVhRU5djINXtqllXI4DFqcI1DgjT9LewND8MW2Krf3S");
+        n.append("psk_ZkoFnilakGygTwpZ3uesH-PFABNIUYpOiN15dsQRkgr0vEhxN92i2a");
+        n.append("sbOenSZeyaxziK72UwxrrKoExv6kc5twXTq4h-QChLOln0_mtUZwfsRaMS");
+        n.append("tPs6mS6XrgxnxbWhojf663tuEQueGC-FCMfra36C9knDFGzKsNa7LZK2dj");
+        n.append("YgyD3JR_MB_4NUJW_TqOQtwHYbxevoJArm-L5StowjzGy-_bq6Gw");
+
+        StringBuilder e = new StringBuilder();
+        e.append("AQAB");
+
+        return new RSAPublicKey(
+                Optional.<String>empty(),
+                KeyType.RSA,
+                Use.ENCRYPTION,
+                toBigInt(n.toString()),
+                toBigInt(e.toString())
+        );
+
+    }
+
+    // taken from, https://tools.ietf.org/html/rfc7516#section-3.3
+    public static String compactJWE() {
+        StringBuilder encoded = new StringBuilder();
+        encoded.append("eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00ifQ.");
+        encoded.append("OKOawDo13gRp2ojaHV7LFpZcgV7T6DVZKTyKOMTYUmKoTCVJRgckCL9kiMT03JGe");
+        encoded.append("ipsEdY3mx_etLbbWSrFr05kLzcSr4qKAq7YN7e9jwQRb23nfa6c9d-StnImGyFDb");
+        encoded.append("Sv04uVuxIp5Zms1gNxKKK2Da14B8S4rzVRltdYwam_lDp5XnZAYpQdb76FdIKLaV");
+        encoded.append("mqgfwX7XWRxv2322i-vDxRfqNzo_tETKzpVLzfiwQyeyPGLBIO56YJ7eObdv0je8");
+        encoded.append("1860ppamavo35UgoRdbYaBcoh9QcfylQr66oc6vFWXRcZ_ZT2LawVCWTIy3brGPi");
+        encoded.append("6UklfCpIMfIjf7iGdXKHzg.");
+        encoded.append("48V1_ALb6US04U3b.");
+        encoded.append("5eym8TW_c8SuK0ltJ3rpYIzOeDQz7TALvtu6UG9oMo4vpzs9tX_EFShS8iB7j6ji");
+        encoded.append("SdiwkIr3ajwQzaBtQD_A.");
+        encoded.append("XFBoMYUZodetZdvTiFvSkQ");
+
+        return encoded.toString();
+    }
+
+    public static String symmetricCompactJWE() {
+        return "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..0gDRrNTkCcMW_nnA1Q1yKUi0kJEAFxblm2-oUG0QhxEVtbzhWAlUnS5azsiC24Zk7Vv6DYOGCBkt2WSt_Yp2BYWrSHyxWVhNnQ0qtvm2TTh2MHjonN2Kb1NH_ooRLs6Z.NgpZSFNCr7s3SuA4mgoU1jY3bUi5KCp1pZwJ4VZT9yM8qduQaOAZj7qGRbxh.vSdENsFN2CpC1AunaZFJ-w";
     }
 }
