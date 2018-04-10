@@ -6,14 +6,12 @@ import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwe.EncryptionAlgorithm;
 import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
-import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.jwe.entity.JWE;
 
 
 import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
 
@@ -21,7 +19,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
-public class JweRsaSerdesTest {
+public class JweRsaSerializerTest {
 
     @Test
     public void extractCipherText() throws Exception {
@@ -36,7 +34,6 @@ public class JweRsaSerdesTest {
         byte[] cipherText = decoder.decode(jweParts[3]);
         byte[] authenticationTag = decoder.decode(jweParts[4]);
 
-        RSAKeyPair jwk = Factory.makeRSAKeyPairForJWE();
         JweRsaDeserializer JweRsaDeserializer = jwtAppFactory.jweRsaDeserializer();
 
         RSAPublicKey publicKey = Factory.makeRSAPublicKeyForJWE();

@@ -9,6 +9,7 @@ import java.util.Base64;
 
 public class HeaderDeserializer {
     public static final String JWT_SPLITTER = "\\.";
+    public final int JWT_LENGTH = 2;
     public static final String INVALID_HEADER = "JOSE Header is invalid";
     public static final String JWT_IS_NOT_SPLITTABLE = "JWT is not splittable by '.'";
     private Base64.Decoder decoder;
@@ -22,7 +23,7 @@ public class HeaderDeserializer {
     public Header toHeader(String encodedJwt) throws JsonToJwtException, InvalidJWT {
         String[] jwtParts = encodedJwt.split(JWT_SPLITTER);
 
-        if (jwtParts.length == 0) {
+        if (jwtParts.length < JWT_LENGTH) {
             throw new InvalidJWT(JWT_IS_NOT_SPLITTABLE);
         }
 
