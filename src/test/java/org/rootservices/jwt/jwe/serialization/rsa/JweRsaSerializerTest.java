@@ -1,8 +1,6 @@
 package org.rootservices.jwt.jwe.serialization.rsa;
 
 import helper.entity.Factory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwe.EncryptionAlgorithm;
@@ -35,7 +33,7 @@ public class JweRsaSerializerTest {
         byte[] initVector = decoder.decode(jweParts[2]);
         byte[] cipherText = decoder.decode(jweParts[3]);
         byte[] authenticationTag = decoder.decode(jweParts[4]);
-        
+
         JweRsaDeserializer JweRsaDeserializer = jwtAppFactory.jweRsaDeserializer();
 
         RSAPublicKey publicKey = Factory.makeRSAPublicKeyForJWE();
