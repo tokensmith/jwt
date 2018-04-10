@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.notNull;
 
-public class JweDirectSerdesTest {
+public class JweDirectSerializerTest {
     private static JwtAppFactory jwtAppFactory = new JwtAppFactory();
 
     @Test

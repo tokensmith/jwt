@@ -1,6 +1,8 @@
 package org.rootservices.jwt.jwe.serialization.rsa;
 
 import helper.entity.Factory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwe.EncryptionAlgorithm;
@@ -22,6 +24,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
 public class JweRsaSerdesTest {
+    private static final Logger LOGGER = LogManager.getLogger(JweRsaSerdesTest.class);
 
     @Test
     public void extractCipherText() throws Exception {
@@ -96,6 +99,10 @@ public class JweRsaSerdesTest {
         jwe.setPayload("Help me, Obi-Wan Kenobi. You're my only hope.".getBytes());
 
         ByteArrayOutputStream actual = subject.JWEToCompact(jwe);
+
+        for(String member: actual.toString().split("\\.")) {
+            LOGGER.info(member);
+        }
 
         // make sure it can be read.
         RSAKeyPair jwk = Factory.makeRSAKeyPairForJWE();

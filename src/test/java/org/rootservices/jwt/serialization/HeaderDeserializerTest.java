@@ -8,6 +8,7 @@ import org.rootservices.jwt.entity.jwe.EncryptionAlgorithm;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.AlgorithmFor;
 import org.rootservices.jwt.entity.jwt.header.Header;
+import org.rootservices.jwt.exception.InvalidJWT;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -36,5 +37,19 @@ public class HeaderDeserializerTest {
         assertThat(actual.getAlgorithm().getAlgorithmFor(), is(AlgorithmFor.JWE));
         assertThat(actual.getEncryptionAlgorithm().isPresent(), is(true));
         assertThat(actual.getEncryptionAlgorithm().get(), is(EncryptionAlgorithm.AES_GCM_256));
+    }
+
+    @Test
+    public void toHeaderShouldThrowInvalidJwt() throws Exception {
+        String compactJWE = "";
+
+        InvalidJWT actual = null;
+        try {
+            subject.toHeader(compactJWE);
+        } catch (InvalidJWT e) {
+            actual = e;
+        }
+
+        assertThat(actual, is(notNullValue()));
     }
 }
