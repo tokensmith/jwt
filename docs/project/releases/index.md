@@ -5,6 +5,12 @@ title: Releases
 
 ### {{ page.title }} ###
 
+#### 1.3 - Published on, 2018-04-01 ####
+ - Renamed Encoder to Serializer
+ - Key Encryption with RSAES-OAEP 
+ - Content Encryption with AES GCM
+ - Direct Encryption with AES GCM
+
 #### 1.2 - Published on, 2016-09-03 ####
  - Single interface to produce a jwt
    - SecureJwtEncoder which given a claim will return a secure encoded jwt

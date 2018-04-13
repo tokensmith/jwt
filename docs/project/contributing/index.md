@@ -10,7 +10,7 @@ date: 2015-09-02 11:59:57
 
 - Modify or add to the documentation.
 - Implement remaining [Cryptographic Algorithms for Digital Signatures and MACs](https://tools.ietf.org/html/rfc7518#section-3)
-- Implement [JSON Web Encryption](https://tools.ietf.org/html/rfc7516#section-1)
+- Implement additional [algorithms for JWE](https://tools.ietf.org/html/rfc7518#section-4.1)
 
 
 ##### Contributing code: #####

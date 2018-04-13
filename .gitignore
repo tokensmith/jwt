@@ -3,3 +3,5 @@ jwt.iml
 target/*
 _site/*
 .DS_Store
+.gradle/
+build/
