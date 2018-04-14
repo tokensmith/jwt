@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Dependency Coordinates
-categories: [1.2]
+categories: [1.3]
 ---
 
 ### {{ page.title }} ###
