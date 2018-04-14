@@ -10,3 +10,4 @@ This project is actively contributed to by interpreting the following RFCs
 - [JSON Web Key (JWK)](https://tools.ietf.org/html/rfc7517)
 - [JSON Web Signature (JWS)](https://tools.ietf.org/html/rfc7515)
 - [JSON Web Algorithms (JWA)](https://tools.ietf.org/html/rfc7518)
+- [JSON Web Encryption (JWE)](https://tools.ietf.org/html/rfc7516)
