@@ -8,6 +8,7 @@ import org.rootservices.jwt.jwe.entity.JWE;
 import org.rootservices.jwt.jwe.factory.CipherSymmetricFactory;
 import org.rootservices.jwt.jwe.factory.exception.CipherException;
 import org.rootservices.jwt.jwe.serialization.JweDeserializer;
+import org.rootservices.jwt.jwe.serialization.exception.KeyException;
 import org.rootservices.jwt.serialization.Serdes;
 import org.rootservices.jwt.serialization.exception.DecryptException;
 import org.rootservices.jwt.serialization.exception.JsonException;
@@ -21,6 +22,7 @@ import java.util.Base64;
 
 
 public class JweDirectDesializer implements JweDeserializer {
+    public static final String KEY_CANNOT_BE_DECODED = "Key cannot be decoded.";
     private Serdes serdes;
     private Base64.Decoder decoder;
     private CipherSymmetricFactory cipherSymmetricFactory;
@@ -32,7 +34,7 @@ public class JweDirectDesializer implements JweDeserializer {
     }
 
     @Override
-    public JWE stringToJWE(String compactJWE, Key key) throws JsonToJwtException, DecryptException, CipherException {
+    public JWE stringToJWE(String compactJWE, Key key) throws JsonToJwtException, DecryptException, CipherException, KeyException {
         String[] jweParts = compactJWE.split(JWT_SPLITTER);
         byte[] protectedHeader = decoder.decode(jweParts[0]);
         byte[] initVector = decoder.decode(jweParts[2]);
@@ -48,7 +50,13 @@ public class JweDirectDesializer implements JweDeserializer {
 
         byte[] aad = jweParts[0].getBytes(StandardCharsets.US_ASCII);
 
-        byte[] cek = decoder.decode(((SymmetricKey) key).getKey().getBytes());
+        byte[] cek;
+        try {
+            cek = decoder.decode(((SymmetricKey) key).getKey().getBytes());
+        } catch (IllegalArgumentException e) {
+            throw new KeyException(KEY_CANNOT_BE_DECODED, e);
+        }
+
         Cipher symmetricCipher;
         try {
             symmetricCipher = cipherSymmetricFactory.forDecrypt(Transformation.AES_GCM_NO_PADDING, cek, initVector, aad);
