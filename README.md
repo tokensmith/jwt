@@ -22,7 +22,9 @@ ByteArrayOutputStream encodedJwt = compactBuilder.claims(claim)
     .build();
 ```
 
-## secure compact jwt with asymmetric key
+## secure 
+
+### compact jwt signed with asymmetric key
 ```java
 SecureCompactBuilder compactBuilder = new SecureCompactBuilder();
 
@@ -54,7 +56,7 @@ try {
 }
 ```
 
-## secure compact jwt with symmetric key
+### compact jwt signed with symmetric key
 ```java
 SecureCompactBuilder compactBuilder = new SecureCompactBuilder();
 
@@ -78,7 +80,8 @@ try {
 }
 ```
 
-encrypted compact jwt with symmetric key
+## Encrypted
+### encrypted compact jwt with symmetric key
 ```java
 SymmetricKey key = Factory.makeSymmetricKeyForJWE();
 
@@ -94,7 +97,7 @@ ByteArrayOutputStream actual = subject.encAlg(EncryptionAlgorithm.AES_GCM_256)
         .build();
 ```
 
-encrypted compact jwt with asymmetric key
+### encrypted compact jwt with asymmetric key
 ```java
 JwtAppFactory jwtAppFactory = new JwtAppFactory();
 
