@@ -10,7 +10,7 @@ Documentation
  
 Quick Start
 -----------
-This is a Java implementation of JWT, JWS, and JWE. Below are examples that were sourced from the test suite.
+This is a Java implementation of JWT, JWS, and JWE.
  
 ## Unsecured JWT
 ```java
