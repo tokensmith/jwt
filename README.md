@@ -6,25 +6,25 @@
 
 Documentation
 ------------
- More documentation is written in [github pages](http://rootservices.github.io/jwt/). Which is located in the branch, [gh-pages](https://github.com/RootServices/jwt/tree/gh-pages)
+ More documentation is available [here](http://rootservices.github.io/jwt/).
  
 Quick Start
 -----------
-
-## unsecure compact jwt
+This is a Java implementation of JWT, JWS, and JWE.
+ 
+## Unsecured JWT
 ```java
 UnsecureCompactBuilder compactBuilder = new UnsecureCompactBuilder();
 
 Claim claim = new Claim();
 claim.setUriIsRoot(true);
 
-ByteArrayOutputStream encodedJwt = compactBuilder.claims(claim)
-    .build();
+ByteArrayOutputStream encodedJwt = compactBuilder.claims(claim).build();
 ```
 
-## secure 
+## JWS Compact Serialization
 
-### compact jwt signed with asymmetric key
+### Asymmetric key
 ```java
 SecureCompactBuilder compactBuilder = new SecureCompactBuilder();
 
@@ -56,7 +56,7 @@ try {
 }
 ```
 
-### compact jwt signed with symmetric key
+### Symmetric key
 ```java
 SecureCompactBuilder compactBuilder = new SecureCompactBuilder();
 
@@ -80,8 +80,8 @@ try {
 }
 ```
 
-## Encrypted
-### encrypted compact jwt with symmetric key
+## JWE Compact Serialization
+### Symmetric key
 ```java
 SymmetricKey key = Factory.makeSymmetricKeyForJWE();
 
@@ -97,7 +97,7 @@ ByteArrayOutputStream actual = subject.encAlg(EncryptionAlgorithm.AES_GCM_256)
         .build();
 ```
 
-### encrypted compact jwt with asymmetric key
+### Asymmetric key
 ```java
 JwtAppFactory jwtAppFactory = new JwtAppFactory();
 
