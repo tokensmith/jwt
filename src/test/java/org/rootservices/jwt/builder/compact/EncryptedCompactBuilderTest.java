@@ -10,12 +10,9 @@ import org.rootservices.jwt.entity.jwk.RSAKeyPair;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.jwe.entity.JWE;
 import org.rootservices.jwt.jwe.serialization.JweDeserializer;
-import org.rootservices.jwt.jwe.serialization.JweSerializer;
 import org.rootservices.jwt.jwe.serialization.rsa.JweRsaDeserializer;
-import org.rootservices.jwt.jwe.serialization.rsa.JweRsaSerializer;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -43,16 +40,14 @@ public class EncryptedCompactBuilderTest {
 
         Base64.Decoder decoder = jwtAppFactory.urlDecoder();
 
-        Header header = new Header();
-        header.setEncryptionAlgorithm(Optional.of(EncryptionAlgorithm.AES_GCM_256));
-        header.setAlgorithm(Algorithm.DIRECT);
+        byte[] payload = "Help me, Obi-Wan Kenobi. You're my only hope.".getBytes();
 
-        JWE jwe = new JWE();
-        jwe.setHeader(header);
-        jwe.setCek(decoder.decode(key.getKey()));
-        jwe.setPayload("Help me, Obi-Wan Kenobi. You're my only hope.".getBytes());
-
-        ByteArrayOutputStream actual = subject.jwe(jwe).build();
+        ByteArrayOutputStream actual = subject.encAlg(EncryptionAlgorithm.AES_GCM_256)
+                .alg(Algorithm.DIRECT)
+                .encAlg(EncryptionAlgorithm.AES_GCM_256)
+                .payload(payload)
+                .cek(decoder.decode(key.getKey()))
+                .build();
 
         assertThat(actual, is(notNullValue()));
 
@@ -80,27 +75,24 @@ public class EncryptedCompactBuilderTest {
         JWE leia = jweDeserializer.stringToJWE(compactJWE, key);
 
         assertThat(leia, CoreMatchers.is(CoreMatchers.notNullValue()));
-        String payload = new String(leia.getPayload());
-        assertThat(payload, CoreMatchers.is("Help me, Obi-Wan Kenobi. You're my only hope."));
+        String decryptedPayload = new String(leia.getPayload());
+        assertThat(decryptedPayload, CoreMatchers.is("Help me, Obi-Wan Kenobi. You're my only hope."));
     }
 
     @Test
     public void buildWithRSA() throws Exception {
         JwtAppFactory jwtAppFactory = new JwtAppFactory();
 
+        byte[] payload = "Help me, Obi-Wan Kenobi. You're my only hope.".getBytes();
+
         RSAPublicKey publicKey = Factory.makeRSAPublicKeyForJWE();
         publicKey.setKeyId(Optional.of(UUID.randomUUID().toString()));
 
-        Header header = new Header();
-        header.setEncryptionAlgorithm(Optional.of(EncryptionAlgorithm.AES_GCM_256));
-        header.setAlgorithm(Algorithm.RSAES_OAEP);
-        header.setKeyId(publicKey.getKeyId());
-
-        JWE jwe = new JWE();
-        jwe.setHeader(header);
-        jwe.setPayload("Help me, Obi-Wan Kenobi. You're my only hope.".getBytes());
-
-        ByteArrayOutputStream actual = subject.jwe(jwe).key(publicKey).build();
+        ByteArrayOutputStream actual = subject.encAlg(EncryptionAlgorithm.AES_GCM_256)
+                .alg(Algorithm.RSAES_OAEP)
+                .payload(payload)
+                .rsa(publicKey)
+                .build();
 
         // make sure it can be read.
         RSAKeyPair jwk = Factory.makeRSAKeyPairForJWE();
@@ -111,8 +103,8 @@ public class EncryptedCompactBuilderTest {
         JWE leia = JweRsaDeserializer.stringToJWE(compactJWE, jwk);
 
         assertThat(leia, CoreMatchers.is(CoreMatchers.notNullValue()));
-        String payload = new String(leia.getPayload());
-        assertThat(payload, CoreMatchers.is("Help me, Obi-Wan Kenobi. You're my only hope."));
+        String decryptedPayload = new String(leia.getPayload());
+        assertThat(decryptedPayload, CoreMatchers.is("Help me, Obi-Wan Kenobi. You're my only hope."));
 
     }
 
