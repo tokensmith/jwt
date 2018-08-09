@@ -38,20 +38,20 @@ public class EncryptedCompactBuilderTest {
 
         SymmetricKey key = Factory.makeSymmetricKeyForJWE();
 
-        Base64.Decoder decoder = jwtAppFactory.urlDecoder();
-
         byte[] payload = "Help me, Obi-Wan Kenobi. You're my only hope.".getBytes();
 
         ByteArrayOutputStream actual = subject.encAlg(EncryptionAlgorithm.AES_GCM_256)
                 .alg(Algorithm.DIRECT)
                 .encAlg(EncryptionAlgorithm.AES_GCM_256)
                 .payload(payload)
-                .cek(decoder.decode(key.getKey()))
+                .cek(key)
                 .build();
 
         assertThat(actual, is(notNullValue()));
 
         String compactJWE = actual.toString();
+
+        Base64.Decoder decoder = jwtAppFactory.urlDecoder();
 
         String[] jweParts = compactJWE.split("\\.");
         String protectedHeader = new String(decoder.decode(jweParts[0]), StandardCharsets.UTF_8);

@@ -6,6 +6,7 @@ import org.rootservices.jwt.builder.exception.CompactException;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwe.EncryptionAlgorithm;
 import org.rootservices.jwt.entity.jwk.RSAPublicKey;
+import org.rootservices.jwt.entity.jwk.SymmetricKey;
 import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.Header;
 import org.rootservices.jwt.jwe.entity.JWE;
@@ -16,6 +17,7 @@ import org.rootservices.jwt.serialization.exception.EncryptException;
 import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 import java.util.Optional;
 
 public class EncryptedCompactBuilder {
@@ -24,7 +26,7 @@ public class EncryptedCompactBuilder {
     private static JwtAppFactory jwtAppFactory = new JwtAppFactory();
 
     private byte[] payload;
-    private byte[] cek;
+    private SymmetricKey cek;
     private Algorithm alg;
     private EncryptionAlgorithm encAlg;
 
@@ -40,7 +42,7 @@ public class EncryptedCompactBuilder {
         return this;
     }
 
-    public EncryptedCompactBuilder cek(byte[] cek) {
+    public EncryptedCompactBuilder cek(SymmetricKey cek) {
         this.cek = cek;
         return this;
     }
@@ -97,15 +99,18 @@ public class EncryptedCompactBuilder {
     }
 
     protected JWE jweForDirect() {
+        Base64.Decoder decoder = jwtAppFactory.urlDecoder();
+
         JWE jwe = new JWE();
         Header header = new Header();
 
         header.setEncryptionAlgorithm(Optional.of(this.encAlg));
         header.setAlgorithm(this.alg);
+        header.setKeyId(cek.getKeyId());
 
         jwe.setHeader(header);
         jwe.setPayload(payload);
-        jwe.setCek(cek);
+        jwe.setCek(decoder.decode(cek.getKey()));
 
         return jwe;
     }
