@@ -10,6 +10,7 @@ import org.rootservices.jwt.entity.jwt.header.Algorithm;
 import org.rootservices.jwt.entity.jwt.header.AlgorithmFor;
 import org.rootservices.jwt.jwe.entity.JWE;
 import org.rootservices.jwt.jwe.serialization.JweDeserializer;
+import org.rootservices.jwt.jwe.serialization.exception.KeyException;
 
 import java.nio.charset.StandardCharsets;
 
@@ -44,5 +45,23 @@ public class JweDirectDesializerTest {
 
         String payload = new String(actual.getPayload(), StandardCharsets.UTF_8);
         assertThat(payload, CoreMatchers.is("Help me, Obi-Wan Kenobi. You're my only hope."));
+    }
+
+    @Test
+    public void stringToJWEWhenKeyIsNotBase64ShouldThrowKeyException() throws Exception {
+        JweDirectDesializer subject = jwtAppFactory.jweDirectDesializer();
+
+        SymmetricKey key = Factory.makeSymmetricKeyForJWE();
+        key.setKey("=bad-key=");
+        String compactJwe = Factory.symmetricCompactJWE();
+
+        KeyException actual = null;
+        try {
+            subject.stringToJWE(compactJwe, key);
+        } catch (KeyException e) {
+            actual = e;
+        }
+
+        assertThat(actual, is(notNullValue()));
     }
 }

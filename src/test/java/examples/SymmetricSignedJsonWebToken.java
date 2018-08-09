@@ -1,6 +1,8 @@
 package examples;
 
 import helper.entity.Claim;
+import org.rootservices.jwt.builder.compact.SecureCompactBuilder;
+import org.rootservices.jwt.builder.exception.CompactException;
 import org.rootservices.jwt.jws.serialization.SecureJwtSerializer;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.SymmetricKey;
@@ -13,6 +15,7 @@ import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 import org.rootservices.jwt.serialization.exception.JwtToJsonException;
 import org.rootservices.jwt.jws.verifier.VerifySignature;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Optional;
 
 /**
@@ -22,7 +25,7 @@ public class SymmetricSignedJsonWebToken {
 
     public String tocCompactJwt() {
 
-        JwtAppFactory appFactory = new JwtAppFactory();
+        SecureCompactBuilder compactBuilder = new SecureCompactBuilder();
 
         SymmetricKey key = new SymmetricKey(
                 Optional.of("test-key-id"),
@@ -33,21 +36,17 @@ public class SymmetricSignedJsonWebToken {
         Claim claim = new Claim();
         claim.setUriIsRoot(true);
 
-        SecureJwtSerializer secureJwtSerializer = null;
+        ByteArrayOutputStream encodedJwt = null;
         try {
-            secureJwtSerializer = appFactory.secureJwtSerializer(Algorithm.HS256, key);
-        } catch (SignatureException e) {
+            encodedJwt = compactBuilder.claims(claim)
+                    .key(key)
+                    .alg(Algorithm.HS256)
+                    .build();
+        } catch (CompactException e) {
             e.printStackTrace();
         }
 
-        String encodedJwt = null;
-        try {
-            encodedJwt = secureJwtSerializer.compactJwtToString(claim);
-        } catch (JwtToJsonException e) {
-            e.printStackTrace();
-        }
-
-        return encodedJwt;
+        return encodedJwt.toString();
     }
 
     public Boolean verifySignature() throws Exception {

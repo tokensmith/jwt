@@ -1,6 +1,8 @@
 package examples;
 
 import helper.entity.Claim;
+import org.rootservices.jwt.builder.compact.SecureCompactBuilder;
+import org.rootservices.jwt.builder.exception.CompactException;
 import org.rootservices.jwt.jws.serialization.SecureJwtSerializer;
 import org.rootservices.jwt.config.JwtAppFactory;
 import org.rootservices.jwt.entity.jwk.KeyType;
@@ -15,6 +17,7 @@ import org.rootservices.jwt.serialization.exception.JsonToJwtException;
 import org.rootservices.jwt.serialization.exception.JwtToJsonException;
 import org.rootservices.jwt.jws.verifier.VerifySignature;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.util.Optional;
 
@@ -24,6 +27,8 @@ import java.util.Optional;
 public class AsymmetricSignedJsonWebToken {
 
     public String toCompactJwt() {
+
+        SecureCompactBuilder compactBuilder = new SecureCompactBuilder();
 
         RSAKeyPair keyPair = new RSAKeyPair(
                 Optional.of("test-key-id"),
@@ -42,22 +47,17 @@ public class AsymmetricSignedJsonWebToken {
         Claim claim = new Claim();
         claim.setUriIsRoot(true);
 
-        JwtAppFactory appFactory = new JwtAppFactory();
-        SecureJwtSerializer secureJwtSerializer = null;
+        ByteArrayOutputStream encodedJwt = null;
         try {
-            secureJwtSerializer = appFactory.secureJwtSerializer(Algorithm.RS256, keyPair);
-        } catch (SignatureException e) {
+            encodedJwt = compactBuilder.claims(claim)
+                    .key(keyPair)
+                    .alg(Algorithm.RS256)
+                    .build();
+        } catch (CompactException e) {
             e.printStackTrace();
         }
 
-        String encodedJwt = null;
-        try {
-            encodedJwt = secureJwtSerializer.compactJwtToString(claim);
-        } catch (JwtToJsonException e) {
-            e.printStackTrace();
-        }
-
-        return encodedJwt;
+        return encodedJwt.toString();
     }
 
     public Boolean verifySignature() throws Exception {
