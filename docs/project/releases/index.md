@@ -5,6 +5,9 @@ title: Releases
 
 ### {{ page.title }} ###
 
+#### 1.3.1 - Published on, 2018-08-10 ####
+ - Builders to help create compact JWT, JWS, and JWE
+
 #### 1.3 - Published on, 2018-04-01 ####
  - Renamed Encoder to Serializer
  - Key Encryption with RSAES-OAEP 
