@@ -50,39 +50,42 @@ key.setKeyId(Optional.of("test-key-id"));
 Claim claim = new Claim();
 claim.setUriIsRoot(true);
 
-ByteArrayOutputStream actual = subject.alg(Algorithm.HS256)
+ByteArrayOutputStream actual = compactBuilder.alg(Algorithm.HS256)
         .key(key)
         .claims(claim)
         .build();
 ```
 
 ## JWE Compact Serialization
-### Symmetric key
-```java
-SymmetricKey key = Factory.makeSymmetricKeyForJWE();
-
-byte[] payload = "Help me, Obi-Wan Kenobi. You're my only hope.".getBytes();
-
-ByteArrayOutputStream actual = subject.encAlg(EncryptionAlgorithm.AES_GCM_256)
-        .alg(Algorithm.DIRECT)
-        .encAlg(EncryptionAlgorithm.AES_GCM_256)
-        .payload(payload)
-        .cek(key)
-        .build();
-```
 
 ### Asymmetric key
 ```java
-JwtAppFactory jwtAppFactory = new JwtAppFactory();
+EncryptedCompactBuilder compactBuilder = new EncryptedCompactBuilder();
 
 byte[] payload = "Help me, Obi-Wan Kenobi. You're my only hope.".getBytes();
 
 RSAPublicKey publicKey = Factory.makeRSAPublicKeyForJWE();
 publicKey.setKeyId(Optional.of(UUID.randomUUID().toString()));
 
-ByteArrayOutputStream actual = subject.encAlg(EncryptionAlgorithm.AES_GCM_256)
+ByteArrayOutputStream actual = compactBuilder.encAlg(EncryptionAlgorithm.AES_GCM_256)
         .alg(Algorithm.RSAES_OAEP)
         .payload(payload)
         .rsa(publicKey)
+        .build();
+```
+
+### Symmetric key
+```java
+EncryptedCompactBuilder compactBuilder = new EncryptedCompactBuilder();
+
+SymmetricKey key = Factory.makeSymmetricKeyForJWE();
+
+byte[] payload = "Help me, Obi-Wan Kenobi. You're my only hope.".getBytes();
+
+ByteArrayOutputStream actual = compactBuilder.encAlg(EncryptionAlgorithm.AES_GCM_256)
+        .alg(Algorithm.DIRECT)
+        .encAlg(EncryptionAlgorithm.AES_GCM_256)
+        .payload(payload)
+        .cek(key)
         .build();
 ```
