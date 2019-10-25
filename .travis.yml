@@ -5,10 +5,10 @@ jdk:
   - openjdk12
 
 install:
-- ./gradlew assemble -x signArchives -i
+  - ./gradlew assemble -i
 
 script:
-- ./gradlew check -x signArchives -i
+  - ./gradlew check -i
 
 after_failure:
   chmod +x $TRAVIS_BUILD_DIR/print_surefire_reports.sh; $TRAVIS_BUILD_DIR/print_surefire_reports.sh
