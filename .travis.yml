@@ -2,7 +2,7 @@ sudo: false
 language: java
 
 jdk:
-  - oraclejdk9
+  - openjdk12
 
 install:
 - ./gradlew assemble -x signArchives -i
