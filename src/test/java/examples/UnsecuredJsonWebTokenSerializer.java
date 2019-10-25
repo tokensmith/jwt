@@ -1,9 +1,7 @@
 package examples;
 
 import helper.entity.Claim;
-import org.rootservices.jwt.builder.compact.UnsecureCompactBuilder;
-import org.rootservices.jwt.serialization.UnSecureJwtSerializer;
-import org.rootservices.jwt.config.JwtAppFactory;
+import net.tokensmith.jwt.builder.compact.UnsecureCompactBuilder;
 
 import java.io.ByteArrayOutputStream;
 

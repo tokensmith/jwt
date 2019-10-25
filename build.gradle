@@ -1,35 +1,27 @@
-// Apply the java-library plugin to add support for Java Library
-apply plugin: 'java-library'
-apply plugin: 'signing'
-apply plugin: 'maven'
-
-group = "org.rootservices"
-version = "1.3.1-SNAPSHOT"
-archivesBaseName="jwt"
-
-description = """JSON Web Tokens"""
-
-sourceCompatibility = 1.9
-targetCompatibility = 1.9
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'signing'
 }
 
 repositories {
-    mavenCentral()
     mavenLocal()
+    maven {
+        url = 'http://repo.maven.apache.org/maven2'
+    }
 }
 
-configurations {
-    deployerJars
-}
+group = 'net.tokensmith'
+version = '1.3.1-SNAPSHOT'
+description = 'Interface used in Otter Web Framework to help serializing to/from JSON'
+
+sourceCompatibility = 12
+targetCompatibility = 12
 
 ext {
-    jacksonVersion = '2.8.8'
-    log4jVersion = '2.11.0'
+    jacksonVersion = '2.9.10'
+    log4jVersion = '2.12.1'
+    mockitoVersion = '2.28.2'
 }
 
 dependencies {
@@ -42,76 +34,84 @@ dependencies {
 
     testImplementation group: 'junit', name: 'junit', version:'4.12'
     testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version:'1.3'
-    testImplementation group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
+    testCompile "org.mockito:mockito-core:${mockitoVersion}"
+}
+
+
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from(sourceSets.main.allJava)
 }
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
-    from javadoc
+    from(javadoc.destinationDir)
 }
 
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'jwt'
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
 
-artifacts {
-    archives javadocJar, sourcesJar
-}
-
-signing {
-    sign configurations.archives
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            if(!project.ext.properties.containsKey("ossrhUser")) {
-                project.ext.ossrhUser = 'wrongUser'
-                project.ext.ossrhPassword = 'wrongPassword'
-            }
-
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
-                authentication(userName: ossrhUser, password: ossrhPassword)
-            }
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUser, password: ossrhPassword)
-            }
-            pom.project {
-                groupId 'org.rootservices'
-                artifactId project.name
-                version project.version
-                name project.name
-                description project.description
-                packaging 'jar'
-                url 'https://github.com/RootServices/jwt'
+            pom {
+                name = 'jwt'
+                packaging = 'jar'
+                description = 'Java Implementation of JSON Web Tokens'
+                url = 'https://github.com/RootServices/jwt'
 
                 scm {
-                    connection 'git@github.com:RootServices/jwt.git'
-                    developerConnection 'git@github.com:RootServices/jwt.git'
-                    url 'https://github.com/RootServices/jwt'
+                    connection = 'git@github.com:RootServices/jwt.git'
+                    developerConnection = 'git@github.com:RootServices/jwt.git'
+                    url = 'https://github.com/RootServices/jwt'
                 }
 
                 licenses {
                     license {
-                        name 'The MIT License (MIT)'
-                        url 'https://github.com/RootServices/jwt/blob/development/LICENSE'
+                        name = 'The MIT License (MIT)'
+                        url = 'https://github.com/RootServices/jwt/blob/development/LICENSE'
                     }
                 }
 
                 developers {
                     developer {
-                        id 'tmackenzie'
-                        name 'Tom MacKenzie'
-                        email 'tom@rootservices.org'
+                        id = 'tmackenzie'
+                        name = 'Tom MacKenzie'
+                        email = 'tom@tokensmith.net'
                     }
                 }
             }
         }
     }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+            if(!project.ext.properties.containsKey("ossrhUser")) {
+                project.ext.ossrhUser = 'wrongUser'
+                project.ext.ossrhPassword = 'wrongPassword'
+                print "no ossrh user or password"
+            }
+            credentials {
+                username = project.ext.ossrhUser
+                password = project.ext.ossrhPassword
+            }
+        }
+    }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
+signing {
+    sign publishing.publications.mavenJava
 }
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+

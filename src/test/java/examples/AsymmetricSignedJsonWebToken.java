@@ -1,21 +1,19 @@
 package examples;
 
 import helper.entity.Claim;
-import org.rootservices.jwt.builder.compact.SecureCompactBuilder;
-import org.rootservices.jwt.builder.exception.CompactException;
-import org.rootservices.jwt.jws.serialization.SecureJwtSerializer;
-import org.rootservices.jwt.config.JwtAppFactory;
-import org.rootservices.jwt.entity.jwk.KeyType;
-import org.rootservices.jwt.entity.jwk.RSAKeyPair;
-import org.rootservices.jwt.entity.jwk.RSAPublicKey;
-import org.rootservices.jwt.entity.jwk.Use;
-import org.rootservices.jwt.entity.jwt.JsonWebToken;
-import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.exception.SignatureException;
-import org.rootservices.jwt.serialization.JwtSerde;
-import org.rootservices.jwt.serialization.exception.JsonToJwtException;
-import org.rootservices.jwt.serialization.exception.JwtToJsonException;
-import org.rootservices.jwt.jws.verifier.VerifySignature;
+import net.tokensmith.jwt.builder.compact.SecureCompactBuilder;
+import net.tokensmith.jwt.builder.exception.CompactException;
+import net.tokensmith.jwt.config.JwtAppFactory;
+import net.tokensmith.jwt.entity.jwk.KeyType;
+import net.tokensmith.jwt.entity.jwk.RSAKeyPair;
+import net.tokensmith.jwt.entity.jwk.RSAPublicKey;
+import net.tokensmith.jwt.entity.jwk.Use;
+import net.tokensmith.jwt.entity.jwt.JsonWebToken;
+import net.tokensmith.jwt.entity.jwt.header.Algorithm;
+import net.tokensmith.jwt.exception.SignatureException;
+import net.tokensmith.jwt.serialization.JwtSerde;
+import net.tokensmith.jwt.serialization.exception.JsonToJwtException;
+import net.tokensmith.jwt.jws.verifier.VerifySignature;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
