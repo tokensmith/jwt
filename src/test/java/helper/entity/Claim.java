@@ -1,7 +1,7 @@
 package helper.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.rootservices.jwt.entity.jwt.Claims;
+import net.tokensmith.jwt.entity.jwt.Claims;
 
 /**
  * Created by tommackenzie on 8/11/15.
