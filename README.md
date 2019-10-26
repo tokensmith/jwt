@@ -34,7 +34,7 @@ key.setKeyId(Optional.of("test-key-id"));
 Claim claim = new Claim();
 claim.setUriIsRoot(true);
 
-ByteArrayOutputStream actual = subject.alg(Algorithm.RS256)
+ByteArrayOutputStream actual = compactBuilder.alg(Algorithm.RS256)
         .key(key)
         .claims(claim)
         .build();

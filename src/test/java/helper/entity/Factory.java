@@ -1,10 +1,10 @@
 package helper.entity;
 
-import org.rootservices.jwt.entity.jwk.*;
-import org.rootservices.jwt.entity.jwt.JsonWebToken;
-import org.rootservices.jwt.entity.jwt.header.Algorithm;
-import org.rootservices.jwt.entity.jwt.header.Header;
-import org.rootservices.jwt.entity.jwt.header.TokenType;
+import net.tokensmith.jwt.entity.jwk.*;
+import net.tokensmith.jwt.entity.jwt.JsonWebToken;
+import net.tokensmith.jwt.entity.jwt.header.Algorithm;
+import net.tokensmith.jwt.entity.jwt.header.Header;
+import net.tokensmith.jwt.entity.jwt.header.TokenType;
 
 import java.math.BigInteger;
 import java.util.Base64;
