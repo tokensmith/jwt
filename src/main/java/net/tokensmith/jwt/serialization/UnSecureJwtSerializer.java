@@ -21,9 +21,9 @@ public class UnSecureJwtSerializer {
         return compactJwt(claims).toString();
     }
 
-    public ByteArrayOutputStream compactJwt(Claims claims) {
+    public <T extends Claims> ByteArrayOutputStream compactJwt(T claims) {
 
-        JsonWebToken jsonWebToken = unSecureJwtFactory.makeJwt(claims);
+        JsonWebToken<T> jsonWebToken = unSecureJwtFactory.makeJwt(claims);
 
         ByteArrayOutputStream encodedJwt = null;
         try {

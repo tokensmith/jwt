@@ -65,12 +65,12 @@ public class SecureJwtFactoryTest {
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken actual = subject.makeJwt(claim);
+        JsonWebToken<Claim> actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
 
         // inspect claims
-        Claim actualClaim = (Claim) actual.getClaims();
+        Claim actualClaim = actual.getClaims();
         assertThat(actualClaim.isUriIsRoot(), is(true));
         assertThat(actualClaim.getIssuer().isPresent(), is(true));
         assertThat(actualClaim.getIssuer().get(), is("joe"));
@@ -116,12 +116,12 @@ public class SecureJwtFactoryTest {
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken actual = subject.makeJwt(claim);
+        JsonWebToken<Claim> actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
 
         // inspect claims
-        Claim actualClaim = (Claim) actual.getClaims();
+        Claim actualClaim = actual.getClaims();
         assertThat(actualClaim.isUriIsRoot(), is(true));
         assertThat(actualClaim.getIssuer().isPresent(), is(true));
         assertThat(actualClaim.getIssuer().get(), is("joe"));
@@ -159,7 +159,7 @@ public class SecureJwtFactoryTest {
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken actual = subject.makeJwt(claim);
+        JsonWebToken<Claim> actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getHeader().getKeyId(), is(keyId));
@@ -177,7 +177,7 @@ public class SecureJwtFactoryTest {
         Claim claim = Factory.makeClaim();
 
         // first JsonWebToken.
-        JsonWebToken actual = subject.makeJwt(claim);
+        JsonWebToken<Claim> actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getSignature().isPresent(), is(true));
@@ -203,7 +203,7 @@ public class SecureJwtFactoryTest {
         Claim claim = Factory.makeClaim();
 
         // first JsonWebToken.
-        JsonWebToken actual = subject.makeJwt(claim);
+        JsonWebToken<Claim> actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getSignature().isPresent(), is(true));

@@ -1,5 +1,6 @@
 package net.tokensmith.jwt.jws.verifier;
 
+import net.tokensmith.jwt.entity.jwt.Claims;
 import net.tokensmith.jwt.entity.jwt.JsonWebToken;
 
 import java.security.Signature;
@@ -19,7 +20,7 @@ public class VerifyRsaSignature extends VerifySignature {
     }
 
     @Override
-    public boolean run(JsonWebToken token) {
+    public <T extends Claims> boolean run(JsonWebToken<T> token) {
 
         boolean isVerified = false;
 

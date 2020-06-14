@@ -8,20 +8,20 @@ import java.util.Optional;
 /**
  * Created by tommackenzie on 8/9/15.
  */
-public class JsonWebToken {
+public class JsonWebToken<T extends Claims> {
     private Header header;
-    private Claims claims;
+    private T claims;
     private Optional<byte[]> signature = Optional.empty();
     private Optional<String> jwt = Optional.empty();
 
     public JsonWebToken() {}
 
-    public JsonWebToken(Header header, Claims claims) {
+    public JsonWebToken(Header header, T claims) {
         this.header = header;
         this.claims = claims;
     }
 
-    public JsonWebToken(Header header, Claims claims, Optional<String> jwt) {
+    public JsonWebToken(Header header, T claims, Optional<String> jwt) {
         this.header = header;
         this.claims = claims;
         this.jwt = jwt;
@@ -35,11 +35,11 @@ public class JsonWebToken {
         this.header = header;
     }
 
-    public Claims getClaims() {
+    public T getClaims() {
         return claims;
     }
 
-    public void setClaims(Claims claims) {
+    public void setClaims(T claims) {
         this.claims = claims;
     }
 

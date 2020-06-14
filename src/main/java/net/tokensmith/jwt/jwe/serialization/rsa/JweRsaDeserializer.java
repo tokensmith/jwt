@@ -50,7 +50,7 @@ public class JweRsaDeserializer implements JweDeserializer {
 
         Header header;
         try {
-            header = (Header) serdes.jsonBytesToObject(protectedHeader, Header.class);
+            header = serdes.jsonBytesTo(protectedHeader, Header.class);
         } catch (JsonException e) {
             throw new JsonToJwtException(COMPACT_JWE_INVALID, e);
         }

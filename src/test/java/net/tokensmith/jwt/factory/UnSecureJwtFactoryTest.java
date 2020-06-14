@@ -40,12 +40,12 @@ public class UnSecureJwtFactoryTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        JsonWebToken actual = subject.makeJwt(claim);
+        JsonWebToken<Claim> actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
 
         // inspect claims
-        Claim actualClaim = (Claim) actual.getClaims();
+        Claim actualClaim = actual.getClaims();
         assertThat(actualClaim.isUriIsRoot(), is(true));
         assertThat(actualClaim.getIssuer().isPresent(), is(true));
         assertThat(actualClaim.getIssuer().get(), is("joe"));

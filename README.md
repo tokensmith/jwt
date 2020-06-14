@@ -1,12 +1,12 @@
 [JSON Web Tokens](https://tools.ietf.org/html/rfc7519)
 ---------------------------------------------------------------------------------------------------------------------
 
-[![Build Status](https://travis-ci.org/RootServices/jwt.svg?branch=development)](https://travis-ci.org/RootServices/jwt)
+[![Build Status](https://travis-ci.org/TokenSmith/jwt.svg?branch=development)](https://travis-ci.org/TokenSmith/jwt)
 
 
 Documentation
 ------------
- More documentation is available [here](http://rootservices.github.io/jwt/).
+ More documentation is available [here](http://tokensmith.github.io/jwt/).
  
 Quick Start
 -----------

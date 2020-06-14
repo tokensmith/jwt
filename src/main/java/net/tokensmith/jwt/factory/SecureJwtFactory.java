@@ -22,13 +22,13 @@ public class SecureJwtFactory {
         this.keyId = keyId;
     }
 
-    public JsonWebToken makeJwt(Claims claimNames) throws JwtToJsonException {
+    public <T extends Claims> JsonWebToken<T> makeJwt(T claimNames) throws JwtToJsonException {
         Header header = new Header();
         header.setAlgorithm(algorithm);
         header.setType(Optional.of(TokenType.JWT));
         header.setKeyId(keyId);
 
-        JsonWebToken jwt = new JsonWebToken();
+        JsonWebToken<T> jwt = new JsonWebToken<>();
         jwt.setHeader(header);
         jwt.setClaims(claimNames);
 

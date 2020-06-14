@@ -1,5 +1,6 @@
 package net.tokensmith.jwt.jws.verifier;
 
+import net.tokensmith.jwt.entity.jwt.Claims;
 import net.tokensmith.jwt.entity.jwt.JsonWebToken;
 import net.tokensmith.jwt.jws.signer.Signer;
 
@@ -16,7 +17,7 @@ public class VerifyMacSignature extends VerifySignature {
     }
 
     @Override
-    public boolean run(JsonWebToken token) {
+    public <T extends Claims> boolean run(JsonWebToken<T> token) {
         byte[] generatedSignature = null;
         byte[] actualSignature = null;
 
