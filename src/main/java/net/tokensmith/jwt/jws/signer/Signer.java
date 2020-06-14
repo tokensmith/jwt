@@ -1,5 +1,6 @@
 package net.tokensmith.jwt.jws.signer;
 
+import net.tokensmith.jwt.entity.jwt.Claims;
 import net.tokensmith.jwt.entity.jwt.JsonWebToken;
 import net.tokensmith.jwt.serialization.JwtSerde;
 import net.tokensmith.jwt.serialization.exception.JwtToJsonException;
@@ -18,7 +19,7 @@ public abstract class Signer {
         this.encoder = encoder;
     }
 
-    public byte[] run(JsonWebToken jwt) throws JwtToJsonException {
+    public <T extends Claims> byte[] run(JsonWebToken<T> jwt) throws JwtToJsonException {
         byte[] signInput = jwtSerde.makeSignInput(jwt.getHeader(), jwt.getClaims());
         return run(signInput);
     }

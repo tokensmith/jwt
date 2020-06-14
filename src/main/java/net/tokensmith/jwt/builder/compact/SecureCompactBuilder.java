@@ -3,18 +3,18 @@ package net.tokensmith.jwt.builder.compact;
 import net.tokensmith.jwt.entity.jwk.Key;
 import net.tokensmith.jwt.entity.jwt.Claims;
 import net.tokensmith.jwt.entity.jwt.header.Algorithm;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import net.tokensmith.jwt.builder.exception.CompactException;
 import net.tokensmith.jwt.config.JwtAppFactory;
 import net.tokensmith.jwt.exception.SignatureException;
 import net.tokensmith.jwt.jws.serialization.SecureJwtSerializer;
 import net.tokensmith.jwt.serialization.exception.JwtToJsonException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 
 public class SecureCompactBuilder {
-    private static final Logger LOGGER = LogManager.getLogger(SecureCompactBuilder.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecureCompactBuilder.class);
     public static final String UNABLE_TO_BUILD_COMPACT_JWT = "Unable to build compact jwt";
     private static JwtAppFactory jwtAppFactory = new JwtAppFactory();
 

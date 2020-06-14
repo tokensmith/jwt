@@ -57,7 +57,7 @@ public class MacSignerTest {
         claim.setIssuer(issuer);
         claim.setExpirationTime(expirationTime);
 
-        JsonWebToken jwt = new JsonWebToken(header, claim);
+        JsonWebToken<Claim> jwt = new JsonWebToken<>(header, claim);
 
         byte[] actual = subject.run(jwt);
         assertThat(actual, is("lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY".getBytes()));

@@ -71,7 +71,7 @@ public class AsymmetricSignedJsonWebToken {
 
         JwtAppFactory appFactory = new JwtAppFactory();
         JwtSerde jwtSerde = appFactory.jwtSerde();
-        JsonWebToken jsonWebToken;
+        JsonWebToken<Claim> jsonWebToken;
         try {
             jsonWebToken = jwtSerde.stringToJwt(jwt, Claim.class);
         } catch (JsonToJwtException e) {

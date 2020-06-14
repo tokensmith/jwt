@@ -79,7 +79,7 @@ public class Factory {
         return claim;
     }
 
-    public static JsonWebToken makeToken(Algorithm algorithm, Optional<TokenType> tokenType) {
+    public static JsonWebToken<Claim> makeToken(Algorithm algorithm, Optional<TokenType> tokenType) {
 
         // header
         Header header = new Header();
@@ -89,7 +89,7 @@ public class Factory {
         // claim of the token.
         Claim claim = makeClaim();
 
-        return new JsonWebToken(header, claim);
+        return new JsonWebToken<>(header, claim);
     }
 
     public static byte[] aad() {

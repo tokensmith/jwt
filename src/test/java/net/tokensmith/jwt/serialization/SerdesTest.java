@@ -60,7 +60,7 @@ public class SerdesTest {
     public void jsonToUnsecuredHeader() throws JsonException {
         Serdes subject = appFactory.serdes();
         byte[] json = "{\"alg\":\"none\"}".getBytes();
-        Header actual = (Header) subject.jsonBytesToObject(json, Header.class);
+        Header actual = subject.jsonBytesTo(json, Header.class);
         assertThat(actual.getAlgorithm(), is(Algorithm.NONE));
     }
 
@@ -68,7 +68,7 @@ public class SerdesTest {
     public void jsonToClaim() throws JsonException {
         Serdes subject = appFactory.serdes();
         byte[] json = "{\"iss\":\"joe\",\"exp\":1300819380,\"http://example.com/is_root\":true}".getBytes();
-        Claim actual = (Claim) subject.jsonBytesToObject(json, Claim.class);
+        Claim actual = subject.jsonBytesTo(json, Claim.class);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.isUriIsRoot(), is(true));
@@ -84,10 +84,10 @@ public class SerdesTest {
     }
 
     @Test(expected=JsonException.class)
-    public void jsonBytesToObjectShouldThrowJsonException() throws JsonException {
+    public void jsonBytesToShouldThrowJsonException() throws JsonException {
         Serdes subject = appFactory.serdes();
         byte[] invalidJson = "{\"iss\":\"joe\"".getBytes();
 
-        subject.jsonBytesToObject(invalidJson, Claim.class);
+        subject.jsonBytesTo(invalidJson, Claim.class);
     }
 }

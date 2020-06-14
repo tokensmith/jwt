@@ -37,7 +37,6 @@ public class JwtSerde {
     private Serdes serdes;
     private Encoder encoder;
     private Decoder decoder;
-    private final String DELIMITTER = ".";
     private final byte[] DELIMITER = ".".getBytes();
 
     public JwtSerde(Serdes serdes, Encoder encoder, Decoder decoder) {
@@ -77,7 +76,7 @@ public class JwtSerde {
         return members;
     }
 
-    public ByteArrayOutputStream compactJwt(JsonWebToken jwt) throws JwtToJsonException {
+    public <T extends Claims> ByteArrayOutputStream compactJwt(JsonWebToken<T> jwt) throws JwtToJsonException {
 
         List<byte[]> members = membersForSigning(jwt.getHeader(), jwt.getClaims());
 
@@ -93,9 +92,9 @@ public class JwtSerde {
         return compactJwt;
     }
 
-    public JsonWebToken stringToJwt(String jwtAsText, Class claimClass) throws JsonToJwtException, InvalidJWT {
+    public <T extends Claims> JsonWebToken<T> stringToJwt(String jwtAsText, Class<T> claimClass) throws JsonToJwtException, InvalidJWT {
         String[] jwtParts = jwtAsText.split(JWT_SPLITTER);
-        JsonWebToken jwt;
+        JsonWebToken<T> jwt;
 
         if (jwtParts.length == JWT_LENGTH) {
             jwt = jwt(jwtParts, claimClass, jwtAsText);
@@ -110,26 +109,24 @@ public class JwtSerde {
         return jwt;
     }
 
-    protected JsonWebToken jwt(String[] jwtParts, Class claimClass, String jwtAsText) throws JsonToJwtException {
+    protected <T extends Claims> JsonWebToken<T> jwt(String[] jwtParts, Class<T> claimClass, String jwtAsText) throws JsonToJwtException {
         byte[] headerJson = decoder.decode(jwtParts[0]);
         byte[] claimsJson = decoder.decode(jwtParts[1]);
 
         Header header;
-        Claims claim;
+        T claim;
         try {
-            header = (Header) serdes.jsonBytesToObject(headerJson, Header.class);
-            claim = (Claims) serdes.jsonBytesToObject(claimsJson, claimClass);
+            header = serdes.jsonBytesTo(headerJson, Header.class);
+            claim = serdes.jsonBytesTo(claimsJson, claimClass);
         } catch (JsonException e) {
             throw new JsonToJwtException(INVALID_JSON, e);
         }
 
-        JsonWebToken jwt = new JsonWebToken(header, claim, Optional.of(jwtAsText));
-
-        return jwt;
+        return new JsonWebToken<T>(header, claim, Optional.of(jwtAsText));
     }
 
-    protected JsonWebToken jws(String[] jwsParts, Class claimClass, String jwtAsText) throws JsonToJwtException {
-        JsonWebToken jwt = jwt(jwsParts, claimClass, jwtAsText);
+    protected <T extends Claims> JsonWebToken<T> jws(String[] jwsParts, Class<T> claimClass, String jwtAsText) throws JsonToJwtException {
+        JsonWebToken<T> jwt = jwt(jwsParts, claimClass, jwtAsText);
         jwt.setSignature(Optional.of(jwsParts[JWS_LENGTH-1].getBytes()));
 
         return jwt;

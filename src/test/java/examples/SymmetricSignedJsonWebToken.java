@@ -54,7 +54,7 @@ public class SymmetricSignedJsonWebToken {
         String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZX0.TeZ3DKSE-gplbaoA8CK_RMojt8CfA1MTYaM_ZuOeGNw";
         JwtSerde jwtSerde = appFactory.jwtSerde();
 
-        JsonWebToken jsonWebToken = null;
+        JsonWebToken<Claim> jsonWebToken;
         try {
             jsonWebToken = jwtSerde.stringToJwt(jwt, Claim.class);
         } catch (JsonToJwtException e) {

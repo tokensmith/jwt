@@ -36,10 +36,9 @@ import net.tokensmith.jwt.serialization.HeaderDeserializer;
 import net.tokensmith.jwt.serialization.JwtSerde;
 import net.tokensmith.jwt.serialization.Serdes;
 import net.tokensmith.jwt.serialization.UnSecureJwtSerializer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import net.tokensmith.jwt.jws.serialization.SecureJwtSerializer;
-import net.tokensmith.jwt.jws.signer.factory.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import javax.crypto.Cipher;
@@ -49,7 +48,7 @@ import java.util.Base64;
 
 
 public class JwtAppFactory {
-    private static final Logger LOGGER = LogManager.getLogger(JwtAppFactory.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtAppFactory.class);
     public static final String KEY_WAS_INVALID = "Could not construct Signer. Key was invalid.";
     public static final String ALG_WAS_INVALID = "Could not construct Signer. Algorithm was invalid.";
     public static final String RSA = "RSA";

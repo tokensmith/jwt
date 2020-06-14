@@ -33,7 +33,7 @@ public class VerifyMacSignatureTest {
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
                 "lliDzOlRAdGUCfCHCPx_uisb6ZfZ1LRQa0OJLeYTTpY";
 
-        JsonWebToken jwt = null;
+        JsonWebToken<Claim> jwt = null;
         try {
             jwt = jwtSerde.stringToJwt(jwtAsText, Claim.class);
         } catch (JsonToJwtException e) {
@@ -54,7 +54,7 @@ public class VerifyMacSignatureTest {
         String jwtAsText = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";
 
-        JsonWebToken jwt = null;
+        JsonWebToken<Claim> jwt = null;
         try {
             jwt = jwtSerde.stringToJwt(jwtAsText, Claim.class);
         } catch (JsonToJwtException e) {
