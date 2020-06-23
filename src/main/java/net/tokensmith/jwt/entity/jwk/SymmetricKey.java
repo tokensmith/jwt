@@ -20,4 +20,29 @@ public class SymmetricKey extends Key {
     public void setKey(String key) {
         this.key = key;
     }
+
+    public static class Builder {
+        protected Optional<String> keyId = Optional.empty();
+        private Use use;
+        private String key;
+
+        public Builder keyId(Optional<String> keyId) {
+            this.keyId = keyId;
+            return this;
+        }
+
+        public Builder use(Use use) {
+            this.use = use;
+            return this;
+        }
+
+        public Builder key(String key) {
+            this.key = key;
+            return this;
+        }
+
+        public SymmetricKey build() {
+            return new SymmetricKey(keyId, key, use);
+        }
+    }
 }

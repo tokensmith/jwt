@@ -3,6 +3,7 @@ package net.tokensmith.jwt.jws.signer.factory.rsa;
 import net.tokensmith.jwt.entity.jwk.RSAPublicKey;
 import net.tokensmith.jwt.jws.signer.SignAlgorithm;
 import net.tokensmith.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
+import net.tokensmith.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
 import net.tokensmith.jwt.jws.signer.factory.rsa.exception.PublicKeyException;
 import net.tokensmith.jwt.jws.signer.factory.rsa.exception.RSAPublicKeyException;
 
@@ -35,8 +36,13 @@ public class PublicKeySignatureFactory {
         return publicKey;
     }
 
-    public Signature makeSignature(SignAlgorithm alg, RSAPublicKey jwk) throws PublicKeyException, InvalidAlgorithmException, RSAPublicKeyException {
-        java.security.interfaces.RSAPublicKey securityPublicKey = makePublicKey(jwk);
+    public Signature makeSignature(SignAlgorithm alg, RSAPublicKey jwk) throws InvalidAlgorithmException, RSAPublicKeyException, InvalidJsonWebKeyException {
+        java.security.PublicKey securityPublicKey;
+        try {
+            securityPublicKey = makePublicKey(jwk);
+        } catch (PublicKeyException e) {
+            throw new InvalidJsonWebKeyException("jwk is invalid", e);
+        }
 
         Signature signature;
         try {
