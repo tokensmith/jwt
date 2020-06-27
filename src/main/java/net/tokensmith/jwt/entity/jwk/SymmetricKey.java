@@ -3,11 +3,18 @@ package net.tokensmith.jwt.entity.jwk;
 import java.util.Optional;
 
 /**
- * Created by tommackenzie on 11/4/15.
+ * Represents a symmetric key.
  */
 public class SymmetricKey extends Key {
     private String key;
 
+    /**
+     * Construct a Symmetric Key.
+     *
+     * @param keyId the id of the key
+     * @param key the base64, url encoded, without padding symmetric key value
+     * @param use how the key will be used, sign, encrypt.
+     */
     public SymmetricKey(Optional<String> keyId, String key, Use use) {
         super(keyId, KeyType.OCT, use);
         this.key = key;

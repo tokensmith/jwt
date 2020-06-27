@@ -10,9 +10,11 @@ import net.tokensmith.jwt.jwk.generator.jdk.RSAPrivateCrtKeyGenerator;
 import net.tokensmith.jwt.jwk.generator.jdk.SecretKeyGenerator;
 
 import javax.crypto.SecretKey;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -60,10 +62,15 @@ public class KeyGenerator {
     }
 
     private SymmetricKey translate(SecretKey from, Optional<String> keyId, Use use) {
+        String encodedKey = Base64
+                .getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(from.getEncoded());
+
         return new SymmetricKey.Builder()
                 .keyId(keyId)
                 .use(use)
-                .key(new String(from.getEncoded(), StandardCharsets.UTF_8))
+                .key(encodedKey)
                 .build();
     }
 

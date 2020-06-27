@@ -26,6 +26,13 @@ public class KeyGeneratorTest {
         assertThat(actual.getUse(), is(Use.SIGNATURE));
         assertThat(actual.getKey(), is(notNullValue()));
 
+        // key should be able to be base64 decoded.
+        try {
+            jwtAppFactory.urlDecoder().decode(actual.getKey());
+        } catch (IllegalArgumentException e) {
+            fail("key is not base 64 encoded. " + e.getMessage());
+        }
+
     }
 
     @Test

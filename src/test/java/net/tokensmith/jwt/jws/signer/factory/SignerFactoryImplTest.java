@@ -29,7 +29,7 @@ public class SignerFactoryImplTest {
     }
 
     @Test
-    public void shouldCreateMacSigner() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public void shouldCreateMacSigner() throws Exception {
         SymmetricKey key = Factory.makeSymmetricKey();
 
         Signer actual = subject.makeSigner(Algorithm.HS256, key);
