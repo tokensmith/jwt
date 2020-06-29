@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream;
 
 public class UnsecuredJsonWebTokenSerializer {
 
-    public String toEncodedJwt() {
+    public ByteArrayOutputStream toEncodedJwt() {
 
         UnsecureCompactBuilder compactBuilder = new UnsecureCompactBuilder();
 
@@ -17,6 +17,6 @@ public class UnsecuredJsonWebTokenSerializer {
 
         ByteArrayOutputStream encodedJwt = compactBuilder.claims(claim).build();
 
-        return encodedJwt.toString();
+        return encodedJwt;
     }
 }

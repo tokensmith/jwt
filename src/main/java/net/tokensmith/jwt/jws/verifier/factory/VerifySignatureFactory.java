@@ -3,6 +3,7 @@ package net.tokensmith.jwt.jws.verifier.factory;
 import net.tokensmith.jwt.entity.jwk.Key;
 import net.tokensmith.jwt.entity.jwk.KeyType;
 import net.tokensmith.jwt.entity.jwk.RSAPublicKey;
+import net.tokensmith.jwt.entity.jwk.SymmetricKey;
 import net.tokensmith.jwt.entity.jwt.header.Algorithm;
 import net.tokensmith.jwt.exception.SignatureException;
 import net.tokensmith.jwt.jws.signer.SignAlgorithm;
@@ -40,14 +41,14 @@ public class VerifySignatureFactory {
         VerifySignature verifySignature = null;
 
         if (key.getKeyType() == KeyType.OCT) {
-            verifySignature = makeVerifyMacSignature(algorithm, key);
+            verifySignature = makeVerifyMacSignature(algorithm, (SymmetricKey) key);
         } else if (key.getKeyType() == KeyType.RSA){
             verifySignature =  makeVerifyRsaSignature(algorithm, (RSAPublicKey) key);
         }
         return verifySignature;
     }
 
-    private VerifySignature makeVerifyMacSignature(Algorithm algorithm, Key key) throws SignatureException {
+    private VerifySignature makeVerifyMacSignature(Algorithm algorithm, SymmetricKey key) throws SignatureException {
         Signer macSigner;
         try {
             macSigner = signerFactory.makeMacSigner(algorithm, key);
@@ -67,12 +68,10 @@ public class VerifySignatureFactory {
 
         try {
             signature = publicKeySignatureFactory.makeSignature(signAlgorithm, key);
-        } catch (PublicKeyException e) {
-            throw new SignatureException(KEY_WAS_INVALID, e);
-        } catch (RSAPublicKeyException e) {
-            throw new SignatureException(KEY_WAS_INVALID, e);
         } catch (InvalidAlgorithmException e) {
             throw new SignatureException(ALG_WAS_INVALID, e);
+        } catch (InvalidJsonWebKeyException | RSAPublicKeyException e) {
+            throw new SignatureException(KEY_WAS_INVALID, e);
         }
 
         return new VerifyRsaSignature(signature, decoder);

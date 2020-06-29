@@ -36,7 +36,7 @@ public class SecureJwtFactoryTest {
 
 
     @Test
-    public void constructShouldAssignIVars() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public void constructShouldAssignIVars() throws Exception {
         SymmetricKey key = Factory.makeSymmetricKey();
         key.setKeyId(Optional.of("test-key-id"));
         SecureJwtFactory subject = appFactory.secureJwtFactory(Algorithm.HS256, key);
@@ -193,7 +193,7 @@ public class SecureJwtFactoryTest {
     }
 
     @Test
-    public void buildTwiceWithSymmetricKeyShouldSignsCorrectly() throws JwtToJsonException, InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public void buildTwiceWithSymmetricKeyShouldSignsCorrectly() throws Exception {
 
         // prepare subject of the test.
         SymmetricKey key = Factory.makeSymmetricKey();

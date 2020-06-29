@@ -19,9 +19,11 @@ import net.tokensmith.jwt.jwe.serialization.direct.JweDirectDesializer;
 import net.tokensmith.jwt.jwe.serialization.direct.JweDirectSerializer;
 import net.tokensmith.jwt.jwe.serialization.rsa.JweRsaDeserializer;
 import net.tokensmith.jwt.jwe.serialization.rsa.JweRsaSerializer;
-import net.tokensmith.jwt.jwk.PrivateKeyFactory;
-import net.tokensmith.jwt.jwk.PublicKeyFactory;
-import net.tokensmith.jwt.jwk.SecretKeyFactory;
+import net.tokensmith.jwt.jwk.PrivateKeyTranslator;
+import net.tokensmith.jwt.jwk.PublicKeyTranslator;
+import net.tokensmith.jwt.jwk.generator.KeyGenerator;
+import net.tokensmith.jwt.jwk.generator.jdk.RSAPrivateCrtKeyGenerator;
+import net.tokensmith.jwt.jwk.generator.jdk.SecretKeyGenerator;
 import net.tokensmith.jwt.jws.signer.Signer;
 import net.tokensmith.jwt.jws.signer.factory.SignerFactory;
 import net.tokensmith.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
@@ -43,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.crypto.Cipher;
 import java.security.KeyFactory;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
@@ -124,8 +127,8 @@ public class JwtAppFactory {
         );
     }
 
-    public PublicKeyFactory publicKeyFactory() {
-        return new PublicKeyFactory(rsaKeyFactory());
+    public PublicKeyTranslator publicKeyFactory() {
+        return new PublicKeyTranslator(rsaKeyFactory());
     }
 
     public PublicKeySignatureFactory publicKeySignatureFactory() {
@@ -136,8 +139,8 @@ public class JwtAppFactory {
         return new MacFactory(urlDecoder());
     }
 
-    public PrivateKeyFactory privateKeyFactory() {
-        return new PrivateKeyFactory(rsaKeyFactory());
+    public PrivateKeyTranslator privateKeyFactory() {
+        return new PrivateKeyTranslator(rsaKeyFactory());
     }
 
     public PrivateKeySignatureFactory privateKeySignatureFactory() {
@@ -188,7 +191,7 @@ public class JwtAppFactory {
     public JweRsaSerializer jweRsaSerializer(RSAPublicKey jwk) throws PublicKeyException, CipherException {
         java.security.interfaces.RSAPublicKey jdkKey;
         try {
-            jdkKey = publicKeyFactory().makePublicKey(jwk);
+            jdkKey = publicKeyFactory().to(jwk);
         } catch (PublicKeyException e) {
             throw e;
         }
@@ -204,7 +207,7 @@ public class JwtAppFactory {
                 serdes(),
                 encoder(),
                 rsaEncryptCipher,
-                new SecretKeyFactory(),
+                new SecretKeyGenerator(),
                 cipherSymmetricFactory()
         );
     }
@@ -222,6 +225,14 @@ public class JwtAppFactory {
         return new UnSecureJwtSerializer(unsecureJwtFactory(), jwtSerde());
     }
 
+    public KeyGenerator keyGenerator() {
+        return new KeyGenerator(new SecretKeyGenerator(), rsaPrivateCrtKeyGenerator());
+    }
+
+    protected RSAPrivateCrtKeyGenerator rsaPrivateCrtKeyGenerator() {
+        return new RSAPrivateCrtKeyGenerator(keyPairGenerator(), rsaKeyFactory());
+    }
+
     protected KeyFactory rsaKeyFactory() {
         if (this.RSAKeyFactory == null) {
             try {
@@ -232,5 +243,15 @@ public class JwtAppFactory {
             }
         }
         return RSAKeyFactory;
+    }
+
+    protected KeyPairGenerator keyPairGenerator() {
+        KeyPairGenerator keyPairGenerator = null;
+        try {
+            keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return keyPairGenerator;
     }
 }

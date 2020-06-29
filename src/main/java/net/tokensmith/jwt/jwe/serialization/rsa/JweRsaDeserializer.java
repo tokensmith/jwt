@@ -14,7 +14,7 @@ import net.tokensmith.jwt.serialization.exception.JsonException;
 import net.tokensmith.jwt.serialization.exception.JsonToJwtException;
 import net.tokensmith.jwt.jwe.serialization.JweDeserializer;
 import net.tokensmith.jwt.jwe.serialization.exception.KeyException;
-import net.tokensmith.jwt.jwk.PrivateKeyFactory;
+import net.tokensmith.jwt.jwk.PrivateKeyTranslator;
 import net.tokensmith.jwt.jws.signer.factory.rsa.exception.PrivateKeyException;
 
 
@@ -28,14 +28,14 @@ public class JweRsaDeserializer implements JweDeserializer {
 
     private Serdes serdes;
     private Base64.Decoder decoder;
-    private PrivateKeyFactory privateKeyFactory;
+    private PrivateKeyTranslator privateKeyTranslator;
     private CipherRSAFactory cipherRSAFactory;
     private CipherSymmetricFactory cipherSymmetricFactory;
 
-    public JweRsaDeserializer(Serdes serdes, Base64.Decoder decoder, PrivateKeyFactory privateKeyFactory, CipherRSAFactory cipherRSAFactory, CipherSymmetricFactory cipherSymmetricFactory) {
+    public JweRsaDeserializer(Serdes serdes, Base64.Decoder decoder, PrivateKeyTranslator privateKeyTranslator, CipherRSAFactory cipherRSAFactory, CipherSymmetricFactory cipherSymmetricFactory) {
         this.serdes = serdes;
         this.decoder = decoder;
-        this.privateKeyFactory = privateKeyFactory;
+        this.privateKeyTranslator = privateKeyTranslator;
         this.cipherRSAFactory = cipherRSAFactory;
         this.cipherSymmetricFactory = cipherSymmetricFactory;
     }
@@ -58,7 +58,7 @@ public class JweRsaDeserializer implements JweDeserializer {
         RSAKeyPair keyPair = (RSAKeyPair) key;
         RSAPrivateCrtKey jdkKey;
         try {
-            jdkKey = privateKeyFactory.makePrivateKey(keyPair);
+            jdkKey = privateKeyTranslator.to(keyPair);
         } catch (PrivateKeyException e) {
             throw new KeyException("", e);
         }

@@ -27,7 +27,7 @@ public class MacSignerTest {
     Signer subject;
 
     @Before
-    public void setUp() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public void setUp() throws Exception {
         SymmetricKey key = Factory.makeSymmetricKey();
 
         JwtAppFactory appFactory = new JwtAppFactory();

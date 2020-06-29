@@ -1,5 +1,6 @@
 package net.tokensmith.jwt.entity.jwk;
 
+import javax.swing.text.html.Option;
 import java.math.BigInteger;
 import java.util.Optional;
 
@@ -25,8 +26,8 @@ public class RSAKeyPair extends Key {
     private BigInteger dq;
     private BigInteger qi;
 
-    public RSAKeyPair(Optional<String> keyId, KeyType keyType, Use use, BigInteger n, BigInteger e, BigInteger d, BigInteger p, BigInteger q, BigInteger dp, BigInteger dq, BigInteger qi) {
-        super(keyId, keyType, use);
+    public RSAKeyPair(Optional<String> keyId, Use use, BigInteger n, BigInteger e, BigInteger d, BigInteger p, BigInteger q, BigInteger dp, BigInteger dq, BigInteger qi) {
+        super(keyId, KeyType.RSA, use);
         this.n = n;
         this.e = e;
         this.d = d;
@@ -100,5 +101,72 @@ public class RSAKeyPair extends Key {
 
     public void setQi(BigInteger qi) {
         this.qi = qi;
+    }
+
+    public static class Builder {
+        private Optional<String> keyId = Optional.empty();
+        private Use use;
+        private BigInteger n; // modulus
+        private BigInteger e; // public exponent
+        private BigInteger d; // private exponent
+        private BigInteger p;
+        private BigInteger q;
+        private BigInteger dp;
+        private BigInteger dq;
+        private BigInteger qi;
+
+        public Builder keyId(Optional<String> keyId) {
+            this.keyId = keyId;
+            return this;
+        }
+
+        public Builder use(Use use) {
+            this.use = use;
+            return this;
+        }
+
+        public Builder n(BigInteger n) {
+            this.n = n;
+            return this;
+        }
+
+        public Builder e(BigInteger e) {
+            this.e = e;
+            return this;
+        }
+
+        public Builder d(BigInteger d) {
+            this.d = d;
+            return this;
+        }
+
+        public Builder p(BigInteger p) {
+            this.p = p;
+            return this;
+        }
+
+        public Builder q(BigInteger q) {
+            this.q = q;
+            return this;
+        }
+
+        public Builder dp(BigInteger dp) {
+            this.dp = dp;
+            return this;
+        }
+
+        public Builder dq(BigInteger dq) {
+            this.dq = dq;
+            return this;
+        }
+
+        public Builder qi(BigInteger qi) {
+            this.qi = qi;
+            return this;
+        }
+
+        public RSAKeyPair build() {
+            return new RSAKeyPair(keyId, use, n, e, d, p, q, dp, dq, qi);
+        }
     }
 }

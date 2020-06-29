@@ -10,7 +10,7 @@ import net.tokensmith.jwt.serialization.exception.EncryptException;
 import net.tokensmith.jwt.serialization.exception.JsonException;
 import net.tokensmith.jwt.serialization.exception.JsonToJwtException;
 import net.tokensmith.jwt.jwk.KeyAlgorithm;
-import net.tokensmith.jwt.jwk.SecretKeyFactory;
+import net.tokensmith.jwt.jwk.generator.jdk.SecretKeyGenerator;
 import net.tokensmith.jwt.jwk.exception.SecretKeyException;
 
 import javax.crypto.BadPaddingException;
@@ -30,14 +30,14 @@ public class JweRsaSerializer implements JweSerializer {
     private Serdes serdes;
     private Base64.Encoder encoder;
     private Cipher RSAEncryptCipher;
-    private SecretKeyFactory secretKeyFactory;
+    private SecretKeyGenerator secretKeyGenerator;
     private CipherSymmetricFactory cipherSymmetricFactory;
 
-    public JweRsaSerializer(Serdes serdes, Base64.Encoder encoder, Cipher RSAEncryptCipher, SecretKeyFactory secretKeyFactory, CipherSymmetricFactory cipherSymmetricFactory) {
+    public JweRsaSerializer(Serdes serdes, Base64.Encoder encoder, Cipher RSAEncryptCipher, SecretKeyGenerator secretKeyGenerator, CipherSymmetricFactory cipherSymmetricFactory) {
         this.serdes = serdes;
         this.encoder = encoder;
         this.RSAEncryptCipher = RSAEncryptCipher;
-        this.secretKeyFactory = secretKeyFactory;
+        this.secretKeyGenerator = secretKeyGenerator;
         this.cipherSymmetricFactory = cipherSymmetricFactory;
     }
 
@@ -55,7 +55,7 @@ public class JweRsaSerializer implements JweSerializer {
 
         SecretKey cek;
         try {
-            cek = secretKeyFactory.makeKey(KeyAlgorithm.AES);
+            cek = secretKeyGenerator.makeKey(KeyAlgorithm.AES);
         } catch (SecretKeyException e) {
             throw new EncryptException(FAILED_TO_CREATE_CONTENT_ENCRYPTION_KEY, e);
         }

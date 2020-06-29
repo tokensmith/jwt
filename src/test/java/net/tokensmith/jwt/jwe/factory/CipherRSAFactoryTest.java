@@ -7,8 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 import net.tokensmith.jwt.config.JwtAppFactory;
 import net.tokensmith.jwt.jwe.Transformation;
-import net.tokensmith.jwt.jwk.PrivateKeyFactory;
-import net.tokensmith.jwt.jwk.PublicKeyFactory;
+import net.tokensmith.jwt.jwk.PrivateKeyTranslator;
+import net.tokensmith.jwt.jwk.PublicKeyTranslator;
 
 import javax.crypto.Cipher;
 
@@ -20,15 +20,15 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 
 public class CipherRSAFactoryTest {
-    private PublicKeyFactory publicKeyFactory;
-    private PrivateKeyFactory privateKeyFactory;
+    private PublicKeyTranslator publicKeyTranslator;
+    private PrivateKeyTranslator privateKeyTranslator;
     private CipherRSAFactory subject;
 
     @Before
     public void setUp() {
         JwtAppFactory jwtAppFactory = new JwtAppFactory();
-        publicKeyFactory = jwtAppFactory.publicKeyFactory();
-        privateKeyFactory = jwtAppFactory.privateKeyFactory();
+        publicKeyTranslator = jwtAppFactory.publicKeyFactory();
+        privateKeyTranslator = jwtAppFactory.privateKeyFactory();
         subject = new CipherRSAFactory();
     }
 
@@ -36,7 +36,7 @@ public class CipherRSAFactoryTest {
     public void forEncryptWhenPublicKey() throws Exception {
 
         RSAPublicKey rsaPublicKey = Factory.makeRSAPublicKey();
-        java.security.interfaces.RSAPublicKey jdkPublicKey = publicKeyFactory.makePublicKey(rsaPublicKey);
+        java.security.interfaces.RSAPublicKey jdkPublicKey = publicKeyTranslator.to(rsaPublicKey);
 
         Cipher actual = subject.forEncrypt(Transformation.RSA_OAEP, jdkPublicKey);
 
@@ -48,7 +48,7 @@ public class CipherRSAFactoryTest {
     @Test
     public void forDecryptWhenPrivateKey() throws Exception {
         RSAKeyPair jwk = Factory.makeRSAKeyPair();
-        RSAPrivateCrtKey jdkPrivateKey = privateKeyFactory.makePrivateKey(jwk);
+        RSAPrivateCrtKey jdkPrivateKey = privateKeyTranslator.to(jwk);
 
         Cipher actual = subject.forDecrypt(Transformation.RSA_OAEP, jdkPrivateKey);
 

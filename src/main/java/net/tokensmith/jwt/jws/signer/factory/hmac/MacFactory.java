@@ -27,7 +27,12 @@ public class MacFactory {
     }
 
     public Mac makeMac(SignAlgorithm alg, SymmetricKey jwk) throws InvalidAlgorithmException, SecurityKeyException {
-        java.security.Key securityKey = makeKey(alg, jwk);
+        java.security.Key securityKey;
+        try {
+            securityKey = makeKey(alg, jwk);
+        } catch (IllegalArgumentException e) {
+            throw new SecurityKeyException("Inappropriate key for SecretKeySpec", e);
+        }
         Mac mac;
 
         try {

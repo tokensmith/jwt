@@ -1,5 +1,6 @@
-package net.tokensmith.jwt.jwk;
+package net.tokensmith.jwt.jwk.generator.jdk;
 
+import net.tokensmith.jwt.jwk.KeyAlgorithm;
 import net.tokensmith.jwt.jwk.exception.SecretKeyException;
 
 import javax.crypto.KeyGenerator;
@@ -7,9 +8,9 @@ import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
 
 
-public class SecretKeyFactory {
+public class SecretKeyGenerator {
     public static final String MESSAGE = "Could not construct key generator";
-    private static int keySize = 256;
+    private static int KEY_SIZE = 256;
 
     public SecretKey makeKey(KeyAlgorithm keyAlgorithm) throws SecretKeyException {
         // docs say KeyGenerators can be reused as long as they use the same init values.
@@ -21,7 +22,7 @@ public class SecretKeyFactory {
             throw new SecretKeyException(MESSAGE, e);
         }
 
-        keyGenerator.init(keySize);
+        keyGenerator.init(KEY_SIZE);
 
         return keyGenerator.generateKey();
     }
