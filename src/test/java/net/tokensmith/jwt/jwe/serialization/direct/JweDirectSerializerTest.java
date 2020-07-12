@@ -20,7 +20,7 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.notNull;
+
 
 public class JweDirectSerializerTest {
     private static JwtAppFactory jwtAppFactory = new JwtAppFactory();

@@ -1,5 +1,6 @@
 package net.tokensmith.jwt.jws.signer;
 
+import helper.entity.Claim;
 import helper.entity.Factory;
 import net.tokensmith.jwt.entity.jwk.RSAKeyPair;
 import net.tokensmith.jwt.entity.jwt.JsonWebToken;
@@ -75,7 +76,7 @@ public class RSASignerTest {
         RSAKeyPair jwk = Factory.makeRSAKeyPair();
         Signer subject =  appFactory.signerFactory().makeSigner(Algorithm.RS256, jwk);
 
-        JsonWebToken jwt = Factory.makeToken(Algorithm.RS256, Optional.<TokenType>empty());
+        JsonWebToken<Claim> jwt = Factory.makeToken(Algorithm.RS256, Optional.<TokenType>empty());
 
         byte[] actual = subject.run(jwt);
 

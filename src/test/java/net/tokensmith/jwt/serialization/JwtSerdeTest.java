@@ -37,7 +37,7 @@ public class JwtSerdeTest {
 
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken tokenToMarshal = unsecureTokenBuilder.makeJwt(claim);
+        JsonWebToken<Claim> tokenToMarshal = unsecureTokenBuilder.makeJwt(claim);
         ByteArrayOutputStream actual = subject.compactJwt(tokenToMarshal);
         assertThat(actual.toString(), is(expectedJwt));
     }
@@ -57,7 +57,7 @@ public class JwtSerdeTest {
 
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken tokenToMarshal = secureJwtFactory.makeJwt(claim);
+        JsonWebToken<Claim> tokenToMarshal = secureJwtFactory.makeJwt(claim);
         ByteArrayOutputStream actual = subject.compactJwt(tokenToMarshal);
 
         assertThat(actual.toString(), is(expectedJwt));
@@ -79,7 +79,7 @@ public class JwtSerdeTest {
 
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken tokenToMarshal = secureJwtFactory.makeJwt(claim);
+        JsonWebToken<Claim> tokenToMarshal = secureJwtFactory.makeJwt(claim);
         ByteArrayOutputStream actual = subject.compactJwt(tokenToMarshal);
 
         assertThat(actual.toString(), is(expectedJwt));
@@ -93,7 +93,7 @@ public class JwtSerdeTest {
         String jwtAsText = "eyJhbGciOiJub25lIn0=." +
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ==.";
 
-        JsonWebToken actual = subject.stringToJwt(jwtAsText, Claim.class);
+        JsonWebToken<Claim> actual = subject.stringToJwt(jwtAsText, Claim.class);
         assertThat(actual, is(notNullValue()));
 
         // header
@@ -104,7 +104,7 @@ public class JwtSerdeTest {
         // claim
         assertThat(actual.getClaims(), is(notNullValue()));
         assertThat(actual.getClaims(), instanceOf(Claim.class));
-        assertThat(((Claim) actual.getClaims()).isUriIsRoot(), is(true));
+        assertThat((actual.getClaims()).isUriIsRoot(), is(true));
         assertThat(actual.getClaims().getIssuer().isPresent(), is(true));
         assertThat(actual.getClaims().getIssuer().get(), is("joe"));
         assertThat(actual.getClaims().getExpirationTime().isPresent(), is(true));
@@ -129,7 +129,7 @@ public class JwtSerdeTest {
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
                 signature;
 
-        JsonWebToken actual = subject.stringToJwt(jwtAsText, Claim.class);
+        JsonWebToken<Claim> actual = subject.stringToJwt(jwtAsText, Claim.class);
         assertThat(actual, is(notNullValue()));
 
         // header
@@ -142,7 +142,7 @@ public class JwtSerdeTest {
         // claim
         assertThat(actual.getClaims(), is(notNullValue()));
         assertThat(actual.getClaims(), instanceOf(Claim.class));
-        assertThat(((Claim) actual.getClaims()).isUriIsRoot(), is(true));
+        assertThat((actual.getClaims()).isUriIsRoot(), is(true));
         assertThat(actual.getClaims().getIssuer().isPresent(), is(true));
         assertThat(actual.getClaims().getIssuer().get(), is("joe"));
         assertThat(actual.getClaims().getExpirationTime().isPresent(), is(true));
@@ -171,7 +171,7 @@ public class JwtSerdeTest {
                 "eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
                 signature;
 
-        JsonWebToken actual = subject.stringToJwt(jwtAsText, Claim.class);
+        JsonWebToken<Claim> actual = subject.stringToJwt(jwtAsText, Claim.class);
         assertThat(actual, is(notNullValue()));
 
         // header
@@ -185,7 +185,7 @@ public class JwtSerdeTest {
         // claim
         assertThat(actual.getClaims(), is(notNullValue()));
         assertThat(actual.getClaims(), instanceOf(Claim.class));
-        assertThat(((Claim) actual.getClaims()).isUriIsRoot(), is(true));
+        assertThat((actual.getClaims()).isUriIsRoot(), is(true));
         assertThat(actual.getClaims().getIssuer().isPresent(), is(true));
         assertThat(actual.getClaims().getIssuer().get(), is("joe"));
         assertThat(actual.getClaims().getExpirationTime().isPresent(), is(true));

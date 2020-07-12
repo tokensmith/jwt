@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import net.tokensmith.jwt.jwe.Transformation;
 import net.tokensmith.jwt.jwk.KeyAlgorithm;
-import net.tokensmith.jwt.jwk.SecretKeyFactory;
+import net.tokensmith.jwt.jwk.generator.jdk.SecretKeyGenerator;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -26,8 +26,8 @@ public class CipherSymmetricFactoryTest {
 
     @Test
     public void forEncryptWhenSecretKey() throws Exception {
-        SecretKeyFactory secretKeyFactory = new SecretKeyFactory();
-        SecretKey secretKey = secretKeyFactory.makeKey(KeyAlgorithm.AES);
+        SecretKeyGenerator secretKeyGenerator = new SecretKeyGenerator();
+        SecretKey secretKey = secretKeyGenerator.makeKey(KeyAlgorithm.AES);
         byte[] aad = Factory.aad();
 
         Cipher actual = subject.forEncrypt(Transformation.AES_GCM_NO_PADDING, secretKey, aad);
@@ -39,8 +39,8 @@ public class CipherSymmetricFactoryTest {
 
     @Test
     public void forDecryptWhenSecretKey() throws Exception {
-        SecretKeyFactory secretKeyFactory = new SecretKeyFactory();
-        SecretKey secretKey = secretKeyFactory.makeKey(KeyAlgorithm.AES);
+        SecretKeyGenerator secretKeyGenerator = new SecretKeyGenerator();
+        SecretKey secretKey = secretKeyGenerator.makeKey(KeyAlgorithm.AES);
         byte[] aad = Factory.aad();
 
         byte[] initVector = subject.makeInitVector();

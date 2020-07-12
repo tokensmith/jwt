@@ -2,6 +2,7 @@ package net.tokensmith.jwt.builder.compact;
 
 import helper.entity.Claim;
 import helper.entity.Factory;
+import net.tokensmith.jwt.config.JwtAppFactory;
 import net.tokensmith.jwt.entity.jwk.RSAKeyPair;
 import net.tokensmith.jwt.entity.jwk.SymmetricKey;
 import net.tokensmith.jwt.entity.jwt.header.Algorithm;

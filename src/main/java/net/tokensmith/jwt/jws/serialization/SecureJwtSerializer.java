@@ -23,8 +23,8 @@ public class SecureJwtSerializer {
         return compactJwt(claims).toString();
     }
 
-    public ByteArrayOutputStream compactJwt(Claims claims) throws JwtToJsonException {
-        JsonWebToken jsonWebToken;
+    public <T extends Claims> ByteArrayOutputStream compactJwt(T claims) throws JwtToJsonException {
+        JsonWebToken<T> jsonWebToken;
         try {
             jsonWebToken = secureJwtFactory.makeJwt(claims);
         } catch (JwtToJsonException e) {

@@ -9,6 +9,8 @@ import net.tokensmith.jwt.entity.jwk.Use;
 import net.tokensmith.jwt.entity.jwt.JsonWebToken;
 import net.tokensmith.jwt.entity.jwt.header.Algorithm;
 import net.tokensmith.jwt.exception.SignatureException;
+import net.tokensmith.jwt.jwk.generator.KeyGenerator;
+import net.tokensmith.jwt.jwk.generator.exception.KeyGenerateException;
 import net.tokensmith.jwt.serialization.JwtSerde;
 import net.tokensmith.jwt.serialization.exception.JsonToJwtException;
 import net.tokensmith.jwt.jws.verifier.VerifySignature;
@@ -21,15 +23,20 @@ import java.util.Optional;
  */
 public class SymmetricSignedJsonWebToken {
 
-    public String tocCompactJwt() {
+    public ByteArrayOutputStream toCompactJwt() throws KeyGenerateException {
 
         SecureCompactBuilder compactBuilder = new SecureCompactBuilder();
 
-        SymmetricKey key = new SymmetricKey(
-                Optional.of("test-key-id"),
-                "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow",
-                Use.SIGNATURE
-        );
+        JwtAppFactory jwtAppFactory = new JwtAppFactory();
+        KeyGenerator keyGenerator = jwtAppFactory.keyGenerator();
+
+        SymmetricKey key;
+
+        try {
+            key = keyGenerator.symmetricKey(Optional.of("test-key-id"), Use.SIGNATURE);
+        } catch (KeyGenerateException e) {
+            throw e;
+        }
 
         Claim claim = new Claim();
         claim.setUriIsRoot(true);
@@ -44,7 +51,7 @@ public class SymmetricSignedJsonWebToken {
             e.printStackTrace();
         }
 
-        return encodedJwt.toString();
+        return encodedJwt;
     }
 
     public Boolean verifySignature() throws Exception {
@@ -54,7 +61,7 @@ public class SymmetricSignedJsonWebToken {
         String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZX0.TeZ3DKSE-gplbaoA8CK_RMojt8CfA1MTYaM_ZuOeGNw";
         JwtSerde jwtSerde = appFactory.jwtSerde();
 
-        JsonWebToken jsonWebToken = null;
+        JsonWebToken<Claim> jsonWebToken;
         try {
             jsonWebToken = jwtSerde.stringToJwt(jwt, Claim.class);
         } catch (JsonToJwtException e) {

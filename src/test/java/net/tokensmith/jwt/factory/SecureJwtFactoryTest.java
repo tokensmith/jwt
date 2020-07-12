@@ -36,7 +36,7 @@ public class SecureJwtFactoryTest {
 
 
     @Test
-    public void constructShouldAssignIVars() throws InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public void constructShouldAssignIVars() throws Exception {
         SymmetricKey key = Factory.makeSymmetricKey();
         key.setKeyId(Optional.of("test-key-id"));
         SecureJwtFactory subject = appFactory.secureJwtFactory(Algorithm.HS256, key);
@@ -65,12 +65,12 @@ public class SecureJwtFactoryTest {
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken actual = subject.makeJwt(claim);
+        JsonWebToken<Claim> actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
 
         // inspect claims
-        Claim actualClaim = (Claim) actual.getClaims();
+        Claim actualClaim = actual.getClaims();
         assertThat(actualClaim.isUriIsRoot(), is(true));
         assertThat(actualClaim.getIssuer().isPresent(), is(true));
         assertThat(actualClaim.getIssuer().get(), is("joe"));
@@ -116,12 +116,12 @@ public class SecureJwtFactoryTest {
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken actual = subject.makeJwt(claim);
+        JsonWebToken<Claim> actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
 
         // inspect claims
-        Claim actualClaim = (Claim) actual.getClaims();
+        Claim actualClaim = actual.getClaims();
         assertThat(actualClaim.isUriIsRoot(), is(true));
         assertThat(actualClaim.getIssuer().isPresent(), is(true));
         assertThat(actualClaim.getIssuer().get(), is("joe"));
@@ -159,7 +159,7 @@ public class SecureJwtFactoryTest {
         // claim of the token.
         Claim claim = Factory.makeClaim();
 
-        JsonWebToken actual = subject.makeJwt(claim);
+        JsonWebToken<Claim> actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getHeader().getKeyId(), is(keyId));
@@ -177,7 +177,7 @@ public class SecureJwtFactoryTest {
         Claim claim = Factory.makeClaim();
 
         // first JsonWebToken.
-        JsonWebToken actual = subject.makeJwt(claim);
+        JsonWebToken<Claim> actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getSignature().isPresent(), is(true));
@@ -193,7 +193,7 @@ public class SecureJwtFactoryTest {
     }
 
     @Test
-    public void buildTwiceWithSymmetricKeyShouldSignsCorrectly() throws JwtToJsonException, InvalidAlgorithmException, InvalidJsonWebKeyException {
+    public void buildTwiceWithSymmetricKeyShouldSignsCorrectly() throws Exception {
 
         // prepare subject of the test.
         SymmetricKey key = Factory.makeSymmetricKey();
@@ -203,7 +203,7 @@ public class SecureJwtFactoryTest {
         Claim claim = Factory.makeClaim();
 
         // first JsonWebToken.
-        JsonWebToken actual = subject.makeJwt(claim);
+        JsonWebToken<Claim> actual = subject.makeJwt(claim);
 
         assertThat(actual, is(notNullValue()));
         assertThat(actual.getSignature().isPresent(), is(true));

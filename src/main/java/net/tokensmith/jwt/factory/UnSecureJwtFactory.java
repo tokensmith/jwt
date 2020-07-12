@@ -13,11 +13,11 @@ import java.util.Optional;
  */
 public class UnSecureJwtFactory {
 
-    public JsonWebToken makeJwt(Claims claimNames) {
+    public <T extends Claims> JsonWebToken<T> makeJwt(T claimNames) {
         Header header = new Header();
         header.setAlgorithm(Algorithm.NONE);
 
-        JsonWebToken jwt = new JsonWebToken();
+        JsonWebToken<T> jwt = new JsonWebToken<T>();
         jwt.setHeader(header);
         jwt.setClaims(claimNames);
         jwt.setSignature(Optional.<byte[]>empty());

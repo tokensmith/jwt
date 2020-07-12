@@ -5,8 +5,6 @@ import net.tokensmith.jwt.entity.jwk.RSAPublicKey;
 import net.tokensmith.jwt.entity.jwk.SymmetricKey;
 import net.tokensmith.jwt.entity.jwt.header.Algorithm;
 import net.tokensmith.jwt.entity.jwt.header.Header;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import net.tokensmith.jwt.builder.exception.CompactException;
 import net.tokensmith.jwt.config.JwtAppFactory;
 import net.tokensmith.jwt.jwe.entity.JWE;
@@ -15,13 +13,15 @@ import net.tokensmith.jwt.jwe.serialization.JweSerializer;
 import net.tokensmith.jwt.jws.signer.factory.rsa.exception.PublicKeyException;
 import net.tokensmith.jwt.serialization.exception.EncryptException;
 import net.tokensmith.jwt.serialization.exception.JsonToJwtException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 import java.util.Optional;
 
 public class EncryptedCompactBuilder {
-    private static final Logger LOGGER = LogManager.getLogger(EncryptedCompactBuilder.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EncryptedCompactBuilder.class);
     public static final String UNABLE_TO_BUILD_COMPACT_JWE = "Unable to build compact jwe";
     private static JwtAppFactory jwtAppFactory = new JwtAppFactory();
 

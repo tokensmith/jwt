@@ -28,8 +28,8 @@ public class Serdes {
         }
     }
 
-    public Object jsonBytesToObject(byte[] json, Class<?> c) throws JsonException {
-        Object object;
+    public <T> T jsonBytesTo(byte[] json, Class<T> c) throws JsonException {
+        T object;
         try {
             object = objectMapper.readValue(json, c);
         } catch (IOException e) {

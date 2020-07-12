@@ -31,7 +31,7 @@ public class HeaderDeserializer {
 
         Header header;
         try {
-            header = (Header) serdes.jsonBytesToObject(headerJson, Header.class);
+            header = serdes.jsonBytesTo(headerJson, Header.class);
         } catch (JsonException e) {
             throw new JsonToJwtException(INVALID_HEADER, e);
         }

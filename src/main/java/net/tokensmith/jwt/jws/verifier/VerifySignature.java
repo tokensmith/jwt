@@ -1,5 +1,6 @@
 package net.tokensmith.jwt.jws.verifier;
 
+import net.tokensmith.jwt.entity.jwt.Claims;
 import net.tokensmith.jwt.entity.jwt.JsonWebToken;
 
 import java.nio.charset.Charset;
@@ -14,5 +15,5 @@ public abstract class VerifySignature {
         return (inputParts[0] + "." + inputParts[1]).getBytes(Charset.forName("UTF-8"));
 
     }
-    public abstract boolean run(JsonWebToken token);
+    public abstract <T extends Claims> boolean run(JsonWebToken<T> token);
 }
