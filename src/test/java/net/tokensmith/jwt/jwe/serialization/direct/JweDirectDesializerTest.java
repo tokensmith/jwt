@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class JweDirectDesializerTest {
     private static JwtAppFactory jwtAppFactory = new JwtAppFactory();

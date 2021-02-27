@@ -13,8 +13,9 @@ import net.tokensmith.jwt.jws.signer.Signer;
 import net.tokensmith.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
 import net.tokensmith.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.*;
+
 
 /**
  * Created by tommackenzie on 8/31/15.

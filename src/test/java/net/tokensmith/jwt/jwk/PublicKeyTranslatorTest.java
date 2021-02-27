@@ -11,7 +11,7 @@ import java.math.BigInteger;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PublicKeyTranslatorTest {
     private JwtAppFactory appFactory;

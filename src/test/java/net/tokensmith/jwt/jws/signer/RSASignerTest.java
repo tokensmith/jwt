@@ -17,8 +17,8 @@ import net.tokensmith.jwt.jws.signer.factory.exception.InvalidJsonWebKeyExceptio
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
 
 /**
  * Created by tommackenzie on 11/12/15.

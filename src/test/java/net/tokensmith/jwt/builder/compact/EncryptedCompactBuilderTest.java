@@ -20,9 +20,10 @@ import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
+
 
 public class EncryptedCompactBuilderTest {
     private static JwtAppFactory jwtAppFactory = new JwtAppFactory();

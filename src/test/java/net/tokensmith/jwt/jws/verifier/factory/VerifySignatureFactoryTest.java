@@ -1,14 +1,12 @@
 package net.tokensmith.jwt.jws.verifier.factory;
 
 import helper.entity.Factory;
-import net.tokensmith.jwt.entity.jwk.KeyType;
 import net.tokensmith.jwt.entity.jwk.RSAPublicKey;
 import net.tokensmith.jwt.entity.jwk.SymmetricKey;
 import net.tokensmith.jwt.entity.jwt.header.Algorithm;
 import net.tokensmith.jwt.exception.SignatureException;
 import net.tokensmith.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
 import net.tokensmith.jwt.jws.signer.factory.exception.InvalidJsonWebKeyException;
-import net.tokensmith.jwt.jws.signer.factory.rsa.exception.PublicKeyException;
 import org.junit.Before;
 import org.junit.Test;
 import net.tokensmith.jwt.config.JwtAppFactory;
@@ -20,8 +18,9 @@ import java.math.BigInteger;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+
 
 /**
  * Created by tommackenzie on 11/15/15.

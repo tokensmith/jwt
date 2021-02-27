@@ -7,14 +7,15 @@ import org.junit.Before;
 import org.junit.Test;
 import net.tokensmith.jwt.config.JwtAppFactory;
 import net.tokensmith.jwt.jws.signer.SignAlgorithm;
-import net.tokensmith.jwt.jws.signer.factory.exception.InvalidAlgorithmException;
 import net.tokensmith.jwt.jws.signer.factory.hmac.MacFactory;
-import net.tokensmith.jwt.jws.signer.factory.hmac.exception.SecurityKeyException;
 
 import javax.crypto.Mac;
 import java.util.Base64;
 
-import static org.junit.Assert.*;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by tommackenzie on 8/22/15.
@@ -34,10 +35,10 @@ public class MacFactoryTest {
 
         java.security.Key actual = subject.makeKey(SignAlgorithm.HS256, key);
         assertNotNull(actual);
-        assertEquals(actual.getAlgorithm(), SignAlgorithm.HS256.getJdkAlgorithm());
+        assertThat(actual.getAlgorithm(), is(SignAlgorithm.HS256.getJdkAlgorithm()));
 
         Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
-        assertEquals(encoder.encodeToString(actual.getEncoded()), key.getKey());
+        assertThat(encoder.encodeToString(actual.getEncoded()), is(key.getKey()));
     }
 
     @Test
@@ -46,6 +47,6 @@ public class MacFactoryTest {
 
         Mac actual = subject.makeMac(SignAlgorithm.HS256, key);
         assertNotNull(actual);
-        assertEquals(actual.getAlgorithm(), SignAlgorithm.HS256.getJdkAlgorithm());
+        assertThat(actual.getAlgorithm(), is(SignAlgorithm.HS256.getJdkAlgorithm()));
     }
 }
