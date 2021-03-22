@@ -12,8 +12,9 @@ import net.tokensmith.jwt.config.JwtAppFactory;
 import java.io.ByteArrayOutputStream;
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+
 
 
 public class SecureJwtSerializerTest {

@@ -10,8 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 import net.tokensmith.jwt.config.JwtAppFactory;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+
 
 /**
  * Created by tommackenzie on 11/14/15.
