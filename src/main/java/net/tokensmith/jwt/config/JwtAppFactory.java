@@ -3,7 +3,7 @@ package net.tokensmith.jwt.config;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import net.tokensmith.jwt.entity.jwk.Key;
 import net.tokensmith.jwt.entity.jwk.RSAPublicKey;
@@ -62,7 +62,7 @@ public class JwtAppFactory {
         if (objectMapper == null) {
             this.objectMapper = new ObjectMapper()
                     .setPropertyNamingStrategy(
-                            PropertyNamingStrategy.SNAKE_CASE
+                            PropertyNamingStrategies.SNAKE_CASE
                     )
                     .configure(JsonParser.Feature.STRICT_DUPLICATE_DETECTION, true)
                     .registerModule(new Jdk8Module())
